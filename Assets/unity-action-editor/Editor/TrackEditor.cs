@@ -201,8 +201,8 @@ namespace ActionEditor
 
             switch (e.type)
             {
-                case EventType.ContextClick:
-                    if (rect.Contains(e.mousePosition))
+                case EventType.MouseDown:
+                    if (rect.Contains(e.mousePosition) && e.button == 1)
                     {
                         var beginFrame = Utility.Remap(e.mousePosition.x, rect.xMin, rect.xMax, navigator.MinFrame, navigator.MaxFrame);
                         ShowCreateClipContextMenu(beginFrame);
