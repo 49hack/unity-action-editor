@@ -16,6 +16,7 @@ namespace ActionEditor
 
         [SerializeField] Navigator m_Navigator = new Navigator();
         [SerializeField] Indicator m_Indicator = new Indicator();
+        [SerializeField] BlackboardEditor m_BlacboardEditor = new BlackboardEditor();
         [SerializeField] float m_CurrentFrame = 20f;
         [SerializeField] Sequence m_Sequence;
         [SerializeField] SequenceEditor m_SequenceEditor;
@@ -55,6 +56,8 @@ namespace ActionEditor
 
             // Sequence Setting
             m_SequenceEditor.DrawSetting();
+
+            m_BlacboardEditor.Draw(this, m_Sequence);
 
             DrawPlayer();
 
@@ -144,6 +147,13 @@ namespace ActionEditor
             {
                 m_Context.Play(current);
             }
+        }
+
+        public void ChangeBlackboard(Blackborad blackboard)
+        {
+            AssetDatabase.AddObjectToAsset(blackboard, m_Sequence);
+            EditorUtility.SetDirty(m_Sequence);
+            AssetDatabase.SaveAssets();
         }
     }
 }

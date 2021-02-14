@@ -16,8 +16,9 @@ namespace ActionEditor.Sample
             EditorGUI.LabelField(labelRect, new GUIContent("Value"));
 
             var valueRect = new Rect(labelRect.x, labelRect.y + 2f + EditorGUIUtility.singleLineHeight, labelRect.width - 4f, EditorGUIUtility.singleLineHeight);
-            var valueProp = serializedObject.FindProperty(FloatClip.PropNameValue);
-            valueProp.floatValue = EditorGUI.DelayedFloatField(valueRect, valueProp.floatValue);
+            var valueProp = serializedObject.FindProperty(FloatClip.PropNameSharedValue);
+            EditorGUI.PropertyField(valueRect, valueProp, GUIContent.none);
+            //valueProp.floatValue = EditorGUI.DelayedFloatField(valueRect, valueProp.floatValue);
         }
     }
 }

@@ -177,6 +177,9 @@ namespace ActionEditor
                     if (!type.IsSubclassOf(typeof(T)))
                         continue;
 
+                    if (type.IsAbstract)
+                        continue;
+
                     result.Add(type);
                 }
             }

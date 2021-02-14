@@ -1,6 +1,51 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-8685422221633627564
+--- !u!114 &-8968958472794792791
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 0}
+  m_Name: SharedFloatObject
+  m_EditorClassIdentifier: unity-action-editor:ActionEditor:SharedFloatObject
+  m_PropertyName: TestFloat
+  m_Value: 0
+--- !u!114 &-8857618477484218126
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 0}
+  m_Name: SharedGameObjectObject
+  m_EditorClassIdentifier: unity-action-editor:ActionEditor:SharedGameObjectObject
+  m_PropertyName: EffectObject
+  m_Value: {fileID: 0}
+--- !u!114 &-8582402318634790172
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 114049a7e97710347a5e20fe3275ae9f, type: 3}
+  m_Name: Blackborad
+  m_EditorClassIdentifier: 
+  m_SharedObjects:
+  - {fileID: -8968958472794792791}
+  - {fileID: -8857618477484218126}
+  - {fileID: 476723976670557838}
+  - {fileID: 1451388064145167120}
+--- !u!114 &-5887717018683952797
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -13,9 +58,7 @@ MonoBehaviour:
   m_Name: FloatTrack
   m_EditorClassIdentifier: 
   m_TrackName: FloatTrack
-  m_Clips:
-  - {fileID: 6467245777501593771}
-  - {fileID: 7139510211791224346}
+  m_Clips: []
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -29,10 +72,11 @@ MonoBehaviour:
   m_Name: ActionSequence
   m_EditorClassIdentifier: 
   m_Tracks:
-  - {fileID: -8685422221633627564}
-  m_Length: 120
+  - {fileID: -5887717018683952797}
+  m_TotalFrame: 120
   m_FrameRate: 60
---- !u!114 &6467245777501593771
+  m_Blackboard: {fileID: -8582402318634790172}
+--- !u!114 &476723976670557838
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -41,13 +85,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0d1ceff52aefd15428d433b4d54a12d5, type: 3}
-  m_Name: Clip
-  m_EditorClassIdentifier: 
-  m_BeginFrame: 13.999998
-  m_EndFrame: 38
+  m_Script: {fileID: 0}
+  m_Name: SharedFloatObject
+  m_EditorClassIdentifier: unity-action-editor:ActionEditor:SharedFloatObject
+  m_PropertyName: TestFloat2
   m_Value: 0
---- !u!114 &7139510211791224346
+--- !u!114 &1451388064145167120
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -56,9 +99,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0d1ceff52aefd15428d433b4d54a12d5, type: 3}
-  m_Name: Clip
-  m_EditorClassIdentifier: 
-  m_BeginFrame: 49.377052
-  m_EndFrame: 59.377052
+  m_Script: {fileID: 0}
+  m_Name: SharedFloatObject
+  m_EditorClassIdentifier: unity-action-editor:ActionEditor:SharedFloatObject
+  m_PropertyName: 
   m_Value: 0
