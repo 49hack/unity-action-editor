@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
+using System.Reflection;
+using System.Linq;
 
 namespace ActionEditor
 {
@@ -38,26 +40,6 @@ namespace ActionEditor
                 onIndicate?.Invoke(x, current);
                 current += interval;
             }
-        }
-
-        
-
-        public static void Draw(Rect rect, Color color)
-        {
-            var left = rect.x;
-            var right = rect.xMax;
-            float top = rect.y;
-            var bottom = rect.yMax;
-
-            var leftTop = new Vector3(left, top);
-            var leftBottom = new Vector3(left, bottom);
-            var rightTop = new Vector3(right, top);
-            var rightBottom = new Vector3(right, bottom);
-            var rightBottom2 = new Vector3(right + 5f, bottom);
-
-            FillTriangle(leftBottom, leftTop, rightTop, color);
-            FillTriangle(leftBottom, rightTop, rightBottom, color);
-            FillTriangle(rightBottom, rightTop, rightBottom2, color);
         }
 
         public static void FillTriangle(Vector3 p1, Vector3 p2, Vector3 p3, Color color)
@@ -182,6 +164,28 @@ namespace ActionEditor
                 current.objectReferenceValue = next.objectReferenceValue;
             }
             prop.arraySize = count - 1;
+        }
+
+        public static System.Type[] GetSubClasses<T>()
+        {
+            List<System.Type> result = new List<System.Type>();
+            
+            foreach(var assembly in System.AppDomain.CurrentDomain.GetAssemblies())
+            {
+                foreach (var type in assembly.GetTypes())
+                {
+                    if (!type.IsSubclassOf(typeof(T)))
+                        continue;
+
+                    result.Add(type);
+                }
+            }
+            return result.ToArray();
+        }
+
+        public static T GetAttribute<T>(System.Type type) where T : System.Attribute
+        {
+            return type.GetCustomAttribute<T>();
         }
 
         public class ColorScope : System.IDisposable

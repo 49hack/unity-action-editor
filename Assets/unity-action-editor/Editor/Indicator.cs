@@ -157,6 +157,7 @@ namespace ActionEditor
                         currentFrame = Utility.Remap(e.mousePosition.x, xMin, xMax, startFrame, endFrame);
                         var lastFrame = Mathf.Min(endFrame, durationFrame);
                         currentFrame = Mathf.Clamp(currentFrame, startFrame, lastFrame);
+                        onFocus?.Invoke(totalFrame, currentFrame);
                         e.Use();
                     }
                     break;
@@ -167,6 +168,7 @@ namespace ActionEditor
                         currentFrame = Utility.Remap(e.mousePosition.x, xMin, xMax, startFrame, endFrame);
                         var lastFrame = Mathf.Min(endFrame, durationFrame);
                         currentFrame = Mathf.Clamp(currentFrame, startFrame, lastFrame);
+                        onFocus?.Invoke(totalFrame, currentFrame);
                         e.Use();
                     }
                     break;

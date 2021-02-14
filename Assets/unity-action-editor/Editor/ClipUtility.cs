@@ -82,7 +82,7 @@ namespace ActionEditor
 
     public static class ClipViewUtility
     {
-        public static void DrawClip(Rect fullRect, ClipViewInfo info, Color color, Color lineColor)
+        public static void DrawClip(Rect fullRect, ClipViewInfo info, Color color)
         {
             using (new Utility.HandlesColorScope(color))
             {

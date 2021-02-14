@@ -7,7 +7,7 @@ using System.Linq;
 namespace ActionEditor
 {
     [System.Serializable]
-    public class TrackEditor
+    public class TrackEditor : ScriptableObject
     {
         [SerializeField] SequenceEditor m_Owner;
         [SerializeField] Track m_Track;
@@ -16,6 +16,22 @@ namespace ActionEditor
         SerializedObject m_SerializedObject;
         List<Vector3> m_IndicatePointList = new List<Vector3>();
         Vector3[] m_IndicatePoints;
+
+        #region Virtual
+        protected virtual Color BackgroundColor { get { return new Color(0f, 0f, 0f, 0.5f); } }
+
+        protected virtual void DrawContents(Rect rect, SerializedObject serializedObject)
+        {
+            var propName = serializedObject.FindProperty(Track.PropNameTrackName);
+            var nameRect = new Rect(rect.x + 2f, rect.y + 2f, rect.width - 4f, EditorGUIUtility.singleLineHeight);
+            propName.stringValue = EditorGUI.TextField(nameRect, propName.stringValue);
+        }
+
+        protected virtual void AddContextMenu(GenericMenu menu)
+        {
+            menu.AddItem(new GUIContent("Delete"), false, OnClickDelete, null);
+        }
+        #endregion // Virtual
 
         public Track Asset { get { return m_Track; } }
 
@@ -32,10 +48,25 @@ namespace ActionEditor
             }
         }
 
-        public TrackEditor(SequenceEditor owner, Track track)
+        public void Initialize(SequenceEditor owner, Track track)
         {
             m_Owner = owner;
             m_Track = track;
+
+            var propClips = SerializedObject.FindProperty(Track.PropNameClips);
+            for (int i = 0; i < propClips.arraySize; i++)
+            {
+                var item = propClips.GetArrayElementAtIndex(i);
+                var clip = (Clip)item.objectReferenceValue;
+                var editor = CreateClipEditor(clip.GetType());
+                editor.Initialize(this, clip);
+                m_ClipEditors.Add(editor);
+            }
+        }
+
+        public void ChangeData()
+        {
+            m_Owner.ChangeData();
         }
 
         void OnClickDelete(object obj)
@@ -49,7 +80,7 @@ namespace ActionEditor
             m_Owner.RemoveTrack(this);
         }
 
-        public void OnGUI(Navigator navigator, float totalFrame, float currentFrame)
+        public void Draw(Navigator navigator, float totalFrame, float currentFrame)
         {
             if (Asset == null)
                 return;
@@ -71,35 +102,22 @@ namespace ActionEditor
         {
             var rect = new Rect(fullRect.x + Utility.Space, fullRect.y + Utility.Space, Utility.HeaderWidth - Utility.Space * 2f, fullRect.height - Utility.Space * 2f);
 
+            EditorGUI.DrawRect(rect, BackgroundColor);
+            DrawContents(rect, SerializedObject);
+
             var e = Event.current;
             switch (e.type)
             {
-                case EventType.Repaint:
-                    {
-                        using (new Utility.ColorScope(new Color(0f, 0f, 0f, 0.5f)))
-                        {
-                            GUI.skin.box.Draw(rect, GUIContent.none, 0);
-                        }
-                    }
-                    break;
-
                 case EventType.ContextClick:
                     if (rect.Contains(e.mousePosition))
                     {
                         GenericMenu menu = new GenericMenu();
-
-                        menu.AddItem(new GUIContent("Delete"), false, OnClickDelete, null);
-
+                        AddContextMenu(menu);
                         menu.ShowAsContext();
-
                         e.Use();
                     }
                     break;
             }
-
-            var propName = SerializedObject.FindProperty(Track.PropNameTrackName);
-            var nameRect = new Rect(rect.x + 2f, rect.y + 2f, rect.width - 4f, EditorGUIUtility.singleLineHeight);
-            propName.stringValue = EditorGUI.TextField(nameRect, propName.stringValue);
         }
 
         void OnGUIClip(Rect fullRect, Navigator navigator, float totalFrame, float currentFrame)
@@ -120,6 +138,9 @@ namespace ActionEditor
 
                         using (new Utility.HandlesColorScope(Color.gray))
                         {
+                            if (m_IndicatePointList == null)
+                                m_IndicatePointList = new List<Vector3>();
+
                             var intervalFrame = Utility.CalculateFrameInterval(navigator.MinFrame, navigator.MaxFrame, xMin, xMax, 1f / 48f);
                             if (1 < intervalFrame)
                             {
@@ -175,7 +196,7 @@ namespace ActionEditor
             }
             for (int i = 0; i < m_ClipEditors.Count; i++)
             {
-                m_ClipEditors[i].OnGUI(rect, clipInfos[i], navigator, totalFrame, currentFrame);
+                m_ClipEditors[i].Draw(rect, clipInfos[i], navigator, totalFrame, currentFrame);
             }
 
             switch (e.type)
@@ -183,36 +204,73 @@ namespace ActionEditor
                 case EventType.ContextClick:
                     if (rect.Contains(e.mousePosition))
                     {
-                        GenericMenu menu = new GenericMenu();
-
                         var beginFrame = Utility.Remap(e.mousePosition.x, rect.xMin, rect.xMax, navigator.MinFrame, navigator.MaxFrame);
-                        menu.AddItem(new GUIContent("Create Clip"), false, OnClickCreateClip, beginFrame);
-
-                        menu.ShowAsContext();
-
+                        ShowCreateClipContextMenu(beginFrame);
                         e.Use();
                     }
                     break;
             }
         }
 
-        void OnClickCreateClip(object beginFrameObj)
+        void ShowCreateClipContextMenu(float beginFrame)
         {
-            var beginFrame = (float)beginFrameObj;
+            var clipTypeList = GetClipTypeList();
+
+            GenericMenu menu = new GenericMenu();
+
+            for(int i = 0; i < clipTypeList.Length; i++)
+            {
+                var type = clipTypeList[i];
+                var name = type.Name;
+                var nameAttr = Utility.GetAttribute<MenuTitle>(type);
+                if(nameAttr != null)
+                {
+                    name = nameAttr.Name;
+                }
+
+                menu.AddItem(new GUIContent(name), false, OnCreateClip, (type, beginFrame));
+            }
+            
+
+            menu.ShowAsContext();
+        }
+
+        System.Type[] GetClipTypeList()
+        {
+            List<System.Type> result = new List<System.Type>();
+
+            var clipTypeList = Utility.GetSubClasses<Clip>();
+            for(int i = 0; i < clipTypeList.Length; i++)
+            {
+                var type = clipTypeList[i];
+                var parentAttr = Utility.GetAttribute<ParentTrack>(type);
+                if(parentAttr.Target != m_Track.GetType())
+                {
+                    continue;
+                }
+
+                result.Add(type);
+            }
+
+            return result.ToArray();
+        }
+
+        void OnCreateClip(object obj)
+        {
+            var param = ((System.Type type, float beginFrame))obj;
 
             SerializedObject.Update();
 
-            var index = FindInsertIndex(beginFrame);
+            var index = FindInsertIndex(param.beginFrame);
 
             var propClips = SerializedObject.FindProperty(Track.PropNameClips);
-            var count = propClips.arraySize;
             propClips.InsertArrayElementAtIndex(index);
-            propClips.arraySize = count + 1;
             var propClip = propClips.GetArrayElementAtIndex(index);
 
-            var clip = (Clip)ScriptableObject.CreateInstance(typeof(Clip));
+            var clip = (Clip)ScriptableObject.CreateInstance(param.type);
             clip.name = typeof(Clip).Name;
-            clip.PostCreate(beginFrame);
+            clip.PostCreate(param.beginFrame);
+
 
             SerializedObject.ApplyModifiedProperties();
 
@@ -226,14 +284,43 @@ namespace ActionEditor
             EditorUtility.SetDirty(Asset);
             AssetDatabase.SaveAssets();
 
-            var editor = new ClipEditor(this, clip);
+            var editor = CreateClipEditor(param.type);
+            editor.Initialize(this, clip);
             if (index >= m_ClipEditors.Count)
             {
                 m_ClipEditors.Add(editor);
-            } else
+            }
+            else
             {
                 m_ClipEditors.Insert(index, editor);
             }
+
+            ChangeData();
+        }
+
+        ClipEditor CreateClipEditor(System.Type type)
+        {
+            var cutomEditor = GetCustomClipEditor(type);
+            if (cutomEditor == null)
+                return ScriptableObject.CreateInstance(typeof(ClipEditor)) as ClipEditor;
+
+            return ScriptableObject.CreateInstance(cutomEditor) as ClipEditor;
+        }
+
+        System.Type GetCustomClipEditor(System.Type type)
+        {
+            var editorTypeList = Utility.GetSubClasses<ClipEditor>();
+            for (int i = 0; i < editorTypeList.Length; i++)
+            {
+                var editorType = editorTypeList[i];
+                var cutomAttr = Utility.GetAttribute<CustomClipEditor>(editorType);
+                if (cutomAttr == null)
+                    continue;
+
+                if (cutomAttr.Target == type)
+                    return editorType;
+            }
+            return null;
         }
         int FindInsertIndex(float beginFrame)
         {

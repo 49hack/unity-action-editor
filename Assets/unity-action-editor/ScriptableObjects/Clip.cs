@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace ActionEditor
 {
-    public class Clip : ScriptableObject
+    public abstract class Clip : ScriptableObject
     {
         [SerializeField, HideInInspector] float m_BeginFrame;
         [SerializeField, HideInInspector] float m_EndFrame;
@@ -15,10 +15,21 @@ namespace ActionEditor
         public float BeginFrame { get { return m_BeginFrame; } }
         public float EndFrame { get { return m_EndFrame; } }
 
+        public Runtime.ClipContext CreateContext(float frameRate)
+        {
+            return new Runtime.ClipContext(this, frameRate);
+        }
+
         public void PostCreate(float beginFrame)
         {
             m_BeginFrame = beginFrame;
             m_EndFrame = m_BeginFrame + 10f;
         }
+
+        public virtual void OnSetTime(float time) { }
+        public virtual void OnBegin() { }
+        public virtual void OnEnd() { }
+        public virtual void OnProgress(float fromTime, float toTime) { }
+        public virtual void OnDispose() { }
     }
 }

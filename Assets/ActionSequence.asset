@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-8330962881768855361
+--- !u!114 &-8685422221633627564
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -9,56 +9,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b06bfd84068843446b868e481092c897, type: 3}
-  m_Name: Track
+  m_Script: {fileID: 11500000, guid: 470f19e1aeda4b447ac287239bb595c8, type: 3}
+  m_Name: FloatTrack
   m_EditorClassIdentifier: 
-  m_TrackName: 
+  m_TrackName: FloatTrack
   m_Clips:
-  - {fileID: 3400029678816395124}
-  - {fileID: 9194006831823169466}
---- !u!114 &-3448038477753122989
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7bb49acd6228229409e5fd798bdad62e, type: 3}
-  m_Name: Clip
-  m_EditorClassIdentifier: 
-  m_BeginFrame: 32
-  m_EndFrame: 60
---- !u!114 &-2914772307743379355
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b06bfd84068843446b868e481092c897, type: 3}
-  m_Name: Track
-  m_EditorClassIdentifier: 
-  m_TrackName: 
-  m_Clips:
-  - {fileID: -2016392156969352653}
---- !u!114 &-2016392156969352653
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7bb49acd6228229409e5fd798bdad62e, type: 3}
-  m_Name: Clip
-  m_EditorClassIdentifier: 
-  m_BeginFrame: 31.523169
-  m_EndFrame: 41.52317
+  - {fileID: 6467245777501593771}
+  - {fileID: 7139510211791224346}
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -72,11 +29,10 @@ MonoBehaviour:
   m_Name: ActionSequence
   m_EditorClassIdentifier: 
   m_Tracks:
-  - {fileID: -8330962881768855361}
-  - {fileID: 4890986361488026669}
-  - {fileID: -2914772307743379355}
-  m_Length: 0
---- !u!114 &3400029678816395124
+  - {fileID: -8685422221633627564}
+  m_Length: 120
+  m_FrameRate: 60
+--- !u!114 &6467245777501593771
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -85,12 +41,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7bb49acd6228229409e5fd798bdad62e, type: 3}
+  m_Script: {fileID: 11500000, guid: 0d1ceff52aefd15428d433b4d54a12d5, type: 3}
   m_Name: Clip
   m_EditorClassIdentifier: 
-  m_BeginFrame: 18
-  m_EndFrame: 43.000004
---- !u!114 &4890986361488026669
+  m_BeginFrame: 13.999998
+  m_EndFrame: 38
+  m_Value: 0
+--- !u!114 &7139510211791224346
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -99,23 +56,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b06bfd84068843446b868e481092c897, type: 3}
-  m_Name: Track
-  m_EditorClassIdentifier: 
-  m_TrackName: 
-  m_Clips:
-  - {fileID: -3448038477753122989}
---- !u!114 &9194006831823169466
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7bb49acd6228229409e5fd798bdad62e, type: 3}
+  m_Script: {fileID: 11500000, guid: 0d1ceff52aefd15428d433b4d54a12d5, type: 3}
   m_Name: Clip
   m_EditorClassIdentifier: 
-  m_BeginFrame: 45.000004
-  m_EndFrame: 79
+  m_BeginFrame: 49.377052
+  m_EndFrame: 59.377052
+  m_Value: 0

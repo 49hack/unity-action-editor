@@ -6,7 +6,7 @@ using UnityEditor;
 namespace ActionEditor
 {
     [System.Serializable]
-    public class ClipEditor
+    public class ClipEditor : ScriptableObject
     {
         enum DragType { None, Min, Max, Range }
 
@@ -16,9 +16,18 @@ namespace ActionEditor
         SerializedObject m_SerializedObject;
         DragType m_DragType;
 
+        #region Virtual
+        protected virtual Color BackgroundColor { get { return new Color(0f, 0f, 0f, 0.25f); } }
+        protected virtual void DrawContents(Rect rect, SerializedObject serializedObject)
+        {
+            EditorGUI.DrawRect(rect, BackgroundColor);
+        }
+
+        #endregion // Virtual
+
         public Clip Asset { get { return m_Clip; } }
 
-        public ClipEditor(TrackEditor owner, Clip clip)
+        public void Initialize(TrackEditor owner, Clip clip)
         {
             m_Owner = owner;
             m_Clip = clip;
@@ -74,7 +83,7 @@ namespace ActionEditor
             m_Owner.RemoveClip(this);
         }
 
-        public void OnGUI(Rect viewRect, ClipViewInfo info, Navigator navigator, float totalFrame, float currentFrame)
+        public void Draw(Rect viewRect, ClipViewInfo info, Navigator navigator, float totalFrame, float currentFrame)
         {
             if (Asset == null)
                 return;
@@ -98,23 +107,31 @@ namespace ActionEditor
             var bottomWidth = 30f;
             var headerHeight = EditorGUIUtility.singleLineHeight + 4;
             var contentRect = new Rect(info.ContentMin + 2f, fullRect.y + headerHeight, info.ContentMax - info.ContentMin - 4f, fullRect.height - headerHeight - 2f);
-            ClipViewUtility.DrawClip(fullRect, info, new Color(1f, 0f, 0f, 0.25f), Color.red);
-            EditorGUI.DrawRect(contentRect, new Color(0f, 0f, 0f, 0.5f));
+            ClipViewUtility.DrawClip(fullRect, info, BackgroundColor);
+
+            SerializedObject.Update();
+            DrawContents(contentRect, SerializedObject);
+            SerializedObject.ApplyModifiedProperties();
 
             var menuBottomRect = new Rect(info.ContentMin + (info.ContentMax - info.ContentMin) - bottomWidth - 1f, fullRect.y + 2f, bottomWidth - 2f, headerHeight - 4f);
-            if (GUI.Button(menuBottomRect, new GUIContent("..."), GUI.skin.box))
+            if (GUI.Button(menuBottomRect, new GUIContent("..."), EditorStyles.miniButtonMid))
             {
-                GenericMenu menu = new GenericMenu();
-
-                menu.AddItem(new GUIContent("Delete"), false, OnClickDelete, null);
-
-                menu.ShowAsContext();
+                ShowContextMenu();
             }
 
             var dragCtrlId = GUIUtility.GetControlID(FocusType.Passive);
             var e = Event.current;
             switch(e.type)
             {
+                case EventType.ContextClick:
+                    {
+                        if (fullRect.Contains(e.mousePosition))
+                        {
+                            ShowContextMenu();
+                            e.Use();
+                        }
+                    }
+                    break;
                 case EventType.MouseDown:
                     {
                         if (edgeRect.left.Contains(e.mousePosition))
@@ -217,8 +234,15 @@ namespace ActionEditor
                     }
                     break;
             }
+        }
 
-            return;
+        void ShowContextMenu()
+        {
+            GenericMenu menu = new GenericMenu();
+
+            menu.AddItem(new GUIContent("Delete"), false, OnClickDelete, null);
+
+            menu.ShowAsContext();
         }
     }
 }

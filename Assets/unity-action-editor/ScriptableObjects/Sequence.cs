@@ -8,11 +8,23 @@ namespace ActionEditor
     public class Sequence : ScriptableObject
     {
         [SerializeField] Track[] m_Tracks = new Track[0];
-        [SerializeField] float m_Length;
+        [SerializeField] float m_TotalFrame = 120f;
+        [SerializeField] float m_FrameRate = 60f;
 
         public static string PropNameTracks { get { return nameof(m_Tracks); } }
-        public static string PropNameLength { get { return nameof(m_Length); } }
+        public static string PropNameTotalFrame { get { return nameof(m_TotalFrame); } }
+        public static string PropNameFrameRate { get { return nameof(m_FrameRate); } }
 
-        public float Length { get { return m_Length; } }
+        public float TotalFrame { get { return m_TotalFrame; } }
+        public float FrameRate { get { return m_FrameRate; } }
+
+        public Runtime.SequenceContext CreateContext()
+        {
+            return new Runtime.SequenceContext(this, m_Tracks);
+        }
+
+        public void OnDispose()
+        {
+        }
     }
 }
