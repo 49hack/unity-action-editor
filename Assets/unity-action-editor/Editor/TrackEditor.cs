@@ -88,7 +88,7 @@ namespace ActionEditor
             if (SerializedObject == null)
                 return;
 
-            var rect = GUILayoutUtility.GetRect(1f, 86f, GUILayout.ExpandWidth(true));
+            var rect = GUILayoutUtility.GetRect(1f, 64f, GUILayout.ExpandWidth(true));
 
             SerializedObject.Update();
 

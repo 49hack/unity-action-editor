@@ -41,10 +41,10 @@ MonoBehaviour:
   m_Name: Blackborad
   m_EditorClassIdentifier: 
   m_SharedObjects:
+  - {fileID: 1451388064145167120}
+  - {fileID: 476723976670557838}
   - {fileID: -8968958472794792791}
   - {fileID: -8857618477484218126}
-  - {fileID: 476723976670557838}
-  - {fileID: 1451388064145167120}
 --- !u!114 &-5887717018683952797
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -58,7 +58,29 @@ MonoBehaviour:
   m_Name: FloatTrack
   m_EditorClassIdentifier: 
   m_TrackName: FloatTrack
-  m_Clips: []
+  m_Clips:
+  - {fileID: 6303213172579981649}
+  - {fileID: -4381088686935386190}
+--- !u!114 &-4381088686935386190
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0d1ceff52aefd15428d433b4d54a12d5, type: 3}
+  m_Name: Clip
+  m_EditorClassIdentifier: 
+  m_BeginFrame: 69.99999
+  m_EndFrame: 80.00001
+  m_Value: 0
+  m_SharedValue:
+    m_ValueType: 0
+    m_Blackborad: {fileID: 0}
+    m_PropertyName: 
+    m_Value: 0
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -104,3 +126,23 @@ MonoBehaviour:
   m_EditorClassIdentifier: unity-action-editor:ActionEditor:SharedFloatObject
   m_PropertyName: 
   m_Value: 0
+--- !u!114 &6303213172579981649
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0d1ceff52aefd15428d433b4d54a12d5, type: 3}
+  m_Name: Clip
+  m_EditorClassIdentifier: 
+  m_BeginFrame: 34.999996
+  m_EndFrame: 52.999996
+  m_Value: 0
+  m_SharedValue:
+    m_ValueType: 0
+    m_Blackborad: {fileID: 0}
+    m_PropertyName: 
+    m_Value: 0

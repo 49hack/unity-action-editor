@@ -82,6 +82,9 @@ namespace ActionEditor
                 for (int i = 0; i < objectsProp.arraySize; i++)
                 {
                     var item = objectsProp.GetArrayElementAtIndex(i);
+                    if (item.objectReferenceValue == null)
+                        continue;
+
                     var itemSo = new SerializedObject(item.objectReferenceValue);
 
                     using (var check = new EditorGUI.ChangeCheckScope())

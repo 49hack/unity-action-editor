@@ -104,34 +104,17 @@ namespace ActionEditor
             EditorGUIUtility.AddCursorRect(edgeRect.left, MouseCursor.SplitResizeLeftRight);
             EditorGUIUtility.AddCursorRect(edgeRect.right, MouseCursor.SplitResizeLeftRight);
 
-            var bottomWidth = 30f;
-            var headerHeight = EditorGUIUtility.singleLineHeight + 4;
-            var contentRect = new Rect(info.ContentMin + 2f, fullRect.y + headerHeight, info.ContentMax - info.ContentMin - 4f, fullRect.height - headerHeight - 2f);
+            var contentRect = new Rect(info.ContentMin + 2f, fullRect.y - 2f, info.ContentMax - info.ContentMin - 4f, fullRect.height - 2f);
             ClipViewUtility.DrawClip(fullRect, info, BackgroundColor);
 
             SerializedObject.Update();
             DrawContents(contentRect, SerializedObject);
             SerializedObject.ApplyModifiedProperties();
 
-            var menuBottomRect = new Rect(info.ContentMin + (info.ContentMax - info.ContentMin) - bottomWidth - 1f, fullRect.y + 2f, bottomWidth - 2f, headerHeight - 4f);
-            if (GUI.Button(menuBottomRect, new GUIContent("..."), EditorStyles.miniButtonMid))
-            {
-                ShowContextMenu();
-            }
-
             var dragCtrlId = GUIUtility.GetControlID(FocusType.Passive);
             var e = Event.current;
             switch(e.type)
             {
-                case EventType.ContextClick:
-                    {
-                        if (fullRect.Contains(e.mousePosition))
-                        {
-                            ShowContextMenu();
-                            e.Use();
-                        }
-                    }
-                    break;
                 case EventType.MouseDown:
                     {
                         if (edgeRect.left.Contains(e.mousePosition))
@@ -146,6 +129,13 @@ namespace ActionEditor
                         {
                             m_DragType = DragType.Max;
                             GUIUtility.hotControl = dragCtrlId;
+                            e.Use();
+                            break;
+                        }
+
+                        if (contentRect.Contains(e.mousePosition) && e.button == 1)
+                        {
+                            ShowContextMenu();
                             e.Use();
                             break;
                         }
