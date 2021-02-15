@@ -20,10 +20,13 @@ namespace ActionEditor
             for(int i = 0; i < m_SharedObjects.Length; i++)
             {
                 var obj = m_SharedObjects[i];
+                if (obj == null)
+                    continue;
+
                 if (type != null && obj.ValueType != type)
                     continue;
 
-                m_WorkList.Add(m_SharedObjects[i].PropertyName);
+                m_WorkList.Add(obj.PropertyName);
             }
 
             return m_WorkList.ToArray();
@@ -35,7 +38,11 @@ namespace ActionEditor
 
             for(int i = 0; i < m_SharedObjects.Length; i++)
             {
-                var sharedValue = m_SharedObjects[i].SharedValue;
+                var obj = m_SharedObjects[i];
+                if (obj == null)
+                    continue;
+
+                var sharedValue = obj.SharedValue;
                 if (sharedValue.Name != name)
                     continue;
                 if (sharedValue.Type != typeof(T) && !sharedValue.Type.IsInstanceOfType(typeof(T)))

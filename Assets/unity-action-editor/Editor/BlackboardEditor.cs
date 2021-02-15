@@ -98,7 +98,7 @@ namespace ActionEditor
 
                                 var labelWidth = EditorGUIUtility.labelWidth;
                                 var typeNameRect = new Rect(rect.x, rect.y + 2f, labelWidth, EditorGUIUtility.singleLineHeight);
-                                EditorGUI.LabelField(typeNameRect, item.objectReferenceValue.GetType().Name);
+                                EditorGUI.LabelField(typeNameRect, ToName(item.objectReferenceValue.GetType()));
 
                                 var contentWidth = (rect.width - labelWidth - 4);
 
@@ -137,6 +137,16 @@ namespace ActionEditor
                     }
                 }
             }
+        }
+
+        string ToName(System.Type type)
+        {
+            for(int i = 0; i < m_TypeListCache.Length; i++)
+            {
+                if (m_TypeListCache[i] == type)
+                    return m_TypeNameCache[i];
+            }
+            return type.Name;
         }
 
         public bool TryCreate(Sequence sequence)
