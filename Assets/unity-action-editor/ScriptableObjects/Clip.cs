@@ -1,10 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Reflection;
 
 namespace ActionEditor
 {
-    public abstract class Clip : ScriptableObject
+    public abstract class Clip : ScriptableObject, ISerializationCallbackReceiver
     {
         [SerializeField, HideInInspector] float m_BeginFrame;
         [SerializeField, HideInInspector] float m_EndFrame;
@@ -31,5 +32,16 @@ namespace ActionEditor
         public virtual void OnEnd() { }
         public virtual void OnProgress(float fromTime, float toTime) { }
         public virtual void OnDispose() { }
+
+        public void OnBeforeSerialize()
+        {
+#if UNITY_EDITOR
+            Utility.UpdateBlackboardReference(this);
+#endif
+        }
+
+        public void OnAfterDeserialize()
+        {
+        }
     }
 }

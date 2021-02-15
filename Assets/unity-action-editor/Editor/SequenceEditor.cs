@@ -10,10 +10,10 @@ namespace ActionEditor
     {
         [SerializeField] Window m_Owner;
         [SerializeField] Sequence m_Asset;
-        [SerializeField] List<TrackEditor> m_TrackEditors = new List<TrackEditor>();
         [SerializeField] Vector2 m_Scroll;
 
         SerializedObject m_SerializedObject;
+        List<TrackEditor> m_TrackEditors;
 
         Sequence Asset { get { return m_Asset; } }
 
@@ -32,20 +32,47 @@ namespace ActionEditor
             }
         }
 
-        public SequenceEditor(Window owner, Sequence sequence)
+        public void Initialize(Window owner, Sequence sequence)
         {
             m_Owner = owner;
             m_Asset = sequence;
+            Enable();
+        }
+
+        public void Enable()
+        {
+            if (SerializedObject == null)
+                return;
+
+            if(m_TrackEditors == null)
+                m_TrackEditors = new List<TrackEditor>();
 
             var propTracks = SerializedObject.FindProperty(Sequence.PropNameTracks);
-            for(int i = 0; i < propTracks.arraySize; i++)
+            for (int i = 0; i < propTracks.arraySize; i++)
             {
                 var item = propTracks.GetArrayElementAtIndex(i);
                 var track = (Track)item.objectReferenceValue;
-                var editor = CreateTrackEditor(track.GetType());
-                editor.Initialize(this, track);
+                var editor = CreateTrackEditor(track);
+                editor.OnChangeData += ChangeData;
+                editor.OnRemoveTrack += RemoveTrack;
                 m_TrackEditors.Add(editor);
             }
+        }
+
+        public void Disable()
+        {
+            for (int i = 0; i < m_TrackEditors.Count; i++)
+            {
+                var editor = m_TrackEditors[i];
+                editor.Disable();
+            }
+
+            m_TrackEditors.Clear();
+        }
+
+        public void Dispose()
+        {
+            Disable();
         }
 
         public void ChangeData()
@@ -137,8 +164,9 @@ namespace ActionEditor
 
             propTrack.objectReferenceValue = track;
 
-            var trackEditor = CreateTrackEditor(type);
-            trackEditor.Initialize(this, (Track)track);
+            var trackEditor = CreateTrackEditor((Track)track);
+            trackEditor.OnChangeData += ChangeData;
+            trackEditor.OnRemoveTrack += RemoveTrack;
             m_TrackEditors.Add(trackEditor);
 
             SerializedObject.ApplyModifiedProperties();
@@ -146,13 +174,15 @@ namespace ActionEditor
             ChangeData();
         }
 
-        TrackEditor CreateTrackEditor(System.Type type)
+        TrackEditor CreateTrackEditor(Track track)
         {
-            var customEditorType = GetCustomTrackEditor(type);
-            if(customEditorType == null)
-                return ScriptableObject.CreateInstance(typeof(TrackEditor)) as TrackEditor;
+            var customEditorType = GetCustomTrackEditor(track.GetType());
+            if (customEditorType == null)
+            {
+                return TrackEditor.Create(typeof(TrackEditor), track);
+            }
 
-            return ScriptableObject.CreateInstance(customEditorType) as TrackEditor;
+            return TrackEditor.Create(customEditorType, track);
         }
 
         System.Type GetCustomTrackEditor(System.Type type)

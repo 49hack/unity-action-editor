@@ -6,5 +6,5 @@ using ActionEditor;
 [ExecuteInEditMode]
 public class Test : MonoBehaviour
 {
-    [SerializeField] SharedFloat m_Float;
+    [SerializeField] SharedFloatContext m_Float;
 }

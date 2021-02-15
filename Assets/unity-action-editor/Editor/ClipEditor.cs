@@ -6,15 +6,23 @@ using UnityEditor;
 namespace ActionEditor
 {
     [System.Serializable]
-    public class ClipEditor : ScriptableObject
+    public class ClipEditor
     {
+        public static ClipEditor Create(System.Type type, Clip clip)
+        {
+            var editor = System.Activator.CreateInstance(type) as ClipEditor;
+            editor.Initialize(clip);
+            return editor;
+        }
+
         enum DragType { None, Min, Max, Range }
 
-        [SerializeField] TrackEditor m_Owner;
         [SerializeField] Clip m_Clip;
 
         SerializedObject m_SerializedObject;
         DragType m_DragType;
+
+        public event System.Action<ClipEditor> OnRemoveClip;
 
         #region Virtual
         protected virtual Color BackgroundColor { get { return new Color(0f, 0f, 0f, 0.25f); } }
@@ -27,9 +35,8 @@ namespace ActionEditor
 
         public Clip Asset { get { return m_Clip; } }
 
-        public void Initialize(TrackEditor owner, Clip clip)
+        void Initialize(Clip clip)
         {
-            m_Owner = owner;
             m_Clip = clip;
         }
 
@@ -78,9 +85,24 @@ namespace ActionEditor
             }
         }
 
+        public void Enable()
+        {
+
+        }
+
+        public void Disable()
+        {
+
+        }
+
+        public void Dispose()
+        {
+
+        }
+
         void OnClickDelete(object obj)
         {
-            m_Owner.RemoveClip(this);
+            OnRemoveClip?.Invoke(this);
         }
 
         public void Draw(Rect viewRect, ClipViewInfo info, Navigator navigator, float totalFrame, float currentFrame)
@@ -104,7 +126,7 @@ namespace ActionEditor
             EditorGUIUtility.AddCursorRect(edgeRect.left, MouseCursor.SplitResizeLeftRight);
             EditorGUIUtility.AddCursorRect(edgeRect.right, MouseCursor.SplitResizeLeftRight);
 
-            var contentRect = new Rect(info.ContentMin + 2f, fullRect.y - 2f, info.ContentMax - info.ContentMin - 4f, fullRect.height - 2f);
+            var contentRect = new Rect(info.ContentMin + 2f, fullRect.y + 2f, info.ContentMax - info.ContentMin - 4f, fullRect.height - 4f);
             ClipViewUtility.DrawClip(fullRect, info, BackgroundColor);
 
             SerializedObject.Update();

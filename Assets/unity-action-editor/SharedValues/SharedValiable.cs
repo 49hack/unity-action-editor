@@ -1,7 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 namespace ActionEditor
 {
     public interface ISharedValue
@@ -11,10 +13,15 @@ namespace ActionEditor
         System.Type Type { get; }
     }
 
+    public interface IHasBlackboard
+    {
+        Blackborad Blackborad { get; }
+    }
+
     public enum SharedValueType
     {
         Fixed,
-        Flexible
+        Blackboard
     }
 
     public abstract class SharedObject : ScriptableObject
@@ -24,15 +31,45 @@ namespace ActionEditor
         public static string PropNameValue { get { return SharedObject<float>.PropNameValue; } }
         public static string PropNamePropertyName { get { return nameof(m_PropertyName); } }
 
+        public string PropertyName { get { return m_PropertyName; } }
         public abstract ISharedValue SharedValue { get; }
+        public abstract System.Type ValueType { get; }
     }
 
     public class SharedObject<T> : SharedObject
     {
+        public class Handler : ISharedValue
+        {
+            System.Func<string> m_NameGetter;
+            System.Action<T> m_ValueSetter;
+            System.Func<T> m_ValueGetter;
+
+            public Handler(System.Func<string> nameGetter, System.Action<T> setter, System.Func<T> getter)
+            {
+                m_NameGetter = nameGetter;
+                m_ValueSetter = setter;
+                m_ValueGetter = getter;
+            }
+
+            public string Name { get { return m_NameGetter(); }}
+            public T Value { get { return m_ValueGetter(); } set { m_ValueSetter(value); } }
+            object ISharedValue.Value { get { return Value; } set { Value = (T)value; } }
+            public System.Type Type { get { return typeof(T); } }
+        }
+
         [SerializeField] T m_Value;
         new public static string PropNameValue { get { return nameof(m_Value); } }
 
-        SharedValue<T>.Object m_SharedObject;
+        Handler m_SharedObject;
+        T m_TempValue;
+
+        public override System.Type ValueType
+        {
+            get
+            {
+                return typeof(T);
+            }
+        }
 
         public override ISharedValue SharedValue
         {
@@ -40,12 +77,23 @@ namespace ActionEditor
             {
                 if (m_SharedObject == null)
                 {
-                    m_SharedObject = SharedValue<T>.Create(m_PropertyName, m_Value);
+                    m_SharedObject = new Handler(GetName, SetValue, GetValue);
                 }
-                m_SharedObject.Name = m_PropertyName;
-                m_SharedObject.Value = m_Value;
                 return m_SharedObject;
             }
+        }
+
+        string GetName()
+        {
+            return m_PropertyName;
+        }
+        T GetValue()
+        {
+            return m_Value;
+        }
+        void SetValue(T val)
+        {
+            m_Value = val;
         }
     }
 
@@ -58,35 +106,16 @@ namespace ActionEditor
         public static string PropNameValueType { get { return nameof(m_ValueType); } }
         public static string PropNamePropertyName { get { return SharedValue<object>.PropNamePropertyName; } }
         public static string PropNameValue { get { return SharedValue<object>.PropNameValue; } }
+        public static string PropNameBlackboard { get { return nameof(m_Blackborad); } }
 
         protected SharedValueType ValueType { get { return m_ValueType; } }
         protected Blackborad Blackboard { get { return m_Blackborad; } }
+        public bool HasBlackboard { get { return m_Blackborad != null; } }
     }
 
     [System.Serializable]
     public class SharedValue<T> : SharedValue
     {
-        public class Object : ISharedValue
-        {
-            string m_Name;
-            T m_Value;
-            public Object(string name, T value)
-            {
-                m_Name = name;
-                m_Value = value;
-            }
-
-            public string Name { get { return m_Name; } set { m_Name = value; } }
-            public T Value { get { return m_Value; } set { m_Value = value; } }
-            object ISharedValue.Value { get { return m_Value; } set { m_Value = (T)value; } }
-            public System.Type Type { get { return typeof(T); } }
-        }
-
-        public static Object Create(string name, T value)
-        {
-            return new Object(name, value);
-        }
-
         new public static string PropNamePropertyName { get { return nameof(m_PropertyName); } }
         new public static string PropNameValue { get { return nameof(m_Value); } }
 
@@ -102,14 +131,14 @@ namespace ActionEditor
                     case SharedValueType.Fixed:
                         return m_Value != null;
 
-                    case SharedValueType.Flexible:
+                    case SharedValueType.Blackboard:
                         if (Blackboard == null)
                             return false;
-                        if(Blackboard.TryGetValue(m_PropertyName, out T _))
+                        if(!Blackboard.TryGetValue(m_PropertyName, out T _))
                         {
-                            return true;
+                            return false;
                         }
-                        return false;
+                        return true;
                 }
                 return false;
             }
@@ -124,11 +153,11 @@ namespace ActionEditor
                     case SharedValueType.Fixed:
                         return m_Value;
 
-                    case SharedValueType.Flexible:
+                    case SharedValueType.Blackboard:
                         if (Blackboard == null)
                             return default(T);
 
-                        if (Blackboard.TryGetValue(m_PropertyName, out T value))
+                        if (!Blackboard.TryGetValue(m_PropertyName, out T value))
                         {
                             return default(T);
                         }

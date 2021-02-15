@@ -26,10 +26,19 @@ namespace ActionEditor
         private void OnEnable()
         {
             EditorApplication.update += OnUpdate;
+            m_SequenceEditor?.Enable();
+            m_BlacboardEditor?.Enable();
         }
         private void OnDisable()
         {
             EditorApplication.update -= OnUpdate;
+            m_SequenceEditor?.Disable();
+            m_BlacboardEditor?.Disable();
+        }
+
+        private void OnDestroy()
+        {
+            m_SequenceEditor?.Dispose();
         }
 
         private void OnGUI()
@@ -44,7 +53,8 @@ namespace ActionEditor
                         m_SequenceEditor = null;
                         return;
                     }
-                    m_SequenceEditor = new SequenceEditor(this, m_Sequence);
+                    m_SequenceEditor = new SequenceEditor();
+                    m_SequenceEditor.Initialize(this, m_Sequence);
                 }
             }
 
@@ -57,6 +67,7 @@ namespace ActionEditor
             // Sequence Setting
             m_SequenceEditor.DrawSetting();
 
+            m_BlacboardEditor.TryCreate(m_Sequence);
             m_BlacboardEditor.Draw(this, m_Sequence);
 
             DrawPlayer();

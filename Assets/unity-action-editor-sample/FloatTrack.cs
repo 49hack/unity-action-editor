@@ -7,6 +7,10 @@ namespace ActionEditor.Sample
     [MenuTitle("Primitive/Float Track")]
     public class FloatTrack : Track
     {
+        [SerializeField] SharedFloatContext m_Value;
+
+        public static string PropNameValue { get { return nameof(m_Value); } }
+
         public override void OnChangeClip(Clip fromClip, float fromWeight, Clip toClip, float toWeight)
         {
             var from = fromClip as FloatClip;
@@ -23,6 +27,7 @@ namespace ActionEditor.Sample
 
         void Print(FloatClip from, float fromWeight, FloatClip to, float toWeight)
         {
+            Debug.Log("My value; " + m_Value.Value);
             if(from == null)
             {
                 Debug.Log("Clip nothings.");

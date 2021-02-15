@@ -7,15 +7,24 @@ using System.Linq;
 namespace ActionEditor
 {
     [System.Serializable]
-    public class TrackEditor : ScriptableObject
+    public class TrackEditor
     {
-        [SerializeField] SequenceEditor m_Owner;
+        public static TrackEditor Create(System.Type editorType, Track track)
+        {
+            var editor = System.Activator.CreateInstance(editorType) as TrackEditor;
+            editor.Initialize(track);
+            return editor;
+        }
+
         [SerializeField] Track m_Track;
-        [SerializeField] List<ClipEditor> m_ClipEditors = new List<ClipEditor>();
 
         SerializedObject m_SerializedObject;
         List<Vector3> m_IndicatePointList = new List<Vector3>();
         Vector3[] m_IndicatePoints;
+        List<ClipEditor> m_ClipEditors;
+
+        public event System.Action OnChangeData;
+        public event System.Action<TrackEditor> OnRemoveTrack;
 
         #region Virtual
         protected virtual Color BackgroundColor { get { return new Color(0f, 0f, 0f, 0.5f); } }
@@ -48,25 +57,50 @@ namespace ActionEditor
             }
         }
 
-        public void Initialize(SequenceEditor owner, Track track)
+        void Initialize(Track track)
         {
-            m_Owner = owner;
             m_Track = track;
+            m_ClipEditors = new List<ClipEditor>();
+            Enable();
+        }
+
+        public void Enable()
+        {
+            if (SerializedObject == null)
+                return;
+
+            if (m_ClipEditors == null)
+                m_ClipEditors = new List<ClipEditor>();
 
             var propClips = SerializedObject.FindProperty(Track.PropNameClips);
             for (int i = 0; i < propClips.arraySize; i++)
             {
                 var item = propClips.GetArrayElementAtIndex(i);
                 var clip = (Clip)item.objectReferenceValue;
-                var editor = CreateClipEditor(clip.GetType());
-                editor.Initialize(this, clip);
+                var editor = CreateClipEditor(clip);
+                editor.OnRemoveClip += RemoveClip;
                 m_ClipEditors.Add(editor);
             }
         }
 
+        public void Disable()
+        {
+            for(int i = 0; i < m_ClipEditors.Count; i++)
+            {
+                var editor = m_ClipEditors[i];
+                editor.Disable();
+            }
+            m_ClipEditors.Clear();
+        }
+
+        public void Dispose()
+        {
+            Disable();
+        }
+
         public void ChangeData()
         {
-            m_Owner.ChangeData();
+            OnChangeData?.Invoke();
         }
 
         void OnClickDelete(object obj)
@@ -77,7 +111,7 @@ namespace ActionEditor
                 RemoveClip(dump[i]);
             }
 
-            m_Owner.RemoveTrack(this);
+            OnRemoveTrack?.Invoke(this);
         }
 
         public void Draw(Navigator navigator, float totalFrame, float currentFrame)
@@ -268,7 +302,7 @@ namespace ActionEditor
             var propClip = propClips.GetArrayElementAtIndex(index);
 
             var clip = (Clip)ScriptableObject.CreateInstance(param.type);
-            clip.name = typeof(Clip).Name;
+            clip.name = param.type.Name;
             clip.PostCreate(param.beginFrame);
 
 
@@ -281,11 +315,12 @@ namespace ActionEditor
             propClip.objectReferenceValue = clip;
 
             SerializedObject.ApplyModifiedProperties();
+            //EditorUtility.SetDirty(clip);
             EditorUtility.SetDirty(Asset);
             AssetDatabase.SaveAssets();
 
-            var editor = CreateClipEditor(param.type);
-            editor.Initialize(this, clip);
+            var editor = CreateClipEditor(clip);
+            editor.OnRemoveClip += RemoveClip;
             if (index >= m_ClipEditors.Count)
             {
                 m_ClipEditors.Add(editor);
@@ -298,13 +333,13 @@ namespace ActionEditor
             ChangeData();
         }
 
-        ClipEditor CreateClipEditor(System.Type type)
+        ClipEditor CreateClipEditor(Clip clip)
         {
-            var cutomEditor = GetCustomClipEditor(type);
+            var cutomEditor = GetCustomClipEditor(clip.GetType());
             if (cutomEditor == null)
-                return ScriptableObject.CreateInstance(typeof(ClipEditor)) as ClipEditor;
+                return ClipEditor.Create(typeof(ClipEditor), clip);
 
-            return ScriptableObject.CreateInstance(cutomEditor) as ClipEditor;
+            return ClipEditor.Create(cutomEditor, clip);
         }
 
         System.Type GetCustomClipEditor(System.Type type)

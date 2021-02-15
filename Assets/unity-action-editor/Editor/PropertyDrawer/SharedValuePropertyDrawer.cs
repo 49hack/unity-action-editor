@@ -6,7 +6,7 @@ using UnityEditor;
 namespace ActionEditor
 {
     [CustomPropertyDrawer(typeof(SharedValue), true)]
-    public class SharedValiablePropertyDrawer : PropertyDrawer
+    public class SharedValuePropertyDrawer : PropertyDrawer
     {
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
@@ -24,7 +24,7 @@ namespace ActionEditor
             var valueTypeProp = property.FindPropertyRelative(SharedValue.PropNameValueType);
             var modeEnumValues = System.Enum.GetValues(typeof(SharedValueType));
             var valueType = (SharedValueType)modeEnumValues.GetValue(valueTypeProp.enumValueIndex);
-            using (new Utility.ColorScope(valueType == SharedValueType.Flexible ? Color.blue : GUI.color))
+            using (new Utility.ColorScope(valueType == SharedValueType.Blackboard ? new Color(0.25f, 0.25f, 0.5f) : GUI.color))
             {
                 var selectorRect = new Rect(valueRect.x + valueRect.width, valueRect.y, SelectorWidth, valueRect.height);
                 EditorGUI.PropertyField(selectorRect, valueTypeProp, GUIContent.none);
@@ -40,17 +40,39 @@ namespace ActionEditor
                     }
                     break;
 
-                case SharedValueType.Flexible:
+                case SharedValueType.Blackboard:
                     {
-                        // TOOD: 本当はリストから選択したい
                         var nameProp = property.FindPropertyRelative(SharedValue.PropNamePropertyName);
-                        using (new Utility.ColorScope(string.IsNullOrEmpty(nameProp.stringValue) ? Color.red : GUI.color))
+                        var blackboradProp = property.FindPropertyRelative(SharedValue.PropNameBlackboard);
+                        if(blackboradProp.objectReferenceValue == null)
                         {
                             EditorGUI.PropertyField(valueRect, nameProp, GUIContent.none);
+                            break;
+                        }
+
+                        var blackboard = (Blackborad)blackboradProp.objectReferenceValue;
+                        var propNames = blackboard.GetPropertyNames(null);
+                        var currentIndex = FindIndex(propNames, nameProp.stringValue);
+                        bool isForceSet = currentIndex < 0;
+                        currentIndex = Mathf.Clamp(currentIndex, 0, propNames.Length - 1);
+                        var nextIndex = EditorGUI.Popup(valueRect, currentIndex, propNames);
+                        if(isForceSet || currentIndex != nextIndex)
+                        {
+                            nameProp.stringValue = propNames[nextIndex];
                         }
                     }
                     break;
             }
+        }
+
+        int FindIndex(string[] array, string value)
+        {
+            for(int i = 0; i < array.Length; i++)
+            {
+                if (array[i] == value)
+                    return i;
+            }
+            return -1;
         }
     }
 }

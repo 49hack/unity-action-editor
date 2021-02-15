@@ -9,7 +9,7 @@ using UnityEditor;
 namespace ActionEditor
 {
     [CreateAssetMenu(menuName = "Action Editor/Sequence", fileName = "ActionSequence")]
-    public class Sequence : ScriptableObject
+    public class Sequence : ScriptableObject, IHasBlackboard
     {
         [SerializeField] Track[] m_Tracks = new Track[0];
         [SerializeField] float m_TotalFrame = 120f;
