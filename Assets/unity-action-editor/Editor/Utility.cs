@@ -177,54 +177,6 @@ namespace ActionEditor
             }
         }
 
-
-        public static void UpdateBlackboardReference(ScriptableObject obj)
-        {
-            if (obj == null)
-                return;
-
-            var assetPath = AssetDatabase.GetAssetPath(obj);
-            if (string.IsNullOrEmpty(assetPath))
-                return;
-
-            var allAssets = AssetDatabase.LoadAllAssetsAtPath(assetPath);
-            foreach(var asset in allAssets)
-            {
-                if (asset == null)
-                    continue;
-
-                if (!AssetDatabase.IsMainAsset(asset))
-                    continue;
-
-                var bbOwner = asset as IHasBlackboard;
-                if (bbOwner == null)
-                    continue;
-
-                var blackboard = bbOwner.Blackborad;
-                UpdateBlackboardReference(obj, blackboard);
-            }
-        }
-        public static void UpdateBlackboardReference(object instance, Blackborad blackboard)
-        {
-            var sharedValueType = typeof(SharedValue);
-            var fieldInfoList = instance.GetType().GetFields(BindingFlags.Public | BindingFlags.Instance | BindingFlags.NonPublic);
-            for (int i = 0; i < fieldInfoList.Length; i++)
-            {
-                var fieldInfo = fieldInfoList[i];
-                if (!fieldInfo.FieldType.IsSubclassOf(sharedValueType))
-                    continue;
-
-                var blackboardFieldInfo = sharedValueType.GetField(SharedValue.PropNameBlackboard, BindingFlags.Public | BindingFlags.Instance | BindingFlags.NonPublic);
-                var valueObj = fieldInfo.GetValue(instance);
-                if(valueObj == null)
-                {
-                    fieldInfo.SetValue(instance, System.Activator.CreateInstance(fieldInfo.FieldType));
-                    valueObj = fieldInfo.GetValue(instance);
-                }
-                blackboardFieldInfo.SetValue(valueObj, blackboard);
-            }
-        }
-
         public static System.Type[] GetSubClasses<T>()
         {
             List<System.Type> result = new List<System.Type>();

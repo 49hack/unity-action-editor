@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace ActionEditor
 {
-    public class Track : ScriptableObject, ISerializationCallbackReceiver
+    public class Track : ScriptableObject
     {
         [SerializeField] string m_TrackName;
 
@@ -28,16 +28,5 @@ namespace ActionEditor
         public virtual void OnChangeClip(Clip fromClip, float fromWeight, Clip toClip, float toWeight) { }
         public virtual void OnChangeWight(Clip fromClip, float fromWeight, Clip toClip, float toWeight) { }
         public virtual void OnDispose() { }
-
-        public void OnBeforeSerialize()
-        {
-#if UNITY_EDITOR
-            Utility.UpdateBlackboardReference(this);
-#endif
-        }
-
-        public void OnAfterDeserialize()
-        {
-        }
     }
 }

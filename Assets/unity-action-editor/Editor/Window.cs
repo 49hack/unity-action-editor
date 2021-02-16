@@ -134,7 +134,10 @@ namespace ActionEditor
         void DrawPlayer()
         {
             if (CheckState() != State.Playable)
+            {
+                EditorGUILayout.HelpBox("Playing sequence can be available if select a object attached Director in scene.", MessageType.Info);
                 return;
+            }
 
             bool isPlaying = m_Director.Status == Status.Playing;
 
@@ -216,13 +219,6 @@ namespace ActionEditor
             {
                 m_Director.Play(current);
             }
-        }
-
-        public void ChangeBlackboard(Blackborad blackboard)
-        {
-            //AssetDatabase.AddObjectToAsset(blackboard, m_Sequence);
-            //EditorUtility.SetDirty(m_Sequence);
-            //AssetDatabase.SaveAssets();
         }
     }
 }
