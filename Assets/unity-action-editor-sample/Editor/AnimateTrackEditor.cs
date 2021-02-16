@@ -11,6 +11,7 @@ namespace ActionEditor.Sample
     {
         protected override Color BackgroundColor { get { return new Color(0f, 0f, 0f, 0.5f); } }
 
+
         protected override void DrawContents(Rect rect, SerializedObject serializedObject)
         {
             var propName = serializedObject.FindProperty(Track.PropNameTrackName);

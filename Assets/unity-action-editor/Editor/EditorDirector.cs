@@ -1,19 +1,40 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace ActionEditor.Runtime
+namespace ActionEditor
 {
-    
-    [ExecuteInEditMode]
-    public class Director : MonoBehaviour, IDirector
-    {
-        [SerializeField] Sequence m_Sequence;
-        [SerializeField] TickMode m_Mode;
-        [SerializeField] BindingHolder m_BindingHolder;
+    using Runtime;
 
+    public class EditorBindingHolder : IBindingProvider
+    {
+        public bool IsEnable { get { return false; } }
+
+        public UnityEngine.Object Find(string key, System.Type type, int index)
+        {
+            return null;
+        }
+
+        public bool ToSerializeData(UnityEngine.Object obj, out (string key, int index) result)
+        {
+            result = ("", 0);
+            return false;
+        }
+    }
+
+
+    public class EditorDirector : IDirector
+    {
         SequenceContext m_Context;
+        Sequence m_Sequence;
+        EditorBindingHolder m_BindingHolder = new EditorBindingHolder();
+
+        public static EditorDirector Create(Sequence sequence)
+        {
+            var director = new EditorDirector();
+            director.m_Sequence = sequence;
+            return director;
+        }
 
         public Status Status { get { return m_Context == null ? Status.Stoppped : m_Context.Status; } }
         public Sequence Sequence { get { return m_Sequence; } }
@@ -22,7 +43,6 @@ namespace ActionEditor.Runtime
         public float CurrentFrame { get { return m_Context == null ? 0f : m_Context.CurrentFrame; } set { if (m_Context == null) return; m_Context.CurrentFrame = value; } }
         public float Length { get { return m_Context == null ? 0f : m_Context.Length; } }
         public float TotalFrame { get { return m_Sequence == null ? 0f : m_Sequence.TotalFrame; } }
-
 
         public void Prepare(Sequence sequence = null)
         {
@@ -68,21 +88,10 @@ namespace ActionEditor.Runtime
             m_Context?.Tick(deltaTime);
         }
 
-        void Update()
-        {
-            if (m_Mode != TickMode.Manual)
-                Tick(Time.deltaTime);
-        }
-
         public void Dispose()
         {
             m_Context?.Dispose();
             m_Context = null;
-        }
-
-        void OnDestroy()
-        {
-            Dispose();
         }
     }
 }

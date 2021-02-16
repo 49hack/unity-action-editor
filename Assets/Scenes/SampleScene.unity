@@ -242,11 +242,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5633de3c927908445afb4bf5f10c0290, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_SerializedType: 0
-  m_ObjectTypeName: UnityEngine.Animator, UnityEngine.AnimationModule, Version=0.0.0.0,
-    Culture=neutral, PublicKeyToken=null
-  m_SerializedValue: -39920
-  m_Object: {fileID: 480436185240241980}
   m_Exec: 0
   m_returnExec: 0
 --- !u!4 &875759006
@@ -339,13 +334,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: -10}
+  m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
+  m_LocalPosition: {x: 0, y: 1, z: 2}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
 --- !u!137 &480436185236044276
 SkinnedMeshRenderer:
   m_ObjectHideFlags: 0
@@ -4881,6 +4876,8 @@ GameObject:
   m_Component:
   - component: {fileID: 480436185247508950}
   - component: {fileID: 480436185240241980}
+  - component: {fileID: 480436185247544825}
+  - component: {fileID: 480436185247544823}
   m_Layer: 0
   m_Name: SD_unitychan_generic
   m_TagString: Untagged
@@ -4888,6 +4885,431 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &480436185247544823
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 480436185247544822}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 542cb72313f7f7841a6de527b94a2762, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Resource:
+    m_Entries:
+    - m_Key: Root
+      m_Objects:
+      - {fileID: 480436185247508950}
+      - {fileID: 480436185240241980}
+      - {fileID: 480436185247544825}
+      - {fileID: 480436185247544823}
+    - m_Key: Root/Character1_Reference
+      m_Objects:
+      - {fileID: 480436185247508628}
+    - m_Key: Root/Character1_Reference/center
+      m_Objects:
+      - {fileID: 480436185247508684}
+    - m_Key: Root/Character1_Reference/center/Character1_Hips
+      m_Objects:
+      - {fileID: 480436185247508680}
+    - m_Key: Root/Character1_Reference/center/Character1_Hips/Character1_LeftUpLeg
+      m_Objects:
+      - {fileID: 480436185247508632}
+    - m_Key: Root/Character1_Reference/center/Character1_Hips/Character1_LeftUpLeg/Character1_LeftLeg
+      m_Objects:
+      - {fileID: 480436185247508706}
+    - m_Key: Root/Character1_Reference/center/Character1_Hips/Character1_LeftUpLeg/Character1_LeftLeg/Character1_LeftFoot
+      m_Objects:
+      - {fileID: 480436185247508676}
+    - m_Key: Root/Character1_Reference/center/Character1_Hips/Character1_LeftUpLeg/Character1_LeftLeg/Character1_LeftFoot/Character1_LeftToeBase
+      m_Objects:
+      - {fileID: 480436185247508638}
+    - m_Key: Root/Character1_Reference/center/Character1_Hips/Character1_LeftUpLeg/Character1_LeftLeg/J_L_knee
+      m_Objects:
+      - {fileID: 480436185247508852}
+    - m_Key: Root/Character1_Reference/center/Character1_Hips/Character1_RightUpLeg
+      m_Objects:
+      - {fileID: 480436185247508644}
+    - m_Key: Root/Character1_Reference/center/Character1_Hips/Character1_RightUpLeg/Character1_RightLeg
+      m_Objects:
+      - {fileID: 480436185247508654}
+    - m_Key: Root/Character1_Reference/center/Character1_Hips/Character1_RightUpLeg/Character1_RightLeg/Character1_RightFoot
+      m_Objects:
+      - {fileID: 480436185247508624}
+    - m_Key: Root/Character1_Reference/center/Character1_Hips/Character1_RightUpLeg/Character1_RightLeg/Character1_RightFoot/Character1_RightToeBase
+      m_Objects:
+      - {fileID: 480436185247508650}
+    - m_Key: Root/Character1_Reference/center/Character1_Hips/Character1_RightUpLeg/J_R_knee
+      m_Objects:
+      - {fileID: 480436185247508790}
+    - m_Key: Root/Character1_Reference/center/Character1_Hips/J_L_Skirt_00
+      m_Objects:
+      - {fileID: 480436185247508854}
+    - m_Key: Root/Character1_Reference/center/Character1_Hips/J_L_Skirt_00/J_L_Skirt_01
+      m_Objects:
+      - {fileID: 480436185247508848}
+    - m_Key: Root/Character1_Reference/center/Character1_Hips/J_L_Skirt_00/J_L_Skirt_01/J_L_Skirt_02
+      m_Objects:
+      - {fileID: 480436185247508850}
+    - m_Key: Root/Character1_Reference/center/Character1_Hips/J_L_SkirtBack_01
+      m_Objects:
+      - {fileID: 480436185247508844}
+    - m_Key: Root/Character1_Reference/center/Character1_Hips/J_L_SkirtBack_01/J_L_SkirtBack_02
+      m_Objects:
+      - {fileID: 480436185247508846}
+    - m_Key: Root/Character1_Reference/center/Character1_Hips/J_R_Skirt_00
+      m_Objects:
+      - {fileID: 480436185247508784}
+    - m_Key: Root/Character1_Reference/center/Character1_Hips/J_R_Skirt_00/J_R_Skirt_01
+      m_Objects:
+      - {fileID: 480436185247508786}
+    - m_Key: Root/Character1_Reference/center/Character1_Hips/J_R_Skirt_00/J_R_Skirt_01/J_R_Skirt_02
+      m_Objects:
+      - {fileID: 480436185247508780}
+    - m_Key: Root/Character1_Reference/center/Character1_Hips/J_R_SkirtBack_01
+      m_Objects:
+      - {fileID: 480436185247508782}
+    - m_Key: Root/Character1_Reference/center/Character1_Hips/J_R_SkirtBack_01/J_R_SkirtBack_02
+      m_Objects:
+      - {fileID: 480436185247508776}
+    - m_Key: Root/Character1_Reference/center/Character1_Spine
+      m_Objects:
+      - {fileID: 480436185247508646}
+    - m_Key: Root/Character1_Reference/center/Character1_Spine/Character1_Spine1
+      m_Objects:
+      - {fileID: 480436185247508640}
+    - m_Key: Root/Character1_Reference/center/Character1_Spine/Character1_Spine1/Character1_Spine2
+      m_Objects:
+      - {fileID: 480436185247508642}
+    - m_Key: Root/Character1_Reference/center/Character1_Spine/Character1_Spine1/Character1_Spine2/Character1_LeftShoulder
+      m_Objects:
+      - {fileID: 480436185247508636}
+    - m_Key: Root/Character1_Reference/center/Character1_Spine/Character1_Spine1/Character1_Spine2/Character1_LeftShoulder/Character1_LeftArm
+      m_Objects:
+      - {fileID: 480436185247508682}
+    - m_Key: Root/Character1_Reference/center/Character1_Spine/Character1_Spine1/Character1_Spine2/Character1_LeftShoulder/Character1_LeftArm/Character1_LeftForeArm
+      m_Objects:
+      - {fileID: 480436185247508678}
+    - m_Key: Root/Character1_Reference/center/Character1_Spine/Character1_Spine1/Character1_Spine2/Character1_LeftShoulder/Character1_LeftArm/Character1_LeftForeArm/Character1_LeftHand
+      m_Objects:
+      - {fileID: 480436185247508672}
+    - m_Key: Root/Character1_Reference/center/Character1_Spine/Character1_Spine1/Character1_Spine2/Character1_LeftShoulder/Character1_LeftArm/Character1_LeftForeArm/Character1_LeftHand/Character1_LeftHandIndex1
+      m_Objects:
+      - {fileID: 480436185247508674}
+    - m_Key: Root/Character1_Reference/center/Character1_Spine/Character1_Spine1/Character1_Spine2/Character1_LeftShoulder/Character1_LeftArm/Character1_LeftForeArm/Character1_LeftHand/Character1_LeftHandIndex1/Character1_LeftHandIndex2
+      m_Objects:
+      - {fileID: 480436185247508732}
+    - m_Key: Root/Character1_Reference/center/Character1_Spine/Character1_Spine1/Character1_Spine2/Character1_LeftShoulder/Character1_LeftArm/Character1_LeftForeArm/Character1_LeftHand/Character1_LeftHandIndex1/Character1_LeftHandIndex2/Character1_LeftHandIndex3
+      m_Objects:
+      - {fileID: 480436185247508734}
+    - m_Key: Root/Character1_Reference/center/Character1_Spine/Character1_Spine1/Character1_Spine2/Character1_LeftShoulder/Character1_LeftArm/Character1_LeftForeArm/Character1_LeftHand/Character1_LeftHandMiddle1
+      m_Objects:
+      - {fileID: 480436185247508728}
+    - m_Key: Root/Character1_Reference/center/Character1_Spine/Character1_Spine1/Character1_Spine2/Character1_LeftShoulder/Character1_LeftArm/Character1_LeftForeArm/Character1_LeftHand/Character1_LeftHandMiddle1/Character1_LeftHandMiddle2
+      m_Objects:
+      - {fileID: 480436185247508730}
+    - m_Key: Root/Character1_Reference/center/Character1_Spine/Character1_Spine1/Character1_Spine2/Character1_LeftShoulder/Character1_LeftArm/Character1_LeftForeArm/Character1_LeftHand/Character1_LeftHandMiddle1/Character1_LeftHandMiddle2/Character1_LeftHandMiddle3
+      m_Objects:
+      - {fileID: 480436185247508724}
+    - m_Key: Root/Character1_Reference/center/Character1_Spine/Character1_Spine1/Character1_Spine2/Character1_LeftShoulder/Character1_LeftArm/Character1_LeftForeArm/Character1_LeftHand/Character1_LeftHandPinky1
+      m_Objects:
+      - {fileID: 480436185247508726}
+    - m_Key: Root/Character1_Reference/center/Character1_Spine/Character1_Spine1/Character1_Spine2/Character1_LeftShoulder/Character1_LeftArm/Character1_LeftForeArm/Character1_LeftHand/Character1_LeftHandPinky1/Character1_LeftHandPinky2
+      m_Objects:
+      - {fileID: 480436185247508720}
+    - m_Key: Root/Character1_Reference/center/Character1_Spine/Character1_Spine1/Character1_Spine2/Character1_LeftShoulder/Character1_LeftArm/Character1_LeftForeArm/Character1_LeftHand/Character1_LeftHandPinky1/Character1_LeftHandPinky2/Character1_LeftHandPinky3
+      m_Objects:
+      - {fileID: 480436185247508722}
+    - m_Key: Root/Character1_Reference/center/Character1_Spine/Character1_Spine1/Character1_Spine2/Character1_LeftShoulder/Character1_LeftArm/Character1_LeftForeArm/Character1_LeftHand/Character1_LeftHandRing1
+      m_Objects:
+      - {fileID: 480436185247508716}
+    - m_Key: Root/Character1_Reference/center/Character1_Spine/Character1_Spine1/Character1_Spine2/Character1_LeftShoulder/Character1_LeftArm/Character1_LeftForeArm/Character1_LeftHand/Character1_LeftHandRing1/Character1_LeftHandRing2
+      m_Objects:
+      - {fileID: 480436185247508718}
+    - m_Key: Root/Character1_Reference/center/Character1_Spine/Character1_Spine1/Character1_Spine2/Character1_LeftShoulder/Character1_LeftArm/Character1_LeftForeArm/Character1_LeftHand/Character1_LeftHandRing1/Character1_LeftHandRing2/Character1_LeftHandRing3
+      m_Objects:
+      - {fileID: 480436185247508712}
+    - m_Key: Root/Character1_Reference/center/Character1_Spine/Character1_Spine1/Character1_Spine2/Character1_LeftShoulder/Character1_LeftArm/Character1_LeftForeArm/Character1_LeftHand/Character1_LeftHandThumb1
+      m_Objects:
+      - {fileID: 480436185247508714}
+    - m_Key: Root/Character1_Reference/center/Character1_Spine/Character1_Spine1/Character1_Spine2/Character1_LeftShoulder/Character1_LeftArm/Character1_LeftForeArm/Character1_LeftHand/Character1_LeftHandThumb1/Character1_LeftHandThumb2
+      m_Objects:
+      - {fileID: 480436185247508708}
+    - m_Key: Root/Character1_Reference/center/Character1_Spine/Character1_Spine1/Character1_Spine2/Character1_LeftShoulder/Character1_LeftArm/Character1_LeftForeArm/Character1_LeftHand/Character1_LeftHandThumb1/Character1_LeftHandThumb2/Character1_LeftHandThumb3
+      m_Objects:
+      - {fileID: 480436185247508710}
+    - m_Key: Root/Character1_Reference/center/Character1_Spine/Character1_Spine1/Character1_Spine2/Character1_LeftShoulder/Character1_LeftArm/Character1_LeftForeArm/Character1_LeftHand/Character1_LeftHandThumb1/Character1_LeftHandThumb2/Character1_LeftHandThumb3/Character1_LeftHandThumb4
+      m_Objects:
+      - {fileID: 480436185247508704}
+    - m_Key: Root/Character1_Reference/center/Character1_Spine/Character1_Spine1/Character1_Spine2/Character1_LeftShoulder/Character1_LeftArm/Character1_LeftForeArm/J_L_Elbow
+      m_Objects:
+      - {fileID: 480436185247508826}
+    - m_Key: Root/Character1_Reference/center/Character1_Spine/Character1_Spine1/Character1_Spine2/Character1_LeftShoulder/Character1_LeftArm/Character1_LeftForeArm/J_L_ForeArm_00_tw
+      m_Objects:
+      - {fileID: 480436185247508820}
+    - m_Key: Root/Character1_Reference/center/Character1_Spine/Character1_Spine1/Character1_Spine2/Character1_LeftShoulder/Character1_LeftArm/Character1_LeftForeArm/J_L_Sode_A00
+      m_Objects:
+      - {fileID: 480436185247508840}
+    - m_Key: Root/Character1_Reference/center/Character1_Spine/Character1_Spine1/Character1_Spine2/Character1_LeftShoulder/Character1_LeftArm/Character1_LeftForeArm/J_L_Sode_A00/J_L_Sode_A01
+      m_Objects:
+      - {fileID: 480436185247508842}
+    - m_Key: Root/Character1_Reference/center/Character1_Spine/Character1_Spine1/Character1_Spine2/Character1_LeftShoulder/Character1_LeftArm/Character1_LeftForeArm/J_L_Sode_B00
+      m_Objects:
+      - {fileID: 480436185247508836}
+    - m_Key: Root/Character1_Reference/center/Character1_Spine/Character1_Spine1/Character1_Spine2/Character1_LeftShoulder/Character1_LeftArm/Character1_LeftForeArm/J_L_Sode_B00/J_L_Sode_B01
+      m_Objects:
+      - {fileID: 480436185247508838}
+    - m_Key: Root/Character1_Reference/center/Character1_Spine/Character1_Spine1/Character1_Spine2/Character1_LeftShoulder/Character1_LeftArm/Character1_LeftForeArm/J_L_Sode_C00
+      m_Objects:
+      - {fileID: 480436185247508832}
+    - m_Key: Root/Character1_Reference/center/Character1_Spine/Character1_Spine1/Character1_Spine2/Character1_LeftShoulder/Character1_LeftArm/Character1_LeftForeArm/J_L_Sode_C00/J_L_Sode_C01
+      m_Objects:
+      - {fileID: 480436185247508834}
+    - m_Key: Root/Character1_Reference/center/Character1_Spine/Character1_Spine1/Character1_Spine2/Character1_LeftShoulder/Character1_LeftArm/Character1_LeftForeArm/J_L_Sode_D00
+      m_Objects:
+      - {fileID: 480436185247508764}
+    - m_Key: Root/Character1_Reference/center/Character1_Spine/Character1_Spine1/Character1_Spine2/Character1_LeftShoulder/Character1_LeftArm/Character1_LeftForeArm/J_L_Sode_D00/J_L_Sode_D01
+      m_Objects:
+      - {fileID: 480436185247508766}
+    - m_Key: Root/Character1_Reference/center/Character1_Spine/Character1_Spine1/Character1_Spine2/Character1_LeftShoulder/Character1_LeftArm/J_L_Arm_00_tw
+      m_Objects:
+      - {fileID: 480436185247508824}
+    - m_Key: Root/Character1_Reference/center/Character1_Spine/Character1_Spine1/Character1_Spine2/Character1_LeftShoulder/Character1_LeftArm/J_L_Arm_00_tw/J_L_Sode_E00
+      m_Objects:
+      - {fileID: 480436185247508760}
+    - m_Key: Root/Character1_Reference/center/Character1_Spine/Character1_Spine1/Character1_Spine2/Character1_Neck
+      m_Objects:
+      - {fileID: 480436185247508634}
+    - m_Key: Root/Character1_Reference/center/Character1_Spine/Character1_Spine1/Character1_Spine2/Character1_Neck/Character1_Head
+      m_Objects:
+      - {fileID: 480436185247508686}
+    - m_Key: Root/Character1_Reference/center/Character1_Spine/Character1_Spine1/Character1_Spine2/Character1_Neck/Character1_Head/_face
+      m_Objects:
+      - {fileID: 480436185247508696}
+      - {fileID: 480436185236044280}
+    - m_Key: Root/Character1_Reference/center/Character1_Spine/Character1_Spine1/Character1_Spine2/Character1_Neck/Character1_Head/bone_eye_L
+      m_Objects:
+      - {fileID: 480436185247508688}
+    - m_Key: Root/Character1_Reference/center/Character1_Spine/Character1_Spine1/Character1_Spine2/Character1_Neck/Character1_Head/bone_eye_R
+      m_Objects:
+      - {fileID: 480436185247508690}
+    - m_Key: Root/Character1_Reference/center/Character1_Spine/Character1_Spine1/Character1_Spine2/Character1_Neck/Character1_Head/J_L_HairFront_00
+      m_Objects:
+      - {fileID: 480436185247508822}
+    - m_Key: Root/Character1_Reference/center/Character1_Spine/Character1_Spine1/Character1_Spine2/Character1_Neck/Character1_Head/J_L_HairFront_00/J_L_HairFront_01
+      m_Objects:
+      - {fileID: 480436185247508816}
+    - m_Key: Root/Character1_Reference/center/Character1_Spine/Character1_Spine1/Character1_Spine2/Character1_Neck/Character1_Head/J_L_HairSide2_00
+      m_Objects:
+      - {fileID: 480436185247508818}
+    - m_Key: Root/Character1_Reference/center/Character1_Spine/Character1_Spine1/Character1_Spine2/Character1_Neck/Character1_Head/J_L_HairSide2_00/J_L_HairSide2_01
+      m_Objects:
+      - {fileID: 480436185247508812}
+    - m_Key: Root/Character1_Reference/center/Character1_Spine/Character1_Spine1/Character1_Spine2/Character1_Neck/Character1_Head/J_L_HairSide_00
+      m_Objects:
+      - {fileID: 480436185247508814}
+    - m_Key: Root/Character1_Reference/center/Character1_Spine/Character1_Spine1/Character1_Spine2/Character1_Neck/Character1_Head/J_L_HairSide_00/J_L_HairSide_01
+      m_Objects:
+      - {fileID: 480436185247508808}
+    - m_Key: Root/Character1_Reference/center/Character1_Spine/Character1_Spine1/Character1_Spine2/Character1_Neck/Character1_Head/J_L_HairSide_00/J_L_HairSide_01/J_L_HairSide_02
+      m_Objects:
+      - {fileID: 480436185247508810}
+    - m_Key: Root/Character1_Reference/center/Character1_Spine/Character1_Spine1/Character1_Spine2/Character1_Neck/Character1_Head/J_L_HairTail_00
+      m_Objects:
+      - {fileID: 480436185247508804}
+    - m_Key: Root/Character1_Reference/center/Character1_Spine/Character1_Spine1/Character1_Spine2/Character1_Neck/Character1_Head/J_L_HairTail_00/J_L_HairTail_01
+      m_Objects:
+      - {fileID: 480436185247508806}
+    - m_Key: Root/Character1_Reference/center/Character1_Spine/Character1_Spine1/Character1_Spine2/Character1_Neck/Character1_Head/J_L_HairTail_00/J_L_HairTail_01/J_L_HairTail_02
+      m_Objects:
+      - {fileID: 480436185247508800}
+    - m_Key: Root/Character1_Reference/center/Character1_Spine/Character1_Spine1/Character1_Spine2/Character1_Neck/Character1_Head/J_L_HairTail_00/J_L_HairTail_01/J_L_HairTail_02/J_L_HairTail_03
+      m_Objects:
+      - {fileID: 480436185247508802}
+    - m_Key: Root/Character1_Reference/center/Character1_Spine/Character1_Spine1/Character1_Spine2/Character1_Neck/Character1_Head/J_L_HeadRibbon_00
+      m_Objects:
+      - {fileID: 480436185247508860}
+    - m_Key: Root/Character1_Reference/center/Character1_Spine/Character1_Spine1/Character1_Spine2/Character1_Neck/Character1_Head/J_L_HeadRibbon_00/J_L_HeadRibbon_01
+      m_Objects:
+      - {fileID: 480436185247508862}
+    - m_Key: Root/Character1_Reference/center/Character1_Spine/Character1_Spine1/Character1_Spine2/Character1_Neck/Character1_Head/J_L_HeadRibbon_00/J_L_HeadRibbon_01/J_L_HeadRibbon_02
+      m_Objects:
+      - {fileID: 480436185247508856}
+    - m_Key: Root/Character1_Reference/center/Character1_Spine/Character1_Spine1/Character1_Spine2/Character1_Neck/Character1_Head/J_L_HeadRibbon_00/J_L_HeadRibbon_01/J_L_HeadRibbon_02/J_L_HeadRibbon_03
+      m_Objects:
+      - {fileID: 480436185247508858}
+    - m_Key: Root/Character1_Reference/center/Character1_Spine/Character1_Spine1/Character1_Spine2/Character1_Neck/Character1_Head/J_R_HairFront_00
+      m_Objects:
+      - {fileID: 480436185247508752}
+    - m_Key: Root/Character1_Reference/center/Character1_Spine/Character1_Spine1/Character1_Spine2/Character1_Neck/Character1_Head/J_R_HairFront_00/J_R_HairFront_01
+      m_Objects:
+      - {fileID: 480436185247508754}
+    - m_Key: Root/Character1_Reference/center/Character1_Spine/Character1_Spine1/Character1_Spine2/Character1_Neck/Character1_Head/J_R_HairSide2_00
+      m_Objects:
+      - {fileID: 480436185247508748}
+    - m_Key: Root/Character1_Reference/center/Character1_Spine/Character1_Spine1/Character1_Spine2/Character1_Neck/Character1_Head/J_R_HairSide2_00/J_R_HairSide2_01
+      m_Objects:
+      - {fileID: 480436185247508750}
+    - m_Key: Root/Character1_Reference/center/Character1_Spine/Character1_Spine1/Character1_Spine2/Character1_Neck/Character1_Head/J_R_HairSide_00
+      m_Objects:
+      - {fileID: 480436185247508744}
+    - m_Key: Root/Character1_Reference/center/Character1_Spine/Character1_Spine1/Character1_Spine2/Character1_Neck/Character1_Head/J_R_HairSide_00/J_R_HairSide_01
+      m_Objects:
+      - {fileID: 480436185247508746}
+    - m_Key: Root/Character1_Reference/center/Character1_Spine/Character1_Spine1/Character1_Spine2/Character1_Neck/Character1_Head/J_R_HairSide_00/J_R_HairSide_01/J_R_HairSide_02
+      m_Objects:
+      - {fileID: 480436185247508740}
+    - m_Key: Root/Character1_Reference/center/Character1_Spine/Character1_Spine1/Character1_Spine2/Character1_Neck/Character1_Head/J_R_HairTail_00
+      m_Objects:
+      - {fileID: 480436185247508742}
+    - m_Key: Root/Character1_Reference/center/Character1_Spine/Character1_Spine1/Character1_Spine2/Character1_Neck/Character1_Head/J_R_HairTail_00/J_R_HairTail_01
+      m_Objects:
+      - {fileID: 480436185247508736}
+    - m_Key: Root/Character1_Reference/center/Character1_Spine/Character1_Spine1/Character1_Spine2/Character1_Neck/Character1_Head/J_R_HairTail_00/J_R_HairTail_01/J_R_HairTail_02
+      m_Objects:
+      - {fileID: 480436185247508738}
+    - m_Key: Root/Character1_Reference/center/Character1_Spine/Character1_Spine1/Character1_Spine2/Character1_Neck/Character1_Head/J_R_HairTail_00/J_R_HairTail_01/J_R_HairTail_02/J_R_HairTail_03
+      m_Objects:
+      - {fileID: 480436185247508796}
+    - m_Key: Root/Character1_Reference/center/Character1_Spine/Character1_Spine1/Character1_Spine2/Character1_Neck/Character1_Head/J_R_HeadRibbon_00
+      m_Objects:
+      - {fileID: 480436185247508798}
+    - m_Key: Root/Character1_Reference/center/Character1_Spine/Character1_Spine1/Character1_Spine2/Character1_Neck/Character1_Head/J_R_HeadRibbon_00/J_R_HeadRibbon_01
+      m_Objects:
+      - {fileID: 480436185247508792}
+    - m_Key: Root/Character1_Reference/center/Character1_Spine/Character1_Spine1/Character1_Spine2/Character1_Neck/Character1_Head/J_R_HeadRibbon_00/J_R_HeadRibbon_01/J_R_HeadRibbon_02
+      m_Objects:
+      - {fileID: 480436185247508794}
+    - m_Key: Root/Character1_Reference/center/Character1_Spine/Character1_Spine1/Character1_Spine2/Character1_Neck/Character1_Head/J_R_HeadRibbon_00/J_R_HeadRibbon_01/J_R_HeadRibbon_02/J_R_HeadRibbon_03
+      m_Objects:
+      - {fileID: 480436185247508788}
+    - m_Key: Root/Character1_Reference/center/Character1_Spine/Character1_Spine1/Character1_Spine2/Character1_RightShoulder
+      m_Objects:
+      - {fileID: 480436185247508648}
+    - m_Key: Root/Character1_Reference/center/Character1_Spine/Character1_Spine1/Character1_Spine2/Character1_RightShoulder/Character1_RightArm
+      m_Objects:
+      - {fileID: 480436185247508630}
+    - m_Key: Root/Character1_Reference/center/Character1_Spine/Character1_Spine1/Character1_Spine2/Character1_RightShoulder/Character1_RightArm/Character1_RightForeArm
+      m_Objects:
+      - {fileID: 480436185247508626}
+    - m_Key: Root/Character1_Reference/center/Character1_Spine/Character1_Spine1/Character1_Spine2/Character1_RightShoulder/Character1_RightArm/Character1_RightForeArm/Character1_RightHand
+      m_Objects:
+      - {fileID: 480436185247508620}
+    - m_Key: Root/Character1_Reference/center/Character1_Spine/Character1_Spine1/Character1_Spine2/Character1_RightShoulder/Character1_RightArm/Character1_RightForeArm/Character1_RightHand/Character1_RightHandIndex1
+      m_Objects:
+      - {fileID: 480436185247508622}
+    - m_Key: Root/Character1_Reference/center/Character1_Spine/Character1_Spine1/Character1_Spine2/Character1_RightShoulder/Character1_RightArm/Character1_RightForeArm/Character1_RightHand/Character1_RightHandIndex1/Character1_RightHandIndex2
+      m_Objects:
+      - {fileID: 480436185247508616}
+    - m_Key: Root/Character1_Reference/center/Character1_Spine/Character1_Spine1/Character1_Spine2/Character1_RightShoulder/Character1_RightArm/Character1_RightForeArm/Character1_RightHand/Character1_RightHandIndex1/Character1_RightHandIndex2/Character1_RightHandIndex3
+      m_Objects:
+      - {fileID: 480436185247508618}
+    - m_Key: Root/Character1_Reference/center/Character1_Spine/Character1_Spine1/Character1_Spine2/Character1_RightShoulder/Character1_RightArm/Character1_RightForeArm/Character1_RightHand/Character1_RightHandMiddle1
+      m_Objects:
+      - {fileID: 480436185247508612}
+    - m_Key: Root/Character1_Reference/center/Character1_Spine/Character1_Spine1/Character1_Spine2/Character1_RightShoulder/Character1_RightArm/Character1_RightForeArm/Character1_RightHand/Character1_RightHandMiddle1/Character1_RightHandMiddle2
+      m_Objects:
+      - {fileID: 480436185247508614}
+    - m_Key: Root/Character1_Reference/center/Character1_Spine/Character1_Spine1/Character1_Spine2/Character1_RightShoulder/Character1_RightArm/Character1_RightForeArm/Character1_RightHand/Character1_RightHandMiddle1/Character1_RightHandMiddle2/Character1_RightHandMiddle3
+      m_Objects:
+      - {fileID: 480436185247508608}
+    - m_Key: Root/Character1_Reference/center/Character1_Spine/Character1_Spine1/Character1_Spine2/Character1_RightShoulder/Character1_RightArm/Character1_RightForeArm/Character1_RightHand/Character1_RightHandPinky1
+      m_Objects:
+      - {fileID: 480436185247508610}
+    - m_Key: Root/Character1_Reference/center/Character1_Spine/Character1_Spine1/Character1_Spine2/Character1_RightShoulder/Character1_RightArm/Character1_RightForeArm/Character1_RightHand/Character1_RightHandPinky1/Character1_RightHandPinky2
+      m_Objects:
+      - {fileID: 480436185247508668}
+    - m_Key: Root/Character1_Reference/center/Character1_Spine/Character1_Spine1/Character1_Spine2/Character1_RightShoulder/Character1_RightArm/Character1_RightForeArm/Character1_RightHand/Character1_RightHandPinky1/Character1_RightHandPinky2/Character1_RightHandPinky3
+      m_Objects:
+      - {fileID: 480436185247508670}
+    - m_Key: Root/Character1_Reference/center/Character1_Spine/Character1_Spine1/Character1_Spine2/Character1_RightShoulder/Character1_RightArm/Character1_RightForeArm/Character1_RightHand/Character1_RightHandRing1
+      m_Objects:
+      - {fileID: 480436185247508664}
+    - m_Key: Root/Character1_Reference/center/Character1_Spine/Character1_Spine1/Character1_Spine2/Character1_RightShoulder/Character1_RightArm/Character1_RightForeArm/Character1_RightHand/Character1_RightHandRing1/Character1_RightHandRing2
+      m_Objects:
+      - {fileID: 480436185247508666}
+    - m_Key: Root/Character1_Reference/center/Character1_Spine/Character1_Spine1/Character1_Spine2/Character1_RightShoulder/Character1_RightArm/Character1_RightForeArm/Character1_RightHand/Character1_RightHandRing1/Character1_RightHandRing2/Character1_RightHandRing3
+      m_Objects:
+      - {fileID: 480436185247508660}
+    - m_Key: Root/Character1_Reference/center/Character1_Spine/Character1_Spine1/Character1_Spine2/Character1_RightShoulder/Character1_RightArm/Character1_RightForeArm/Character1_RightHand/Character1_RightHandThumb1
+      m_Objects:
+      - {fileID: 480436185247508662}
+    - m_Key: Root/Character1_Reference/center/Character1_Spine/Character1_Spine1/Character1_Spine2/Character1_RightShoulder/Character1_RightArm/Character1_RightForeArm/Character1_RightHand/Character1_RightHandThumb1/Character1_RightHandThumb2
+      m_Objects:
+      - {fileID: 480436185247508656}
+    - m_Key: Root/Character1_Reference/center/Character1_Spine/Character1_Spine1/Character1_Spine2/Character1_RightShoulder/Character1_RightArm/Character1_RightForeArm/Character1_RightHand/Character1_RightHandThumb1/Character1_RightHandThumb2/Character1_RightHandThumb3
+      m_Objects:
+      - {fileID: 480436185247508658}
+    - m_Key: Root/Character1_Reference/center/Character1_Spine/Character1_Spine1/Character1_Spine2/Character1_RightShoulder/Character1_RightArm/Character1_RightForeArm/Character1_RightHand/Character1_RightHandThumb1/Character1_RightHandThumb2/Character1_RightHandThumb3/Character1_RightHandThumb4
+      m_Objects:
+      - {fileID: 480436185247508652}
+    - m_Key: Root/Character1_Reference/center/Character1_Spine/Character1_Spine1/Character1_Spine2/Character1_RightShoulder/Character1_RightArm/Character1_RightForeArm/J_R_Elbow
+      m_Objects:
+      - {fileID: 480436185247508756}
+    - m_Key: Root/Character1_Reference/center/Character1_Spine/Character1_Spine1/Character1_Spine2/Character1_RightShoulder/Character1_RightArm/Character1_RightForeArm/J_R_ForeArm_00_tw
+      m_Objects:
+      - {fileID: 480436185247508758}
+    - m_Key: Root/Character1_Reference/center/Character1_Spine/Character1_Spine1/Character1_Spine2/Character1_RightShoulder/Character1_RightArm/Character1_RightForeArm/J_R_Sode_A00
+      m_Objects:
+      - {fileID: 480436185247508778}
+    - m_Key: Root/Character1_Reference/center/Character1_Spine/Character1_Spine1/Character1_Spine2/Character1_RightShoulder/Character1_RightArm/Character1_RightForeArm/J_R_Sode_A00/J_R_Sode_A01
+      m_Objects:
+      - {fileID: 480436185247508772}
+    - m_Key: Root/Character1_Reference/center/Character1_Spine/Character1_Spine1/Character1_Spine2/Character1_RightShoulder/Character1_RightArm/Character1_RightForeArm/J_R_Sode_B00
+      m_Objects:
+      - {fileID: 480436185247508774}
+    - m_Key: Root/Character1_Reference/center/Character1_Spine/Character1_Spine1/Character1_Spine2/Character1_RightShoulder/Character1_RightArm/Character1_RightForeArm/J_R_Sode_B00/J_R_Sode_B01
+      m_Objects:
+      - {fileID: 480436185247508768}
+    - m_Key: Root/Character1_Reference/center/Character1_Spine/Character1_Spine1/Character1_Spine2/Character1_RightShoulder/Character1_RightArm/Character1_RightForeArm/J_R_Sode_C00
+      m_Objects:
+      - {fileID: 480436185247508770}
+    - m_Key: Root/Character1_Reference/center/Character1_Spine/Character1_Spine1/Character1_Spine2/Character1_RightShoulder/Character1_RightArm/Character1_RightForeArm/J_R_Sode_C00/J_R_Sode_C01
+      m_Objects:
+      - {fileID: 480436185247508956}
+    - m_Key: Root/Character1_Reference/center/Character1_Spine/Character1_Spine1/Character1_Spine2/Character1_RightShoulder/Character1_RightArm/Character1_RightForeArm/J_R_Sode_D00
+      m_Objects:
+      - {fileID: 480436185247508958}
+    - m_Key: Root/Character1_Reference/center/Character1_Spine/Character1_Spine1/Character1_Spine2/Character1_RightShoulder/Character1_RightArm/Character1_RightForeArm/J_R_Sode_D00/J_R_Sode_D01
+      m_Objects:
+      - {fileID: 480436185247508952}
+    - m_Key: Root/Character1_Reference/center/Character1_Spine/Character1_Spine1/Character1_Spine2/Character1_RightShoulder/Character1_RightArm/J_R_Arm_00_tw
+      m_Objects:
+      - {fileID: 480436185247508762}
+    - m_Key: Root/Character1_Reference/center/Character1_Spine/Character1_Spine1/Character1_Spine2/Character1_RightShoulder/Character1_RightArm/J_R_Arm_00_tw/J_R_Sode_E00
+      m_Objects:
+      - {fileID: 480436185247508954}
+    - m_Key: Root/Character1_Reference/center/Character1_Spine/Character1_Spine1/Character1_Spine2/J_acce_00
+      m_Objects:
+      - {fileID: 480436185247508828}
+    - m_Key: Root/Character1_Reference/center/Character1_Spine/Character1_Spine1/Character1_Spine2/J_acce_00/J_acce_01
+      m_Objects:
+      - {fileID: 480436185247508830}
+    - m_Key: Root/Mesh_SD_unitychan
+      m_Objects:
+      - {fileID: 480436185247508948}
+    - m_Key: Root/Mesh_SD_unitychan/_body
+      m_Objects:
+      - {fileID: 480436185247508700}
+      - {fileID: 480436185236044284}
+    - m_Key: Root/Mesh_SD_unitychan/_eye
+      m_Objects:
+      - {fileID: 480436185247508702}
+      - {fileID: 480436185236044286}
+    - m_Key: Root/Mesh_SD_unitychan/_Fhair
+      m_Objects:
+      - {fileID: 480436185247508698}
+      - {fileID: 480436185236044282}
+    - m_Key: Root/Mesh_SD_unitychan/_Fhair2
+      m_Objects:
+      - {fileID: 480436185247508692}
+      - {fileID: 480436185236044276}
+    - m_Key: Root/Mesh_SD_unitychan/_head
+      m_Objects:
+      - {fileID: 480436185247508694}
+      - {fileID: 480436185236044278}
 --- !u!1 &480436185247544824
 GameObject:
   m_ObjectHideFlags: 0
@@ -4904,6 +5326,21 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &480436185247544825
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 480436185247544822}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1529d601a1a56db48873c5af4842aa7c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Sequence: {fileID: 11400000, guid: 19689bf4972e5fa449ef2692238722e7, type: 2}
+  m_Mode: 0
+  m_BindingHolder: {fileID: 480436185247544823}
 --- !u!1 &480436185247544826
 GameObject:
   m_ObjectHideFlags: 0

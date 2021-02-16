@@ -101,6 +101,7 @@ namespace ActionEditor
 
         public void ChangeData()
         {
+            SerializedObject?.ApplyModifiedProperties();
             OnChangeData?.Invoke();
         }
 

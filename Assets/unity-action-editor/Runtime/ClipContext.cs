@@ -13,6 +13,7 @@ namespace ActionEditor.Runtime
         Clip m_Clip;
         float m_CurrentTime;
         float m_FrameRate;
+        bool m_IsBegined = false;
 
         public ClipContext(Clip clip, float frameRate, Sequence sequence, IBindingProvider bindingProvider)
         {
@@ -28,28 +29,32 @@ namespace ActionEditor.Runtime
 
         public void SetTime(float time)
         {
-            if (IsPlayingAt(time) && !IsPlaying)
+            var isPlayingAt = IsPlayingAt(time);
+
+            if (isPlayingAt && !m_IsBegined)
             {
                 Begin();
             }
-            if (!IsPlayingAt(time) && IsPlaying)
+            if (!isPlayingAt && m_IsBegined)
             {
                 End();
             }
 
             m_CurrentTime = time;
 
-            if(IsPlayingAt(time))
+            if (isPlayingAt)
                 m_Clip.OnSetTime(time);
         }
 
         public void Begin()
         {
+            m_IsBegined = true;
             m_Clip.OnBegin();
         }
 
         public void End()
         {
+            m_IsBegined = false;
             m_Clip.OnEnd();
         }
         public void Progress(float toTime)

@@ -7,6 +7,13 @@ namespace ActionEditor
 {
     public class Window : EditorWindow
     {
+        enum State
+        {
+            Disable,
+            Playable,
+            NoSequence,
+            EditOnly,
+        }
         [MenuItem("Window/Action Editor")]
         public static void Create()
         {
@@ -16,7 +23,6 @@ namespace ActionEditor
 
         [SerializeField] Navigator m_Navigator = new Navigator();
         [SerializeField] Indicator m_Indicator = new Indicator();
-        //[SerializeField] BlackboardEditor m_BlacboardEditor = new BlackboardEditor();
         [SerializeField] SequenceEditor m_SequenceEditor;
         [SerializeField] double m_LatestTickTime = 0f;
         IDirector m_Director;
@@ -25,7 +31,6 @@ namespace ActionEditor
         {
             EditorApplication.update += OnUpdate;
             m_SequenceEditor?.Enable();
-            //m_BlacboardEditor?.Enable();
             ChangeDirector(null);
             OnSelect(Selection.activeObject);
         }
@@ -33,7 +38,6 @@ namespace ActionEditor
         {
             EditorApplication.update -= OnUpdate;
             m_SequenceEditor?.Disable();
-            //m_BlacboardEditor?.Disable();
             ChangeDirector(null);
         }
 
@@ -56,20 +60,17 @@ namespace ActionEditor
                 if (string.IsNullOrEmpty(go.scene.name))
                 {
                     ChangeDirector(null);
-                    Debug.Log("object is in project view");
                     return;
                 }
 
                 var director = go.GetComponent<IDirector>();
                 ChangeDirector(director);
-                Debug.Log("object is gameObject director: " + (m_Director == null ? "null" : "not null"));
                 return;
             }
 
             if (selected is Sequence sequence)
             {
-                Debug.Log("object is sequence");
-                ChangeDirector(null);
+                ChangeDirector(EditorDirector.Create(sequence));
                 return;
             }
         }
@@ -95,11 +96,16 @@ namespace ActionEditor
 
         private void OnGUI()
         {
-            if (m_Director == null)
-                return;
+            var state = CheckState();
 
-            if (m_Director.Sequence == null)
+            if (state == State.Disable)
                 return;
+            
+            if(state == State.NoSequence)
+            {
+                EditorGUILayout.HelpBox("Assign a sequence asset into Director", MessageType.Warning);
+                return;
+            }
 
             if (m_SequenceEditor == null)
             {
@@ -108,11 +114,7 @@ namespace ActionEditor
                 m_SequenceEditor.Initialize(this, m_Director.Sequence);
             }
 
-            // Sequence Setting
             m_SequenceEditor.DrawSetting();
-
-            //m_BlacboardEditor.TryCreate(m_Sequence);
-            //m_BlacboardEditor.Draw(this, m_Sequence);
 
             DrawPlayer();
 
@@ -131,7 +133,7 @@ namespace ActionEditor
         }
         void DrawPlayer()
         {
-            if (m_Director == null)
+            if (CheckState() != State.Playable)
                 return;
 
             bool isPlaying = m_Director.Status == Status.Playing;
@@ -172,10 +174,27 @@ namespace ActionEditor
             }
         }
 
-        void OnUpdate()
+        State CheckState()
         {
             if (m_Director == null)
+                return State.Disable;
+
+            if (m_Director.Sequence == null)
+                return State.NoSequence;
+
+            if(m_Director is EditorDirector)
+                return State.EditOnly;
+
+            return State.Playable;
+        }
+
+        void OnUpdate()
+        {
+            Repaint();
+
+            if (m_Director == null)
                 return;
+
             if (m_Director.Status != Status.Playing)
                 return;
 
@@ -190,7 +209,6 @@ namespace ActionEditor
             if (m_Director == null)
                 return;
 
-            Debug.LogError("ChangeData");
             var isPlaying = m_Director.Status == Status.Playing;
             var current = m_Director.CurrentTime;
             m_Director.Prepare();

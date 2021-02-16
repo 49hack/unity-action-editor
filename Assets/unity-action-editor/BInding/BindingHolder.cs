@@ -10,6 +10,8 @@ namespace ActionEditor
 
         [SerializeField] BindingResource m_Resource = new BindingResource();
 
+        public bool IsEnable { get { return m_Resource.IsEnable; } }
+
         public Object Find(string key, System.Type type, int index)
         {
             return m_Resource.Find(key, type, index);

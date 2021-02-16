@@ -17,7 +17,7 @@ MonoBehaviour:
   - {fileID: -3239774741726923220}
   - {fileID: 1015237686791513022}
   m_AnimatorBinding:
-    m_Key: Root
+    m_Key: 
     m_Index: 0
 --- !u!114 &-3239774741726923220
 MonoBehaviour:
@@ -31,8 +31,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 036a6826b508fd54399c2e645544c181, type: 3}
   m_Name: AnimateClip
   m_EditorClassIdentifier: 
-  m_BeginFrame: 12
-  m_EndFrame: 52
+  m_BeginFrame: 10
+  m_EndFrame: 72
   m_Clip: {fileID: 7400018, guid: b6475d894388e0f4bbe9ba904c073a2e, type: 3}
 --- !u!114 &11400000
 MonoBehaviour:
@@ -48,7 +48,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Tracks:
   - {fileID: -6653244266296423509}
-  m_TotalFrame: 120
+  m_TotalFrame: 160
   m_FrameRate: 60
   m_Blackboard: {fileID: 0}
 --- !u!114 &1015237686791513022
@@ -63,6 +63,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 036a6826b508fd54399c2e645544c181, type: 3}
   m_Name: AnimateClip
   m_EditorClassIdentifier: 
-  m_BeginFrame: 55.04762
-  m_EndFrame: 65.04762
-  m_Clip: {fileID: 0}
+  m_BeginFrame: 66
+  m_EndFrame: 134
+  m_Clip: {fileID: 7400002, guid: b6475d894388e0f4bbe9ba904c073a2e, type: 3}

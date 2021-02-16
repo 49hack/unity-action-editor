@@ -62,7 +62,7 @@ namespace ActionEditor.Sample
 
         public override void OnDispose()
         {
-            if(m_Graph.IsValid())
+            if (m_Graph.IsValid())
                 m_Graph.Destroy();
         }
     }

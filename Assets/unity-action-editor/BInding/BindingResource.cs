@@ -6,6 +6,7 @@ namespace ActionEditor
 {
     public interface IBindingProvider
     {
+        bool IsEnable { get; }
         Object Find(string key, System.Type type, int index);
         bool ToSerializeData(Object obj, out (string key, int index) result);
     }
@@ -16,6 +17,8 @@ namespace ActionEditor
         public static string PropNameEntries { get { return nameof(m_Entries); } }
 
         [SerializeField] BindingEntry[] m_Entries = new BindingEntry[0];
+
+        public bool IsEnable { get { return true; } }
 
         public Object Find(string key, System.Type type, int index)
         {
