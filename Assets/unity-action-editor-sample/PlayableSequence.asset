@@ -17,6 +17,7 @@ MonoBehaviour:
   - {fileID: 7744501934529095970}
   - {fileID: -3239774741726923220}
   - {fileID: 1015237686791513022}
+  - {fileID: 3981329662160473788}
   m_AnimatorBinding:
     m_Key: Root
     m_Index: 0
@@ -32,8 +33,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 036a6826b508fd54399c2e645544c181, type: 3}
   m_Name: AnimateClip
   m_EditorClassIdentifier: 
-  m_BeginFrame: 45
-  m_EndFrame: 145
+  m_BeginFrame: 53
+  m_EndFrame: 95.00001
   m_Clip: {fileID: 7400018, guid: b6475d894388e0f4bbe9ba904c073a2e, type: 3}
 --- !u!114 &11400000
 MonoBehaviour:
@@ -49,9 +50,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Tracks:
   - {fileID: -6653244266296423509}
-  m_TotalFrame: 240
+  m_TotalFrame: 400
   m_FrameRate: 60
-  m_Blackboard: {fileID: 0}
 --- !u!114 &1015237686791513022
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -64,9 +64,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 036a6826b508fd54399c2e645544c181, type: 3}
   m_Name: AnimateClip
   m_EditorClassIdentifier: 
-  m_BeginFrame: 120
-  m_EndFrame: 185
-  m_Clip: {fileID: 7400002, guid: b6475d894388e0f4bbe9ba904c073a2e, type: 3}
+  m_BeginFrame: 85
+  m_EndFrame: 200
+  m_Clip: {fileID: 7400004, guid: b6475d894388e0f4bbe9ba904c073a2e, type: 3}
+--- !u!114 &3981329662160473788
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 036a6826b508fd54399c2e645544c181, type: 3}
+  m_Name: AnimateClip
+  m_EditorClassIdentifier: 
+  m_BeginFrame: 140
+  m_EndFrame: 400
+  m_Clip: {fileID: 7400000, guid: b6475d894388e0f4bbe9ba904c073a2e, type: 3}
 --- !u!114 &7744501934529095970
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -79,6 +94,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 036a6826b508fd54399c2e645544c181, type: 3}
   m_Name: AnimateClip
   m_EditorClassIdentifier: 
-  m_BeginFrame: 10.472727
-  m_EndFrame: 20.472727
-  m_Clip: {fileID: 0}
+  m_BeginFrame: 3.999999
+  m_EndFrame: 58.999996
+  m_Clip: {fileID: 7400002, guid: b6475d894388e0f4bbe9ba904c073a2e, type: 3}
