@@ -24,8 +24,10 @@ namespace ActionEditor.Runtime
         public float TotalFrame { get { return m_Sequence == null ? 0f : m_Sequence.TotalFrame; } }
 
 
-        public void Prepare(Sequence sequence = null)
+        public void Prepare(Sequence sequence = null, TickMode mode = TickMode.Auto)
         {
+            m_Mode = mode;
+
             if (m_Context != null)
             {
                 m_Context.Dispose();

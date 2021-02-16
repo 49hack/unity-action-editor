@@ -28,7 +28,7 @@ namespace ActionEditor
         float CurrentFrame { get; set; }
         float Length { get; }
         float TotalFrame { get; }
-        void Prepare(Sequence sequence = null);
+        void Prepare(Sequence sequence = null, TickMode mode = TickMode.Auto);
         void Play(float? time = null);
         void Stop();
         void Pause();

@@ -89,7 +89,7 @@ namespace ActionEditor
             }
 
             m_Director = director;
-            m_Director?.Prepare();
+            m_Director.Prepare(mode: TickMode.Manual);
 
             Repaint();
         }
@@ -109,7 +109,7 @@ namespace ActionEditor
 
             if (m_SequenceEditor == null)
             {
-                m_Director.Prepare();
+                m_Director.Prepare(mode: TickMode.Manual);
                 m_SequenceEditor = new SequenceEditor();
                 m_SequenceEditor.Initialize(this, m_Director.Sequence);
             }
@@ -165,7 +165,7 @@ namespace ActionEditor
                 }
                 if (GUILayout.Button(">", EditorStyles.toolbarButton))
                 {
-                    m_Director.CurrentFrame = Mathf.Max(m_Director.CurrentFrame + 1, m_Director.TotalFrame);
+                    m_Director.CurrentFrame = Mathf.Min(m_Director.CurrentFrame + 1, m_Director.TotalFrame);
                 }
                 if (GUILayout.Button(">>", EditorStyles.toolbarButton))
                 {
@@ -211,8 +211,8 @@ namespace ActionEditor
 
             var isPlaying = m_Director.Status == Status.Playing;
             var current = m_Director.CurrentTime;
-            m_Director.Prepare();
-            if(isPlaying)
+            m_Director.Prepare(mode: TickMode.Manual);
+            if (isPlaying)
             {
                 m_Director.Play(current);
             }
