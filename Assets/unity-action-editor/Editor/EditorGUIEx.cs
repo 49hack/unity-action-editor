@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
+using System.Reflection;
 
 namespace ActionEditor
 {
@@ -54,10 +55,26 @@ namespace ActionEditor
                     QuaternionOneline(position, property, label);
                     break;
 
+                case SerializedPropertyType.ObjectReference:
+                    var type = PathToType(property.serializedObject.targetObject.GetType(), property.propertyPath);
+                    var prev = property.objectReferenceValue;
+                    var current = EditorGUI.ObjectField(position, label, property.objectReferenceValue, type, true);
+                    if (current != prev)
+                    {
+                        Debug.LogError(current);
+                    }
+                    break;
+
                 default:
                     EditorGUI.PropertyField(position, property, label);
                     break;
             }
+        }
+
+        static System.Type PathToType(System.Type type, string path)
+        {
+            var fieldInfo = type.BaseType.GetField(path, BindingFlags.Public | BindingFlags.Instance | BindingFlags.NonPublic);
+            return fieldInfo.FieldType;
         }
 
         public static void Vector2Oneline(Rect position, SerializedProperty property, GUIContent label)

@@ -47,6 +47,7 @@ namespace ActionEditor
                 using (new EditorGUI.IndentLevelScope(1))
                 {
                     var blackboardObject = new SerializedObject(sequence.Blackborad);
+                    blackboardObject.Update();
                     var objectsProp = blackboardObject.FindProperty(Blackborad.PropNameSharedObjects);
 
                     using (new EditorGUILayout.HorizontalScope())
@@ -84,6 +85,7 @@ namespace ActionEditor
                                 continue;
 
                             var itemSo = new SerializedObject(item.objectReferenceValue);
+                            itemSo.Update();
 
                             using (var check = new EditorGUI.ChangeCheckScope())
                             {
@@ -115,11 +117,13 @@ namespace ActionEditor
                                     deleteIndex = i;
                                 }
 
-                                if (check.changed)
+                                //if (check.changed)
                                 {
-                                    itemSo.ApplyModifiedProperties();
+                                    
                                 }
                             }
+
+                            itemSo.ApplyModifiedProperties();
                         }
 
                         if (deleteIndex >= 0)
@@ -135,6 +139,8 @@ namespace ActionEditor
                             AssetDatabase.SaveAssets();
                         }
                     }
+
+                    blackboardObject.ApplyModifiedProperties();
                 }
             }
         }

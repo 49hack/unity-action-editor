@@ -16,155 +16,195 @@ namespace ActionEditor
 
         [SerializeField] Navigator m_Navigator = new Navigator();
         [SerializeField] Indicator m_Indicator = new Indicator();
-        [SerializeField] BlackboardEditor m_BlacboardEditor = new BlackboardEditor();
-        [SerializeField] float m_CurrentFrame = 20f;
-        [SerializeField] Sequence m_Sequence;
+        //[SerializeField] BlackboardEditor m_BlacboardEditor = new BlackboardEditor();
         [SerializeField] SequenceEditor m_SequenceEditor;
         [SerializeField] double m_LatestTickTime = 0f;
-        Runtime.SequenceContext m_Context;
+        IDirector m_Director;
 
         private void OnEnable()
         {
             EditorApplication.update += OnUpdate;
             m_SequenceEditor?.Enable();
-            m_BlacboardEditor?.Enable();
+            //m_BlacboardEditor?.Enable();
+            ChangeDirector(null);
+            OnSelect(Selection.activeObject);
         }
         private void OnDisable()
         {
             EditorApplication.update -= OnUpdate;
             m_SequenceEditor?.Disable();
-            m_BlacboardEditor?.Disable();
+            //m_BlacboardEditor?.Disable();
+            ChangeDirector(null);
         }
 
         private void OnDestroy()
         {
+            ChangeDirector(null);
             m_SequenceEditor?.Dispose();
+        }
+
+        void OnSelectionChange()
+        {
+            var selected = Selection.activeObject;
+            OnSelect(selected);
+        }
+
+        void OnSelect(Object selected)
+        {
+            if (selected is GameObject go)
+            {
+                if (string.IsNullOrEmpty(go.scene.name))
+                {
+                    ChangeDirector(null);
+                    Debug.Log("object is in project view");
+                    return;
+                }
+
+                var director = go.GetComponent<IDirector>();
+                ChangeDirector(director);
+                Debug.Log("object is gameObject director: " + (m_Director == null ? "null" : "not null"));
+                return;
+            }
+
+            if (selected is Sequence sequence)
+            {
+                Debug.Log("object is sequence");
+                ChangeDirector(null);
+                return;
+            }
+        }
+        void ChangeDirector(IDirector director)
+        {
+            if(m_Director != null)
+            {
+                m_Director.Dispose();
+                m_Director = null;
+            }
+
+            if (m_SequenceEditor != null)
+            {
+                m_SequenceEditor.Dispose();
+                m_SequenceEditor = null;
+            }
+
+            m_Director = director;
+            m_Director?.Prepare();
+
+            Repaint();
         }
 
         private void OnGUI()
         {
-            using (var check = new EditorGUI.ChangeCheckScope())
-            {
-                m_Sequence = (Sequence)EditorGUILayout.ObjectField("Sequence Asset", m_Sequence, typeof(Sequence), false);
-                if(check.changed)
-                {
-                    if(m_Sequence == null)
-                    {
-                        m_SequenceEditor = null;
-                        return;
-                    }
-                    m_SequenceEditor = new SequenceEditor();
-                    m_SequenceEditor.Initialize(this, m_Sequence);
-                }
-            }
-
-            if (m_Sequence == null || m_SequenceEditor == null)
+            if (m_Director == null)
                 return;
 
-            if(m_Context == null)
-                m_Context = m_Sequence.CreateContext();
+            if (m_Director.Sequence == null)
+                return;
+
+            if (m_SequenceEditor == null)
+            {
+                m_Director.Prepare();
+                m_SequenceEditor = new SequenceEditor();
+                m_SequenceEditor.Initialize(this, m_Director.Sequence);
+            }
 
             // Sequence Setting
             m_SequenceEditor.DrawSetting();
 
-            m_BlacboardEditor.TryCreate(m_Sequence);
-            m_BlacboardEditor.Draw(this, m_Sequence);
+            //m_BlacboardEditor.TryCreate(m_Sequence);
+            //m_BlacboardEditor.Draw(this, m_Sequence);
 
             DrawPlayer();
 
-            m_CurrentFrame = m_Indicator.OnGUI(m_Sequence.TotalFrame, m_Sequence.TotalFrame, m_CurrentFrame, m_Sequence.FrameRate, m_Navigator.MinFrame, m_Navigator.MaxFrame, Focus);
-            m_Navigator.OnGUI(m_Sequence.TotalFrame, m_Sequence.TotalFrame, m_CurrentFrame);
+            m_Director.CurrentFrame = m_Indicator.OnGUI(m_Director.TotalFrame, m_Director.TotalFrame, m_Director.CurrentFrame, m_Director.Sequence.FrameRate, m_Navigator.MinFrame, m_Navigator.MaxFrame, Focus);
+            m_Navigator.OnGUI(m_Director.TotalFrame, m_Director.TotalFrame, m_Director.CurrentFrame);
 
-            m_SequenceEditor.Draw(m_Navigator, m_Sequence.TotalFrame, m_CurrentFrame);
+            m_SequenceEditor.Draw(m_Navigator, m_Director.TotalFrame, m_Director.CurrentFrame, m_Director.BindingProvider);
         }
 
         void Focus(float totalFrame, float focusFrame)
         {
             m_Navigator?.Focus(totalFrame, focusFrame);
-            if(m_Context != null)
-                m_Context.Current = focusFrame / m_Sequence.FrameRate;
+
+            if(m_Director != null)
+                m_Director.CurrentFrame = focusFrame;
         }
         void DrawPlayer()
         {
-            bool isPlaying = m_Context != null && m_Context.IsPlaying;
+            if (m_Director == null)
+                return;
+
+            bool isPlaying = m_Director.Status == Status.Playing;
 
             using (new EditorGUILayout.HorizontalScope(GUI.skin.box))
             {
                 if(GUILayout.Button("<<", EditorStyles.toolbarButton))
                 {
-                    m_CurrentFrame = 0;
-                    if(m_Context != null)
-                        m_Context.Current = m_CurrentFrame / m_Sequence.FrameRate;
+                    m_Director.CurrentFrame = 0;
                 }
                 if (GUILayout.Button("<", EditorStyles.toolbarButton))
                 {
-                    m_CurrentFrame = Mathf.Max(m_CurrentFrame - 1, 0);
-                    if (m_Context != null)
-                        m_Context.Current = m_CurrentFrame / m_Sequence.FrameRate;
+                    m_Director.CurrentFrame = Mathf.Max(m_Director.CurrentFrame - 1, 0);
                 }
 
                 if(isPlaying)
                 {
                     if (GUILayout.Button("Stop", EditorStyles.toolbarButton))
                     {
-                        m_Context.Stop();
+                        m_Director.Stop();
                     }
                 } else
                 {
                     if (GUILayout.Button("Play", EditorStyles.toolbarButton))
                     {
-                        m_Context.Play(m_Context.Current);
+                        m_Director.Play();
                         m_LatestTickTime = EditorApplication.timeSinceStartup;
                     }
                 }
                 if (GUILayout.Button(">", EditorStyles.toolbarButton))
                 {
-                    m_CurrentFrame = Mathf.Min(m_CurrentFrame + 1, m_Sequence.TotalFrame);
-                    if (m_Context != null)
-                        m_Context.Current = m_CurrentFrame / m_Sequence.FrameRate;
+                    m_Director.CurrentFrame = Mathf.Max(m_Director.CurrentFrame + 1, m_Director.TotalFrame);
                 }
                 if (GUILayout.Button(">>", EditorStyles.toolbarButton))
                 {
-                    m_CurrentFrame = m_Sequence.TotalFrame;
-                    if (m_Context != null)
-                        m_Context.Current = m_CurrentFrame / m_Sequence.FrameRate;
+                    m_Director.CurrentFrame = m_Director.TotalFrame;
                 }
             }
         }
 
         void OnUpdate()
         {
-            if (m_Context == null)
+            if (m_Director == null)
                 return;
-            if (!m_Context.IsPlaying)
+            if (m_Director.Status != Status.Playing)
                 return;
 
             var delta = EditorApplication.timeSinceStartup - m_LatestTickTime;
-            m_Context?.Tick((float)delta);
-            m_CurrentFrame = m_Context.Current * m_Sequence.FrameRate;
+            m_Director.Tick((float)delta);
             m_LatestTickTime = EditorApplication.timeSinceStartup;
             Repaint();
         }
 
         public void ChangeData()
         {
-            if (m_Context == null)
+            if (m_Director == null)
                 return;
 
-            var isPlaying = m_Context.IsPlaying;
-            var current = m_Context.Current;
-            m_Context = m_Sequence.CreateContext();
+            Debug.LogError("ChangeData");
+            var isPlaying = m_Director.Status == Status.Playing;
+            var current = m_Director.CurrentTime;
+            m_Director.Prepare();
             if(isPlaying)
             {
-                m_Context.Play(current);
+                m_Director.Play(current);
             }
         }
 
         public void ChangeBlackboard(Blackborad blackboard)
         {
-            AssetDatabase.AddObjectToAsset(blackboard, m_Sequence);
-            EditorUtility.SetDirty(m_Sequence);
-            AssetDatabase.SaveAssets();
+            //AssetDatabase.AddObjectToAsset(blackboard, m_Sequence);
+            //EditorUtility.SetDirty(m_Sequence);
+            //AssetDatabase.SaveAssets();
         }
     }
 }

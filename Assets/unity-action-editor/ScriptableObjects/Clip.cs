@@ -16,9 +16,9 @@ namespace ActionEditor
         public float BeginFrame { get { return m_BeginFrame; } }
         public float EndFrame { get { return m_EndFrame; } }
 
-        public Runtime.ClipContext CreateContext(float frameRate)
+        public Runtime.ClipContext CreateContext(float frameRate, Sequence sequence, IBindingProvider bindingProvider)
         {
-            return new Runtime.ClipContext(this, frameRate);
+            return new Runtime.ClipContext(this, frameRate, sequence, bindingProvider);
         }
 
         public void PostCreate(float beginFrame)
@@ -27,6 +27,7 @@ namespace ActionEditor
             m_EndFrame = m_BeginFrame + 10f;
         }
 
+        public virtual void OnCreate(Sequence sequence, IBindingProvider bindingProvider) { }
         public virtual void OnSetTime(float time) { }
         public virtual void OnBegin() { }
         public virtual void OnEnd() { }

@@ -22,6 +22,7 @@ namespace ActionEditor
         List<Vector3> m_IndicatePointList = new List<Vector3>();
         Vector3[] m_IndicatePoints;
         List<ClipEditor> m_ClipEditors;
+        IBindingProvider m_BindingProvider;
 
         public event System.Action OnChangeData;
         public event System.Action<TrackEditor> OnRemoveTrack;
@@ -114,13 +115,15 @@ namespace ActionEditor
             OnRemoveTrack?.Invoke(this);
         }
 
-        public void Draw(Navigator navigator, float totalFrame, float currentFrame)
+        public void Draw(Navigator navigator, float totalFrame, float currentFrame, IBindingProvider bindingProvider)
         {
             if (Asset == null)
                 return;
 
             if (SerializedObject == null)
                 return;
+
+            m_BindingProvider = bindingProvider;
 
             var rect = GUILayoutUtility.GetRect(1f, 64f, GUILayout.ExpandWidth(true));
 
@@ -230,7 +233,7 @@ namespace ActionEditor
             }
             for (int i = 0; i < m_ClipEditors.Count; i++)
             {
-                m_ClipEditors[i].Draw(rect, clipInfos[i], navigator, totalFrame, currentFrame);
+                m_ClipEditors[i].Draw(rect, clipInfos[i], navigator, totalFrame, currentFrame, m_BindingProvider);
             }
 
             switch (e.type)
@@ -429,6 +432,18 @@ namespace ActionEditor
             Object.DestroyImmediate(editor.Asset, true);
             EditorUtility.SetDirty(Asset);
             AssetDatabase.SaveAssets();
+        }
+
+        protected void DrawBinding(Rect position, SerializedProperty property, GUIContent label)
+        {
+            using (var check = new EditorGUI.ChangeCheckScope())
+            {
+                Utility.DrawBinding(m_BindingProvider, Asset.GetType(), position, property, label);
+                if(check.changed)
+                {
+                    ChangeData();
+                }
+            }
         }
     }
 }

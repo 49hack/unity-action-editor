@@ -32,6 +32,25 @@ namespace ActionEditor
             return m_WorkList.ToArray();
         }
 
+        public void SetValue<T>(string name, T value)
+        {
+            for (int i = 0; i < m_SharedObjects.Length; i++)
+            {
+                var obj = m_SharedObjects[i];
+                if (obj == null)
+                    continue;
+
+                var sharedValue = obj.SharedValue;
+                if (sharedValue.Name != name)
+                    continue;
+                if (sharedValue.Type != typeof(T) && !sharedValue.Type.IsInstanceOfType(typeof(T)))
+                    continue;
+
+                sharedValue.Value = value;
+                return;
+            }
+        }
+
         public bool TryGetValue<T>(string name, out T value)
         {
             value = default(T);

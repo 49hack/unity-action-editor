@@ -21,6 +21,7 @@ namespace ActionEditor
 
         SerializedObject m_SerializedObject;
         DragType m_DragType;
+        IBindingProvider m_BindingProvider;
 
         public event System.Action<ClipEditor> OnRemoveClip;
 
@@ -105,12 +106,14 @@ namespace ActionEditor
             OnRemoveClip?.Invoke(this);
         }
 
-        public void Draw(Rect viewRect, ClipViewInfo info, Navigator navigator, float totalFrame, float currentFrame)
+        public void Draw(Rect viewRect, ClipViewInfo info, Navigator navigator, float totalFrame, float currentFrame, IBindingProvider bindingProvider)
         {
             if (Asset == null)
                 return;
             if (SerializedObject == null)
                 return;
+
+            m_BindingProvider = bindingProvider;
 
             var beginFrame = BeginFrame;
             var endFrame = EndFrame;

@@ -51,14 +51,16 @@ namespace ActionEditor.Runtime
         ClipIndices m_LatestIndecies = new ClipIndices(-1, -1);
         float m_CurrentTime;
 
-        public TrackContext(Track track, Clip[] clips, float frameRate)
+        public TrackContext(Track track, Clip[] clips, float frameRate, Sequence sequence, IBindingProvider bindingProvider)
         {
             m_CurrentTime = -1f;
             m_Track = track;
+            m_Track.OnCreate(sequence, bindingProvider);
+
             m_ClipContexts = new ClipContext[clips.Length];
             for(int i = 0; i < m_ClipContexts.Length; i++)
             {
-                m_ClipContexts[i] = clips[i].CreateContext(frameRate);
+                m_ClipContexts[i] = clips[i].CreateContext(frameRate, sequence, bindingProvider);
             }
         }
 
@@ -82,7 +84,7 @@ namespace ActionEditor.Runtime
         {
             for (int i = 0; i < m_ClipContexts.Length; i++)
             {
-                m_ClipContexts[i].OnSetTime(time);
+                m_ClipContexts[i].SetTime(time);
             }
 
             m_Track.SetTime(time);
@@ -92,15 +94,17 @@ namespace ActionEditor.Runtime
             m_CurrentTime = time;
         }
 
+
         public void Progress(float time)
         {
             for (int i = 0; i < m_ClipContexts.Length; i++)
             {
-                m_ClipContexts[i].OnProgress(time);
+                m_ClipContexts[i].Progress(time);
             }
 
             var fromTime = m_CurrentTime;
             m_CurrentTime = time;
+            m_Track.SetTime(time);
             m_Track.OnProgress(fromTime, time);
 
             UpdateClip(time);

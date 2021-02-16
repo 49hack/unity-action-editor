@@ -25,13 +25,20 @@ namespace ActionEditor
         public float FrameRate { get { return m_FrameRate; } }
         public Blackborad Blackborad { get { return m_Blackboard; }}
 
-        public Runtime.SequenceContext CreateContext()
+        public Runtime.SequenceContext CreateContext(IBindingProvider bindingProvider)
         {
-            return new Runtime.SequenceContext(this, m_Tracks);
+            this.OnCreate(bindingProvider);
+
+            return new Runtime.SequenceContext(this, m_Tracks, bindingProvider);
         }
 
-        public void OnDispose()
-        {
-        }
+        public virtual void OnCreate(IBindingProvider bindingProvider) { }
+        public virtual void OnSetTime(float time) { }
+        public virtual void OnPlay() { }
+        public virtual void OnStop() { }
+        public virtual void OnPause() { }
+        public virtual void OnResume() { }
+        public virtual void OnProgress(float fromTime, float toTime) { }
+        public virtual void OnDispose() { }
     }
 }

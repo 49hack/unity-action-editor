@@ -14,9 +14,10 @@ namespace ActionEditor.Runtime
         float m_CurrentTime;
         float m_FrameRate;
 
-        public ClipContext(Clip clip, float frameRate)
+        public ClipContext(Clip clip, float frameRate, Sequence sequence, IBindingProvider bindingProvider)
         {
             m_Clip = clip;
+            m_Clip.OnCreate(sequence, bindingProvider);
             m_FrameRate = frameRate;
         }
 
@@ -25,43 +26,37 @@ namespace ActionEditor.Runtime
             return time >= BeginTime && time <= EndTime;
         }
 
-        public void OnSetTime(float time)
+        public void SetTime(float time)
         {
             if (IsPlayingAt(time) && !IsPlaying)
             {
-                OnBegin();
+                Begin();
             }
             if (!IsPlayingAt(time) && IsPlaying)
             {
-                OnEnd();
+                End();
             }
 
             m_CurrentTime = time;
-            m_Clip.OnSetTime(time);
+
+            if(IsPlayingAt(time))
+                m_Clip.OnSetTime(time);
         }
 
-        public void OnBegin()
+        public void Begin()
         {
             m_Clip.OnBegin();
         }
 
-        public void OnEnd()
+        public void End()
         {
             m_Clip.OnEnd();
         }
-        public void OnProgress(float toTime)
+        public void Progress(float toTime)
         {
-            if(IsPlayingAt(toTime) && !IsPlaying)
-            {
-                OnBegin();
-            }
-            if(!IsPlayingAt(toTime) && IsPlaying)
-            {
-                OnEnd();
-            }
-
             var fromTime = m_CurrentTime;
-            m_CurrentTime = toTime;
+
+            SetTime(toTime);
 
             if (!IsPlaying)
                 return;

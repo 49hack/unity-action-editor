@@ -13,11 +13,12 @@ namespace ActionEditor
         public static string PropNameTrackName { get { return nameof(m_TrackName); } }
         public static string PropNameClips { get { return nameof(m_Clips); } }
 
-        public Runtime.TrackContext CreateContext(float frameRate)
+        public Runtime.TrackContext CreateContext(float frameRate, Sequence sequence, IBindingProvider bindingProvider)
         {
-            return new Runtime.TrackContext(this, m_Clips, frameRate);
+            return new Runtime.TrackContext(this, m_Clips, frameRate, sequence, bindingProvider);
         }
 
+        public virtual void OnCreate(Sequence sequence, IBindingProvider bindingProvider) { }
         public virtual void SetTime(float time) { }
         public virtual void OnPlay() { }
         public virtual void OnStop() { }

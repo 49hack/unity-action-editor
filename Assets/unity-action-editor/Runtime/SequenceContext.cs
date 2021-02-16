@@ -6,17 +6,12 @@ namespace ActionEditor.Runtime
 {
     public class SequenceContext
     {
-        enum Status
-        {
-            Stoppped,
-            Playing,
-            Paused,
-        }
         Sequence m_Sequence;
         TrackContext[] m_TrackContexts;
         Status m_State;
         float m_ElapsedTime;
 
+        public Status Status { get { return m_State; } }
         public float Current
         {
             get
@@ -30,6 +25,18 @@ namespace ActionEditor.Runtime
             }
         }
 
+        public float CurrentFrame
+        {
+            get
+            {
+                return m_ElapsedTime * m_Sequence.FrameRate;
+            }
+            set
+            {
+                Current = value / m_Sequence.FrameRate;
+            }
+        }
+
         public float Length
         {
             get
@@ -40,7 +47,7 @@ namespace ActionEditor.Runtime
 
         public bool IsPlaying { get { return m_State == Status.Playing; } }
 
-        public SequenceContext(Sequence sequence, Track[] tracks)
+        public SequenceContext(Sequence sequence, Track[] tracks, IBindingProvider bindingProvider)
         {
             SetState(Status.Stoppped);
 
@@ -48,7 +55,7 @@ namespace ActionEditor.Runtime
             m_TrackContexts = new TrackContext[tracks.Length];
             for(int i = 0; i < m_TrackContexts.Length; i++)
             {
-                m_TrackContexts[i] = tracks[i].CreateContext(sequence.FrameRate);
+                m_TrackContexts[i] = tracks[i].CreateContext(sequence.FrameRate, sequence, bindingProvider);
             }
         }
 
@@ -59,8 +66,13 @@ namespace ActionEditor.Runtime
 
         public void Play(float time)
         {
+            if (m_Sequence == null)
+                return;
+
             Current = time;
             SetState(Status.Playing);
+
+            m_Sequence.OnPlay();
 
             for (int i = 0; i < m_TrackContexts.Length; i++)
             {
@@ -70,7 +82,12 @@ namespace ActionEditor.Runtime
 
         public void Stop()
         {
+            if (m_Sequence == null)
+                return;
+
             SetState(Status.Stoppped);
+
+            m_Sequence.OnStop();
 
             for (int i = 0; i < m_TrackContexts.Length; i++)
             {
@@ -80,7 +97,12 @@ namespace ActionEditor.Runtime
 
         public void Pause()
         {
+            if (m_Sequence == null)
+                return;
+
             SetState(Status.Paused);
+
+            m_Sequence.OnPause();
 
             for (int i = 0; i < m_TrackContexts.Length; i++)
             {
@@ -90,7 +112,12 @@ namespace ActionEditor.Runtime
 
         public void Resume()
         {
+            if (m_Sequence == null)
+                return;
+
             SetState(Status.Playing);
+
+            m_Sequence.OnResume();
 
             for (int i = 0; i < m_TrackContexts.Length; i++)
             {
@@ -100,6 +127,11 @@ namespace ActionEditor.Runtime
 
         void SetTime(float time)
         {
+            if (m_Sequence == null)
+                return;
+
+            m_Sequence.OnSetTime(time);
+
             for (int i = 0; i < m_TrackContexts.Length; i++)
             {
                 m_TrackContexts[i].SetTime(time);
@@ -108,14 +140,21 @@ namespace ActionEditor.Runtime
 
         public void Tick(float deltaTime)
         {
-            if(m_State != Status.Playing)
+            if (m_Sequence == null)
+                return;
+
+            if (m_State != Status.Playing)
             {
                 return;
             }
 
+            var prevTime = Current;
             Current += deltaTime;
 
-            for(int i = 0; i < m_TrackContexts.Length; i++)
+            m_Sequence.OnSetTime(Current);
+            m_Sequence.OnProgress(prevTime, Current);
+
+            for (int i = 0; i < m_TrackContexts.Length; i++)
             {
                 m_TrackContexts[i].Progress(Current);
             }
@@ -128,10 +167,14 @@ namespace ActionEditor.Runtime
 
         public void Dispose()
         {
-            m_Sequence.OnDispose();
-            for (int i = 0; i < m_TrackContexts.Length; i++)
+            m_Sequence?.OnDispose();
+
+            if (m_TrackContexts != null)
             {
-                m_TrackContexts[i].Dispose();
+                for (int i = 0; i < m_TrackContexts.Length; i++)
+                {
+                    m_TrackContexts[i].Dispose();
+                }
             }
         }
     }

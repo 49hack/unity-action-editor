@@ -14,9 +14,10 @@ namespace ActionEditor
 
         SerializedObject m_SerializedObject;
         List<TrackEditor> m_TrackEditors;
+        IBindingProvider m_BindingProvider;
 
         Sequence Asset { get { return m_Asset; } }
-
+        
         SerializedObject SerializedObject
         {
             get
@@ -77,6 +78,8 @@ namespace ActionEditor
 
         public void ChangeData()
         {
+            SerializedObject.Update();
+            SerializedObject.ApplyModifiedProperties();
             m_Owner.ChangeData();
         }
 
@@ -96,10 +99,12 @@ namespace ActionEditor
             SerializedObject.ApplyModifiedProperties();
         }
 
-        public void Draw(Navigator navigator, float totalFrame, float currentFrame)
+        public void Draw(Navigator navigator, float totalFrame, float currentFrame, IBindingProvider bindingProvider)
         {
             if (SerializedObject == null)
                 return;
+
+            m_BindingProvider = bindingProvider;
 
             using (var scroll = new EditorGUILayout.ScrollViewScope(m_Scroll))
             {
@@ -107,7 +112,7 @@ namespace ActionEditor
 
                 for (int i = 0; i < m_TrackEditors.Count; i++)
                 {
-                    m_TrackEditors[i].Draw(navigator, totalFrame, currentFrame);
+                    m_TrackEditors[i].Draw(navigator, totalFrame, currentFrame, m_BindingProvider);
                 }
 
                 if (GUILayout.Button("Add Track", GUILayout.Width(Utility.HeaderWidth)))

@@ -44,4 +44,14 @@ namespace ActionEditor
             Target = type;
         }
     }
+
+    public class BindingType : System.Attribute
+    {
+        public System.Type Type { get; private set; }
+
+        public BindingType(System.Type type)
+        {
+            Type = type;
+        }
+    }
 }

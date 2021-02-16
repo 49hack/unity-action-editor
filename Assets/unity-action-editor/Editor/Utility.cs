@@ -250,6 +250,56 @@ namespace ActionEditor
             return type.GetCustomAttribute<T>();
         }
 
+        public static string TransformToPath(Transform transform, string path, Transform endpoint)
+        {
+            if (transform == endpoint)
+                return path;
+
+            path = transform.name + (string.IsNullOrEmpty(path) ? "" : "/") + path;
+
+            if (transform.parent == null)
+                return path;
+
+            return TransformToPath(transform.parent, path, endpoint);
+        }
+
+        public static void DrawBinding(IBindingProvider provider, System.Type assetType, Rect position, SerializedProperty property, GUIContent label)
+        {
+            var labelWidth = 0f;
+            if (!string.IsNullOrEmpty(label.text))
+            {
+                var labelRect = new Rect(position.x, position.y, EditorGUIUtility.labelWidth, position.height);
+                EditorGUI.LabelField(labelRect, label.text);
+                labelWidth = labelRect.width;
+            }
+
+            var rect = new Rect(position.x + labelWidth, position.y, position.width - labelWidth, position.height);
+            var fieldInfo = assetType.GetField(property.name, BindingFlags.Public | BindingFlags.Instance | BindingFlags.NonPublic);
+            if(fieldInfo == null)
+            {
+                EditorGUI.LabelField(rect, "Field not found.");
+                return;
+            }
+
+            var targetType = typeof(Object);
+            var attr = fieldInfo.GetCustomAttribute<BindingType>();
+            if (attr != null)
+                targetType = attr.Type;
+
+            var keyProp = property.FindPropertyRelative(Binding.PropNameKey);
+            var indexProp = property.FindPropertyRelative(Binding.PropNameIndex);
+            var currentObject = provider.Find(keyProp.stringValue, targetType, indexProp.intValue);
+            var nextObject = EditorGUI.ObjectField(rect, currentObject, targetType, true);
+            if(currentObject != nextObject)
+            {
+                if(provider.ToSerializeData(nextObject, out var data))
+                {
+                    keyProp.stringValue = data.key;
+                    indexProp.intValue = data.index;
+                }
+            }
+        }
+
         public class ColorScope : System.IDisposable
         {
             Color m_Cache;
