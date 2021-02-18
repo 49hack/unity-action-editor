@@ -6,28 +6,10 @@ namespace ActionEditor
 {
     using Runtime;
 
-    public class EditorBindingHolder : IBindingProvider
-    {
-        public bool IsEnable { get { return false; } }
-
-        public UnityEngine.Object Find(string key, System.Type type, int index)
-        {
-            return null;
-        }
-
-        public bool ToSerializeData(UnityEngine.Object obj, out (string key, int index) result)
-        {
-            result = ("", 0);
-            return false;
-        }
-    }
-
-
     public class EditorDirector : IDirector
     {
         SequenceContext m_Context;
         Sequence m_Sequence;
-        EditorBindingHolder m_BindingHolder = new EditorBindingHolder();
 
         public static EditorDirector Create(Sequence sequence)
         {
@@ -36,9 +18,9 @@ namespace ActionEditor
             return director;
         }
 
-        public Status Status { get { return m_Context == null ? Status.Stoppped : m_Context.Status; } }
+        public Status Status { get { return m_Context == null ? Status.Initial : m_Context.Status; } }
         public Sequence Sequence { get { return m_Sequence; } }
-        public IBindingProvider BindingProvider { get { return m_BindingHolder; } }
+        public IReadOnlyList<Blackboard> Blackboard { get { return null; } }
         public float CurrentTime { get { return m_Context == null ? 0f : m_Context.Current; } set { if (m_Context == null) return; m_Context.Current = value; } }
         public float CurrentFrame { get { return m_Context == null ? 0f : m_Context.CurrentFrame; } set { if (m_Context == null) return; m_Context.CurrentFrame = value; } }
         public float Length { get { return m_Context == null ? 0f : m_Context.Length; } }
@@ -60,7 +42,7 @@ namespace ActionEditor
             if (m_Sequence == null)
                 return;
 
-            m_Context = m_Sequence.CreateContext(m_BindingHolder);
+            m_Context = m_Sequence.CreateContext(Blackboard);
         }
 
         public void Play(float? time = null)

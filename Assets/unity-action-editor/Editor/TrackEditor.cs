@@ -22,7 +22,7 @@ namespace ActionEditor
         List<Vector3> m_IndicatePointList = new List<Vector3>();
         Vector3[] m_IndicatePoints;
         List<ClipEditor> m_ClipEditors;
-        IBindingProvider m_BindingProvider;
+        IReadOnlyList<Blackboard> m_BlackboardList;
 
         public event System.Action OnChangeData;
         public event System.Action<TrackEditor> OnRemoveTrack;
@@ -80,6 +80,7 @@ namespace ActionEditor
                 var clip = (Clip)item.objectReferenceValue;
                 var editor = CreateClipEditor(clip);
                 editor.OnRemoveClip += RemoveClip;
+                editor.OnChangeData += ChangeData;
                 m_ClipEditors.Add(editor);
             }
         }
@@ -116,7 +117,7 @@ namespace ActionEditor
             OnRemoveTrack?.Invoke(this);
         }
 
-        public void Draw(Navigator navigator, float totalFrame, float currentFrame, IBindingProvider bindingProvider)
+        public void Draw(Navigator navigator, float totalFrame, float currentFrame, IReadOnlyList<Blackboard> blackboards)
         {
             if (Asset == null)
                 return;
@@ -124,7 +125,7 @@ namespace ActionEditor
             if (SerializedObject == null)
                 return;
 
-            m_BindingProvider = bindingProvider;
+            m_BlackboardList = blackboards;
 
             var rect = GUILayoutUtility.GetRect(1f, 64f, GUILayout.ExpandWidth(true));
 
@@ -234,7 +235,7 @@ namespace ActionEditor
             }
             for (int i = 0; i < m_ClipEditors.Count; i++)
             {
-                m_ClipEditors[i].Draw(rect, clipInfos[i], navigator, totalFrame, currentFrame, m_BindingProvider);
+                m_ClipEditors[i].Draw(rect, clipInfos[i], navigator, totalFrame, currentFrame, m_BlackboardList);
             }
 
             switch (e.type)
@@ -325,6 +326,7 @@ namespace ActionEditor
 
             var editor = CreateClipEditor(clip);
             editor.OnRemoveClip += RemoveClip;
+            editor.OnChangeData += ChangeData;
             if (index >= m_ClipEditors.Count)
             {
                 m_ClipEditors.Add(editor);
@@ -435,12 +437,12 @@ namespace ActionEditor
             AssetDatabase.SaveAssets();
         }
 
-        protected void DrawBinding(Rect position, SerializedProperty property, GUIContent label)
+        protected void DrawBinding(Rect position, SerializedProperty property, GUIContent label, System.Type type)
         {
             using (var check = new EditorGUI.ChangeCheckScope())
             {
-                Utility.DrawBinding(m_BindingProvider, Asset.GetType(), position, property, label);
-                if(check.changed)
+                BlackboardEditorGUI.DrawBind(m_BlackboardList, position, property, label, type);
+                if (check.changed)
                 {
                     ChangeData();
                 }

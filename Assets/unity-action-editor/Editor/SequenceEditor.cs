@@ -14,7 +14,7 @@ namespace ActionEditor
 
         SerializedObject m_SerializedObject;
         List<TrackEditor> m_TrackEditors;
-        IBindingProvider m_BindingProvider;
+        IReadOnlyList<Blackboard> m_BlackboardList;
 
         Sequence Asset { get { return m_Asset; } }
         
@@ -62,13 +62,16 @@ namespace ActionEditor
 
         public void Disable()
         {
-            for (int i = 0; i < m_TrackEditors.Count; i++)
+            if (m_TrackEditors != null)
             {
-                var editor = m_TrackEditors[i];
-                editor.Disable();
-            }
+                for (int i = 0; i < m_TrackEditors.Count; i++)
+                {
+                    var editor = m_TrackEditors[i];
+                    editor.Disable();
+                }
 
-            m_TrackEditors.Clear();
+                m_TrackEditors.Clear();
+            }
         }
 
         public void Dispose()
@@ -99,12 +102,12 @@ namespace ActionEditor
             SerializedObject.ApplyModifiedProperties();
         }
 
-        public void Draw(Navigator navigator, float totalFrame, float currentFrame, IBindingProvider bindingProvider)
+        public void Draw(Navigator navigator, float totalFrame, float currentFrame, IReadOnlyList<Blackboard> blackboards)
         {
             if (SerializedObject == null)
                 return;
 
-            m_BindingProvider = bindingProvider;
+            m_BlackboardList = blackboards;
 
             using (var scroll = new EditorGUILayout.ScrollViewScope(m_Scroll))
             {
@@ -112,7 +115,7 @@ namespace ActionEditor
 
                 for (int i = 0; i < m_TrackEditors.Count; i++)
                 {
-                    m_TrackEditors[i].Draw(navigator, totalFrame, currentFrame, m_BindingProvider);
+                    m_TrackEditors[i].Draw(navigator, totalFrame, currentFrame, m_BlackboardList);
                 }
 
                 if (GUILayout.Button("Add Track", GUILayout.Width(Utility.HeaderWidth)))

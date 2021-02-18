@@ -20,7 +20,7 @@ namespace ActionEditor.Sample
 
             var animRect = new Rect(rect.x + 2f, rect.y + nameRect.height + 5f, rect.width - 4f, EditorGUIUtility.singleLineHeight);
             var animProp = serializedObject.FindProperty(AnimateTrack.PropNameAnimator);
-            DrawBinding(animRect, animProp, GUIContent.none);
+            DrawBinding(animRect, animProp, new GUIContent("Animator"), typeof(Animator));
         }
     }
 }

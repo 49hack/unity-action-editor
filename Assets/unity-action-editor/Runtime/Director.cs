@@ -9,15 +9,17 @@ namespace ActionEditor.Runtime
     [ExecuteInEditMode]
     public class Director : MonoBehaviour, IDirector
     {
+        public static string PropNameBlackboardList { get { return nameof(m_BlackboardList); } }
+
         [SerializeField] Sequence m_Sequence;
         [SerializeField] TickMode m_Mode;
-        [SerializeField] BindingHolder m_BindingHolder;
+        [SerializeField,HideInInspector] List<Blackboard> m_BlackboardList = new List<Blackboard>();
 
         SequenceContext m_Context;
 
-        public Status Status { get { return m_Context == null ? Status.Stoppped : m_Context.Status; } }
+        public Status Status { get { return m_Context == null ? Status.Initial : m_Context.Status; } }
         public Sequence Sequence { get { return m_Sequence; } }
-        public IBindingProvider BindingProvider { get { return m_BindingHolder; } }
+        public IReadOnlyList<Blackboard> Blackboard { get { return m_BlackboardList; } }
         public float CurrentTime { get { return m_Context == null ? 0f : m_Context.Current; } set { if (m_Context == null) return; m_Context.Current = value; } }
         public float CurrentFrame { get { return m_Context == null ? 0f : m_Context.CurrentFrame; } set { if (m_Context == null) return; m_Context.CurrentFrame = value; } }
         public float Length { get { return m_Context == null ? 0f : m_Context.Length; } }
@@ -26,6 +28,7 @@ namespace ActionEditor.Runtime
 
         public void Prepare(Sequence sequence = null, TickMode mode = TickMode.Auto)
         {
+            Debug.LogError("Prepare");
             m_Mode = mode;
 
             if (m_Context != null)
@@ -42,7 +45,7 @@ namespace ActionEditor.Runtime
             if (m_Sequence == null)
                 return;
 
-            m_Context = m_Sequence.CreateContext(m_BindingHolder);
+            m_Context = m_Sequence.CreateContext(Blackboard);
         }
 
         public void Play(float? time = null)
@@ -78,6 +81,7 @@ namespace ActionEditor.Runtime
 
         public void Dispose()
         {
+            Debug.LogError("Dispose");
             m_Context?.Dispose();
             m_Context = null;
         }

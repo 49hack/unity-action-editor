@@ -51,16 +51,16 @@ namespace ActionEditor.Runtime
         ClipIndices m_LatestIndecies = new ClipIndices(-1, -1);
         float m_CurrentTime;
 
-        public TrackContext(Track track, Clip[] clips, float frameRate, Sequence sequence, IBindingProvider bindingProvider)
+        public TrackContext(Track track, Clip[] clips, float frameRate, Sequence sequence, IReadOnlyList<Blackboard> blackboards)
         {
             m_CurrentTime = -1f;
             m_Track = track;
-            m_Track.OnCreate(sequence, bindingProvider);
+            m_Track.OnCreate(sequence, blackboards);
 
             m_ClipContexts = new ClipContext[clips.Length];
             for(int i = 0; i < m_ClipContexts.Length; i++)
             {
-                m_ClipContexts[i] = clips[i].CreateContext(frameRate, sequence, bindingProvider);
+                m_ClipContexts[i] = clips[i].CreateContext(frameRate, sequence, blackboards);
             }
         }
 

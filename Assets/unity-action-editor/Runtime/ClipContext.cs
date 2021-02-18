@@ -15,10 +15,10 @@ namespace ActionEditor.Runtime
         float m_FrameRate;
         bool m_IsBegined = false;
 
-        public ClipContext(Clip clip, float frameRate, Sequence sequence, IBindingProvider bindingProvider)
+        public ClipContext(Clip clip, float frameRate, Sequence sequence, IReadOnlyList<Blackboard> blackboards)
         {
             m_Clip = clip;
-            m_Clip.OnCreate(sequence, bindingProvider);
+            m_Clip.OnCreate(sequence, blackboards);
             m_FrameRate = frameRate;
         }
 

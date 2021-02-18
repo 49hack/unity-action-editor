@@ -14,6 +14,7 @@ namespace ActionEditor
 
     public enum Status
     {
+        Initial,
         Stoppped,
         Playing,
         Paused,
@@ -23,7 +24,7 @@ namespace ActionEditor
     {
         Status Status { get; }
         Sequence Sequence { get; }
-        IBindingProvider BindingProvider { get; }
+        IReadOnlyList<Blackboard> Blackboard { get; }
         float CurrentTime { get; set; }
         float CurrentFrame { get; set; }
         float Length { get; }

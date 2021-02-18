@@ -31,7 +31,7 @@ namespace ActionEditor
             return EditorGUI.GetPropertyHeight(property);
         }
 
-        public static void PropertyField(Rect position, SerializedProperty property, GUIContent label)
+        public static void PropertyField(Rect position, SerializedProperty property, GUIContent label, bool isIncludeChildren = false, System.Type type = null)
         {
             switch (property.propertyType)
             {
@@ -56,25 +56,15 @@ namespace ActionEditor
                     break;
 
                 case SerializedPropertyType.ObjectReference:
-                    var type = PathToType(property.serializedObject.targetObject.GetType(), property.propertyPath);
+                    var propType = type == null ? typeof(Object) : type;
                     var prev = property.objectReferenceValue;
-                    var current = EditorGUI.ObjectField(position, label, property.objectReferenceValue, type, true);
-                    if (current != prev)
-                    {
-                        Debug.LogError(current);
-                    }
+                    property.objectReferenceValue = EditorGUI.ObjectField(position, label, property.objectReferenceValue, propType, true);
                     break;
 
                 default:
-                    EditorGUI.PropertyField(position, property, label);
+                    EditorGUI.PropertyField(position, property, label, isIncludeChildren);
                     break;
             }
-        }
-
-        static System.Type PathToType(System.Type type, string path)
-        {
-            var fieldInfo = type.BaseType.GetField(path, BindingFlags.Public | BindingFlags.Instance | BindingFlags.NonPublic);
-            return fieldInfo.FieldType;
         }
 
         public static void Vector2Oneline(Rect position, SerializedProperty property, GUIContent label)

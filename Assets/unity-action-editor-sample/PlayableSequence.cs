@@ -12,7 +12,7 @@ namespace ActionEditor.Sample
 
         public PlayableGraph Graph { get { return m_Graph; } }
 
-        public override void OnCreate(IBindingProvider bindingProvider)
+        public override void OnCreate(IReadOnlyList<Blackboard> blackboards)
         {
             m_Graph = PlayableGraph.Create(name);
             m_Graph.SetTimeUpdateMode(DirectorUpdateMode.GameTime);
@@ -29,7 +29,8 @@ namespace ActionEditor.Sample
 
         public override void OnSetTime(float time)
         {
-            Graph.Evaluate();
+            if(Graph.IsValid())
+                Graph.Evaluate();
         }
 
         public override void OnPlay()

@@ -8,22 +8,22 @@ namespace ActionEditor.Sample
 {
     public class AnimateTrack : Track
     {
-        [SerializeField, BindingType(typeof(Animator))]
-        Binding m_AnimatorBinding;
+        [SerializeField] SharedAnimatorContext m_Animator = new SharedAnimatorContext();
 
-        public static string PropNameAnimator { get { return nameof(m_AnimatorBinding); } }
+        public static string PropNameAnimator { get { return nameof(m_Animator); } }
 
         PlayableGraph m_Graph;
         AnimationPlayableOutput m_PlayableOutput;
         AnimationMixerPlayable m_Mixer;
-        Animator m_Animator;
 
-        public override void OnCreate(Sequence sequence, IBindingProvider bindingProvider)
+        public override void OnCreate(Sequence sequence, IReadOnlyList<Blackboard> blackboards)
         {
-            m_Animator = bindingProvider.Find(m_AnimatorBinding.Key, typeof(Animator), m_AnimatorBinding.Index) as Animator;
+            Blackboard.Bind(blackboards, m_Animator);
+            Debug.Assert(m_Animator.Value != null, "Animator is null.");
+
             m_Graph = ((PlayableSequence)sequence).Graph;
             m_Graph.SetTimeUpdateMode(DirectorUpdateMode.GameTime);
-            m_PlayableOutput = AnimationPlayableOutput.Create(m_Graph, "Animation", m_Animator);
+            m_PlayableOutput = AnimationPlayableOutput.Create(m_Graph, "Animation", m_Animator.Value);
             m_Mixer = AnimationMixerPlayable.Create(m_Graph, 2, false);
 
             m_PlayableOutput.SetSourcePlayable(m_Mixer);

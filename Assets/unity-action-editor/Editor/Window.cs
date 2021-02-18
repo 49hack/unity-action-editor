@@ -10,6 +10,7 @@ namespace ActionEditor
         enum State
         {
             Disable,
+            NeedPrepare,
             Playable,
             NoSequence,
             EditOnly,
@@ -23,6 +24,7 @@ namespace ActionEditor
 
         [SerializeField] Navigator m_Navigator = new Navigator();
         [SerializeField] Indicator m_Indicator = new Indicator();
+        [SerializeField] BlackboardEditor m_BlackboardEditor = new BlackboardEditor();
         [SerializeField] SequenceEditor m_SequenceEditor;
         [SerializeField] double m_LatestTickTime = 0f;
         IDirector m_Director;
@@ -74,6 +76,7 @@ namespace ActionEditor
                 return;
             }
         }
+
         void ChangeDirector(IDirector director)
         {
             if(m_Director != null)
@@ -89,7 +92,6 @@ namespace ActionEditor
             }
 
             m_Director = director;
-            m_Director.Prepare(mode: TickMode.Manual);
 
             Repaint();
         }
@@ -107,21 +109,35 @@ namespace ActionEditor
                 return;
             }
 
+            if(state == State.NeedPrepare)
+            {
+                m_Director?.Prepare(mode: TickMode.Manual);
+            }
+
+            //var rect = GUILayoutUtility.GetRect(1f, EditorGUIUtility.singleLineHeight, GUILayout.ExpandWidth(true));
+            //var testAsset = AssetDatabase.LoadAssetAtPath("Assets/unity-action-editor/TestValueScript.asset", typeof(TestScript));
+            //var so = new SerializedObject(testAsset);
+            //so.Update();
+            //var testProp = so.FindProperty("m_Int");
+            //BlackboardEditorGUI.DrawBind(m_Director.Blackboard, rect, testProp, GUIContent.none);
+            //so.ApplyModifiedProperties();
+
             if (m_SequenceEditor == null)
             {
-                m_Director.Prepare(mode: TickMode.Manual);
                 m_SequenceEditor = new SequenceEditor();
                 m_SequenceEditor.Initialize(this, m_Director.Sequence);
             }
 
             m_SequenceEditor.DrawSetting();
 
+            m_BlackboardEditor.Draw(m_Director.Blackboard);
+
             DrawPlayer();
 
             m_Director.CurrentFrame = m_Indicator.OnGUI(m_Director.TotalFrame, m_Director.TotalFrame, m_Director.CurrentFrame, m_Director.Sequence.FrameRate, m_Navigator.MinFrame, m_Navigator.MaxFrame, Focus);
             m_Navigator.OnGUI(m_Director.TotalFrame, m_Director.TotalFrame, m_Director.CurrentFrame);
 
-            m_SequenceEditor.Draw(m_Navigator, m_Director.TotalFrame, m_Director.CurrentFrame, m_Director.BindingProvider);
+            m_SequenceEditor.Draw(m_Navigator, m_Director.TotalFrame, m_Director.CurrentFrame, m_Director.Blackboard);
         }
 
         void Focus(float totalFrame, float focusFrame)
@@ -184,6 +200,9 @@ namespace ActionEditor
 
             if (m_Director.Sequence == null)
                 return State.NoSequence;
+
+            if (m_Director.Status == Status.Initial)
+                return State.NeedPrepare;
 
             if(m_Director is EditorDirector)
                 return State.EditOnly;

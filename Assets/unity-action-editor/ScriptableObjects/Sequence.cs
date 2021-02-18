@@ -22,14 +22,14 @@ namespace ActionEditor
         public float TotalFrame { get { return m_TotalFrame; } }
         public float FrameRate { get { return m_FrameRate; } }
 
-        public Runtime.SequenceContext CreateContext(IBindingProvider bindingProvider)
+        public Runtime.SequenceContext CreateContext(IReadOnlyList<Blackboard> blackboards)
         {
-            this.OnCreate(bindingProvider);
+            this.OnCreate(blackboards);
 
-            return new Runtime.SequenceContext(this, m_Tracks, bindingProvider);
+            return new Runtime.SequenceContext(this, m_Tracks, blackboards);
         }
 
-        public virtual void OnCreate(IBindingProvider bindingProvider) { }
+        public virtual void OnCreate(IReadOnlyList<Blackboard> blackboards) { }
         public virtual void OnSetTime(float time) { }
         public virtual void OnPlay() { }
         public virtual void OnStop() { }

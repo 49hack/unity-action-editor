@@ -18,7 +18,7 @@ namespace ActionEditor.Sample
 
         public AnimationClipPlayable Playable { get { return m_Playable; } }
 
-        public override void OnCreate(Sequence sequence, IBindingProvider bindingProvider)
+        public override void OnCreate(Sequence sequence, IReadOnlyList<Blackboard> blackboards)
         {
             m_Graph = ((PlayableSequence)sequence).Graph;
         }
@@ -37,7 +37,8 @@ namespace ActionEditor.Sample
 
         public override void OnSetTime(float time)
         {
-            m_Playable.SetTime(time);
+            if(m_Playable.IsValid())
+                m_Playable.SetTime(time);
         }
 
 #if UNITY_EDITOR

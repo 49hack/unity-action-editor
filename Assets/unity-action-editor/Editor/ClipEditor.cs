@@ -21,8 +21,9 @@ namespace ActionEditor
 
         SerializedObject m_SerializedObject;
         DragType m_DragType;
-        IBindingProvider m_BindingProvider;
+        IReadOnlyList<Blackboard> m_BlackboardList;
 
+        public event System.Action OnChangeData;
         public event System.Action<ClipEditor> OnRemoveClip;
 
         #region Virtual
@@ -101,19 +102,24 @@ namespace ActionEditor
 
         }
 
+        void ChangeData()
+        {
+            OnChangeData?.Invoke();
+        }
+
         void OnClickDelete(object obj)
         {
             OnRemoveClip?.Invoke(this);
         }
 
-        public void Draw(Rect viewRect, ClipViewInfo info, Navigator navigator, float totalFrame, float currentFrame, IBindingProvider bindingProvider)
+        public void Draw(Rect viewRect, ClipViewInfo info, Navigator navigator, float totalFrame, float currentFrame, IReadOnlyList<Blackboard> blackboards)
         {
             if (Asset == null)
                 return;
             if (SerializedObject == null)
                 return;
 
-            m_BindingProvider = bindingProvider;
+            m_BlackboardList = blackboards;
 
             var beginFrame = BeginFrame;
             var endFrame = EndFrame;
@@ -258,6 +264,18 @@ namespace ActionEditor
             menu.AddItem(new GUIContent("Delete"), false, OnClickDelete, null);
 
             menu.ShowAsContext();
+        }
+
+        protected void DrawBinding(Rect position, SerializedProperty property, GUIContent label, System.Type type)
+        {
+            using (var check = new EditorGUI.ChangeCheckScope())
+            {
+                BlackboardEditorGUI.DrawBind(m_BlackboardList, position, property, label, type);
+                if (check.changed)
+                {
+                    ChangeData();
+                }
+            }
         }
     }
 }

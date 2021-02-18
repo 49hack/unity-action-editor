@@ -47,7 +47,7 @@ namespace ActionEditor.Runtime
 
         public bool IsPlaying { get { return m_State == Status.Playing; } }
 
-        public SequenceContext(Sequence sequence, Track[] tracks, IBindingProvider bindingProvider)
+        public SequenceContext(Sequence sequence, Track[] tracks, IReadOnlyList<Blackboard> blackboards)
         {
             SetState(Status.Stoppped);
 
@@ -55,7 +55,7 @@ namespace ActionEditor.Runtime
             m_TrackContexts = new TrackContext[tracks.Length];
             for(int i = 0; i < m_TrackContexts.Length; i++)
             {
-                m_TrackContexts[i] = tracks[i].CreateContext(sequence.FrameRate, sequence, bindingProvider);
+                m_TrackContexts[i] = tracks[i].CreateContext(sequence.FrameRate, sequence, blackboards);
             }
         }
 

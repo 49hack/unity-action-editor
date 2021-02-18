@@ -18,9 +18,8 @@ MonoBehaviour:
   - {fileID: -3239774741726923220}
   - {fileID: 1015237686791513022}
   - {fileID: 3981329662160473788}
-  m_AnimatorBinding:
-    m_Key: Root
-    m_Index: 0
+  m_Animator:
+    m_PropertyName: PlayerAnimator
 --- !u!114 &-3239774741726923220
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -94,6 +93,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 036a6826b508fd54399c2e645544c181, type: 3}
   m_Name: AnimateClip
   m_EditorClassIdentifier: 
-  m_BeginFrame: 3.999999
-  m_EndFrame: 58.999996
+  m_BeginFrame: 0
+  m_EndFrame: 60.000004
   m_Clip: {fileID: 7400002, guid: b6475d894388e0f4bbe9ba904c073a2e, type: 3}
