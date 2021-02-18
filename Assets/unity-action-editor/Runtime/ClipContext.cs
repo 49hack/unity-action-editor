@@ -42,8 +42,9 @@ namespace ActionEditor.Runtime
 
             m_CurrentTime = time;
 
+            var clipTime = Mathf.Clamp(time - BeginTime, 0f, EndTime - BeginTime);
             if (isPlayingAt)
-                m_Clip.OnSetTime(time);
+                m_Clip.OnSetTime(clipTime);
         }
 
         public void Begin()
@@ -66,7 +67,9 @@ namespace ActionEditor.Runtime
             if (!IsPlaying)
                 return;
 
-            m_Clip.OnProgress(fromTime, toTime);
+            var clipFromTime = Mathf.Clamp(fromTime - BeginTime, 0f, EndTime - BeginTime);
+            var clipToTime = Mathf.Clamp(toTime - BeginTime, 0f, EndTime - BeginTime);
+            m_Clip.OnProgress(clipFromTime, clipToTime);
         }
         public void Dispose()
         {

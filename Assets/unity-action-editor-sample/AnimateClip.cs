@@ -37,7 +37,7 @@ namespace ActionEditor.Sample
 
         public override void OnSetTime(float time)
         {
-            if(m_Playable.IsValid())
+            if (m_Playable.IsValid())
                 m_Playable.SetTime(time);
         }
 

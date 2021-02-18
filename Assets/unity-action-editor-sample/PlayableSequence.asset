@@ -1,5 +1,35 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-8621910097148710416
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 036a6826b508fd54399c2e645544c181, type: 3}
+  m_Name: AnimateClip
+  m_EditorClassIdentifier: 
+  m_BeginFrame: 320
+  m_EndFrame: 400
+  m_Clip: {fileID: 7400000, guid: b6475d894388e0f4bbe9ba904c073a2e, type: 3}
+--- !u!114 &-8064724224844161528
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 036a6826b508fd54399c2e645544c181, type: 3}
+  m_Name: AnimateClip
+  m_EditorClassIdentifier: 
+  m_BeginFrame: 85
+  m_EndFrame: 255
+  m_Clip: {fileID: 7400004, guid: b6475d894388e0f4bbe9ba904c073a2e, type: 3}
 --- !u!114 &-3860220615278896121
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14,9 +44,27 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_TrackName: AnimateTrack
   m_Clips:
+  - {fileID: -653278389571272300}
+  - {fileID: -8064724224844161528}
   - {fileID: 4428741029080275819}
+  - {fileID: -8621910097148710416}
   m_Animator:
-    m_PropertyName: PlayerAnimator
+    m_PropertyName: PlayerAnimator-B
+--- !u!114 &-653278389571272300
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 036a6826b508fd54399c2e645544c181, type: 3}
+  m_Name: AnimateClip
+  m_EditorClassIdentifier: 
+  m_BeginFrame: 0
+  m_EndFrame: 120.00001
+  m_Clip: {fileID: 7400002, guid: b6475d894388e0f4bbe9ba904c073a2e, type: 3}
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -45,6 +93,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 036a6826b508fd54399c2e645544c181, type: 3}
   m_Name: AnimateClip
   m_EditorClassIdentifier: 
-  m_BeginFrame: 0
-  m_EndFrame: 180
+  m_BeginFrame: 225
+  m_EndFrame: 335
   m_Clip: {fileID: 7400018, guid: b6475d894388e0f4bbe9ba904c073a2e, type: 3}
