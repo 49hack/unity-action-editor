@@ -90,7 +90,7 @@ namespace ActionEditor
         {
             SerializedObject.Update();
 
-            using (new EditorGUILayout.VerticalScope(GUI.skin.box))
+            using (new Utility.LabelWidthScope(80f))
             {
                 var propTotalFrame = SerializedObject.FindProperty(Sequence.PropNameTotalFrame);
                 propTotalFrame.floatValue = EditorGUILayout.DelayedFloatField("Total Frame", propTotalFrame.floatValue);

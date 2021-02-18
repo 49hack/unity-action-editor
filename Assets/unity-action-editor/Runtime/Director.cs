@@ -28,7 +28,6 @@ namespace ActionEditor.Runtime
 
         public void Prepare(Sequence sequence = null, TickMode mode = TickMode.Auto)
         {
-            Debug.LogError("Prepare");
             m_Mode = mode;
 
             if (m_Context != null)
@@ -81,7 +80,6 @@ namespace ActionEditor.Runtime
 
         public void Dispose()
         {
-            Debug.LogError("Dispose");
             m_Context?.Dispose();
             m_Context = null;
         }

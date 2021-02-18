@@ -114,28 +114,28 @@ namespace ActionEditor
                 m_Director?.Prepare(mode: TickMode.Manual);
             }
 
-            //var rect = GUILayoutUtility.GetRect(1f, EditorGUIUtility.singleLineHeight, GUILayout.ExpandWidth(true));
-            //var testAsset = AssetDatabase.LoadAssetAtPath("Assets/unity-action-editor/TestValueScript.asset", typeof(TestScript));
-            //var so = new SerializedObject(testAsset);
-            //so.Update();
-            //var testProp = so.FindProperty("m_Int");
-            //BlackboardEditorGUI.DrawBind(m_Director.Blackboard, rect, testProp, GUIContent.none);
-            //so.ApplyModifiedProperties();
-
             if (m_SequenceEditor == null)
             {
                 m_SequenceEditor = new SequenceEditor();
                 m_SequenceEditor.Initialize(this, m_Director.Sequence);
             }
 
-            m_SequenceEditor.DrawSetting();
+            // Tool bar
+            using (new EditorGUILayout.HorizontalScope(EditorStyles.toolbar, GUILayout.ExpandWidth(true)))
+            {
+                DrawPlayer();
+
+                EditorGUILayout.Space();
+
+                m_SequenceEditor.DrawSetting();
+
+                GUILayout.FlexibleSpace();
+            }
 
             m_BlackboardEditor.Draw(m_Director.Blackboard);
 
-            DrawPlayer();
-
-            m_Director.CurrentFrame = m_Indicator.OnGUI(m_Director.TotalFrame, m_Director.TotalFrame, m_Director.CurrentFrame, m_Director.Sequence.FrameRate, m_Navigator.MinFrame, m_Navigator.MaxFrame, Focus);
             m_Navigator.OnGUI(m_Director.TotalFrame, m_Director.TotalFrame, m_Director.CurrentFrame);
+            m_Director.CurrentFrame = m_Indicator.OnGUI(m_Director.TotalFrame, m_Director.TotalFrame, m_Director.CurrentFrame, m_Director.Sequence.FrameRate, m_Navigator.MinFrame, m_Navigator.MaxFrame, Focus);
 
             m_SequenceEditor.Draw(m_Navigator, m_Director.TotalFrame, m_Director.CurrentFrame, m_Director.Blackboard);
         }
@@ -149,44 +149,40 @@ namespace ActionEditor
         }
         void DrawPlayer()
         {
-            if (CheckState() != State.Playable)
+            using (new EditorGUI.DisabledGroupScope(CheckState() != State.Playable))
             {
-                EditorGUILayout.HelpBox("Playing sequence can be available if select a object attached Director in scene.", MessageType.Info);
-                return;
-            }
+                bool isPlaying = m_Director.Status == Status.Playing;
 
-            bool isPlaying = m_Director.Status == Status.Playing;
-
-            using (new EditorGUILayout.HorizontalScope(GUI.skin.box))
-            {
-                if(GUILayout.Button("<<", EditorStyles.toolbarButton))
+                const float ButtonWidth = 50f;
+                if (GUILayout.Button("<<", EditorStyles.toolbarButton, GUILayout.Width(ButtonWidth)))
                 {
                     m_Director.CurrentFrame = 0;
                 }
-                if (GUILayout.Button("<", EditorStyles.toolbarButton))
+                if (GUILayout.Button("<", EditorStyles.toolbarButton, GUILayout.Width(ButtonWidth)))
                 {
                     m_Director.CurrentFrame = Mathf.Max(m_Director.CurrentFrame - 1, 0);
                 }
 
-                if(isPlaying)
+                if (isPlaying)
                 {
-                    if (GUILayout.Button("Stop", EditorStyles.toolbarButton))
+                    if (GUILayout.Button("Stop", EditorStyles.toolbarButton, GUILayout.Width(ButtonWidth)))
                     {
                         m_Director.Stop();
                     }
-                } else
+                }
+                else
                 {
-                    if (GUILayout.Button("Play", EditorStyles.toolbarButton))
+                    if (GUILayout.Button("Play", EditorStyles.toolbarButton, GUILayout.Width(ButtonWidth)))
                     {
                         m_Director.Play();
                         m_LatestTickTime = EditorApplication.timeSinceStartup;
                     }
                 }
-                if (GUILayout.Button(">", EditorStyles.toolbarButton))
+                if (GUILayout.Button(">", EditorStyles.toolbarButton, GUILayout.Width(ButtonWidth)))
                 {
                     m_Director.CurrentFrame = Mathf.Min(m_Director.CurrentFrame + 1, m_Director.TotalFrame);
                 }
-                if (GUILayout.Button(">>", EditorStyles.toolbarButton))
+                if (GUILayout.Button(">>", EditorStyles.toolbarButton, GUILayout.Width(ButtonWidth)))
                 {
                     m_Director.CurrentFrame = m_Director.TotalFrame;
                 }

@@ -38,12 +38,12 @@ namespace ActionEditor
                 }
 
                 var currentIndex = FindIndex(propNames, nameProp.stringValue);
-                bool isForceSet = currentIndex < 0;
+                bool isForceSet = currentIndex < 0 || string.IsNullOrEmpty(nameProp.stringValue);
                 currentIndex = Mathf.Clamp(currentIndex, 0, propNames.Length - 1);
                 var nextIndex = EditorGUI.Popup(valueRect, currentIndex, propNames);
                 if (isForceSet || currentIndex != nextIndex)
                 {
-                    if(propNames.Length < nextIndex)
+                    if(propNames.Length > nextIndex)
                         nameProp.stringValue = propNames[nextIndex];
                 }
             }
