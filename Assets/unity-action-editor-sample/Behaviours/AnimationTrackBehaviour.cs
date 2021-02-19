@@ -6,7 +6,7 @@ using UnityEngine.Animations;
 
 namespace ActionEditor.Sample
 {
-    public class AnimateTrack : TrackBehaviour
+    public class AnimationTrackBehaviour : TrackBehaviour
     {
         [SerializeField] SharedAnimatorContext m_Animator = new SharedAnimatorContext();
 
@@ -37,13 +37,13 @@ namespace ActionEditor.Sample
             //Debug.LogError(string.Format("fromWeight: {0}, toWeight: {1}", fromWeight, toWeight));
             if(fromClip != null)
             {
-                var playable = ((AnimateClip)fromClip).Playable;
+                var playable = ((AnimationClipBehaviour)fromClip).Playable;
                 m_Mixer.ConnectInput(0, playable, 0, fromWeight);
             }
 
             if(toClip != null)
             {
-                var playable = ((AnimateClip)toClip).Playable;
+                var playable = ((AnimationClipBehaviour)toClip).Playable;
                 m_Mixer.ConnectInput(1, playable, 0, toWeight);
             }
 

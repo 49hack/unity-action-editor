@@ -6,8 +6,8 @@ using UnityEditor;
 namespace ActionEditor.Sample
 {
     [System.Serializable]
-    [CustomTrackEditor(typeof(AnimateTrack))]
-    public class AnimateTrackEditor : TrackEditor
+    [CustomTrackEditor(typeof(AnimationTrackBehaviour))]
+    public class AnimationTrackBehaviourEditor : TrackBehaviourEditor
     {
         protected override Color BackgroundColor { get { return new Color(0f, 0f, 0f, 0.5f); } }
 
@@ -19,7 +19,7 @@ namespace ActionEditor.Sample
             propName.stringValue = EditorGUI.TextField(nameRect, propName.stringValue);
 
             var animRect = new Rect(rect.x + 2f, rect.y + nameRect.height + 5f, rect.width - 4f, EditorGUIUtility.singleLineHeight);
-            var animProp = serializedObject.FindProperty(AnimateTrack.PropNameAnimator);
+            var animProp = serializedObject.FindProperty(AnimationTrackBehaviour.PropNameAnimator);
             DrawContext(animRect, animProp, new GUIContent("Animator"), typeof(Animator));
         }
     }

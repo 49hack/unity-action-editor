@@ -7,7 +7,7 @@ namespace ActionEditor.Sample
 {
     [System.Serializable]
     [CustomTrackEditor(typeof(EffectTrack))]
-    public class EffectTrackEditor : TrackEditor
+    public class EffectTrackEditor : TrackBehaviourEditor
     {
         protected override Color BackgroundColor { get { return new Color(0f, 0f, 0f, 0.5f); } }
 

@@ -6,8 +6,8 @@ using UnityEngine.Animations;
 
 namespace ActionEditor.Sample
 {
-    [ParentTrack(typeof(AnimateTrack))]
-    public class AnimateClip : ClipBehaviour
+    [ParentTrack(typeof(AnimationTrackBehaviour))]
+    public class AnimationClipBehaviour : ClipBehaviour
     {
         public static string PropNameClip { get { return nameof(m_Clip); } }
 

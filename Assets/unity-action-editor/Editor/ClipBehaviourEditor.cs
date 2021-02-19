@@ -6,11 +6,11 @@ using UnityEditor;
 namespace ActionEditor
 {
     [System.Serializable]
-    public class ClipEditor
+    public class ClipBehaviourEditor
     {
-        public static ClipEditor Create(System.Type type, ClipBehaviour clip)
+        public static ClipBehaviourEditor Create(System.Type type, ClipBehaviour clip)
         {
-            var editor = System.Activator.CreateInstance(type) as ClipEditor;
+            var editor = System.Activator.CreateInstance(type) as ClipBehaviourEditor;
             editor.Initialize(clip);
             return editor;
         }
@@ -24,7 +24,7 @@ namespace ActionEditor
         IReadOnlyList<Blackboard> m_BlackboardList;
 
         public event System.Action OnChangeData;
-        public event System.Action<ClipEditor> OnRemoveClip;
+        public event System.Action<ClipBehaviourEditor> OnRemoveClip;
 
         #region Virtual
         protected virtual Color BackgroundColor { get { return new Color(0f, 0f, 0f, 0.25f); } }

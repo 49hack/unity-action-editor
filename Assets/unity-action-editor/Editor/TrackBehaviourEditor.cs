@@ -7,11 +7,11 @@ using System.Linq;
 namespace ActionEditor
 {
     [System.Serializable]
-    public class TrackEditor
+    public class TrackBehaviourEditor
     {
-        public static TrackEditor Create(System.Type editorType, TrackBehaviour track)
+        public static TrackBehaviourEditor Create(System.Type editorType, TrackBehaviour track)
         {
-            var editor = System.Activator.CreateInstance(editorType) as TrackEditor;
+            var editor = System.Activator.CreateInstance(editorType) as TrackBehaviourEditor;
             editor.Initialize(track);
             return editor;
         }
@@ -21,11 +21,11 @@ namespace ActionEditor
         SerializedObject m_SerializedObject;
         List<Vector3> m_IndicatePointList = new List<Vector3>();
         Vector3[] m_IndicatePoints;
-        List<ClipEditor> m_ClipEditors;
+        List<ClipBehaviourEditor> m_ClipEditors;
         IReadOnlyList<Blackboard> m_BlackboardList;
 
         public event System.Action OnChangeData;
-        public event System.Action<TrackEditor> OnRemoveTrack;
+        public event System.Action<TrackBehaviourEditor> OnRemoveTrack;
 
         #region Virtual
         protected virtual Color BackgroundColor { get { return new Color(0f, 0f, 0f, 0.5f); } }
@@ -61,7 +61,7 @@ namespace ActionEditor
         void Initialize(TrackBehaviour track)
         {
             m_Track = track;
-            m_ClipEditors = new List<ClipEditor>();
+            m_ClipEditors = new List<ClipBehaviourEditor>();
             Enable();
         }
 
@@ -71,7 +71,7 @@ namespace ActionEditor
                 return;
 
             if (m_ClipEditors == null)
-                m_ClipEditors = new List<ClipEditor>();
+                m_ClipEditors = new List<ClipBehaviourEditor>();
 
             var propClips = SerializedObject.FindProperty(TrackBehaviour.PropNameClips);
             for (int i = 0; i < propClips.arraySize; i++)
@@ -345,18 +345,18 @@ namespace ActionEditor
             ChangeData();
         }
 
-        ClipEditor CreateClipEditor(ClipBehaviour clip)
+        ClipBehaviourEditor CreateClipEditor(ClipBehaviour clip)
         {
             var cutomEditor = GetCustomClipEditor(clip.GetType());
             if (cutomEditor == null)
-                return ClipEditor.Create(typeof(ClipEditor), clip);
+                return ClipBehaviourEditor.Create(typeof(ClipBehaviourEditor), clip);
 
-            return ClipEditor.Create(cutomEditor, clip);
+            return ClipBehaviourEditor.Create(cutomEditor, clip);
         }
 
         System.Type GetCustomClipEditor(System.Type type)
         {
-            var editorTypeList = Utility.GetSubClasses<ClipEditor>();
+            var editorTypeList = Utility.GetSubClasses<ClipBehaviourEditor>();
             for (int i = 0; i < editorTypeList.Length; i++)
             {
                 var editorType = editorTypeList[i];
@@ -387,7 +387,7 @@ namespace ActionEditor
 
             return propClips.arraySize;
         }
-        int FindIndex(ClipEditor[] array, ClipBehaviour clip)
+        int FindIndex(ClipBehaviourEditor[] array, ClipBehaviour clip)
         {
             for(int i = 0; i < array.Length; i++)
             {
@@ -415,7 +415,7 @@ namespace ActionEditor
             return list;
         }
 
-        public void RemoveClip(ClipEditor editor)
+        public void RemoveClip(ClipBehaviourEditor editor)
         {
             SerializedObject.Update();
 

@@ -25,7 +25,7 @@ namespace ActionEditor
         [SerializeField] Navigator m_Navigator = new Navigator();
         [SerializeField] Indicator m_Indicator = new Indicator();
         [SerializeField] BlackboardEditor m_BlackboardEditor = new BlackboardEditor();
-        [SerializeField] SequenceEditor m_SequenceEditor;
+        [SerializeField] SequenceBehaviourEditor m_SequenceEditor;
         [SerializeField] double m_LatestTickTime = 0f;
         IDirector m_Director;
 
@@ -133,7 +133,7 @@ namespace ActionEditor
 
             if (m_SequenceEditor == null)
             {
-                m_SequenceEditor = new SequenceEditor();
+                m_SequenceEditor = new SequenceBehaviourEditor();
                 m_SequenceEditor.Initialize(this, m_Director.Sequence);
             }
 

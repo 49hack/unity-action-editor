@@ -6,14 +6,14 @@ using UnityEditor;
 namespace ActionEditor
 {
     [System.Serializable]
-    public class SequenceEditor
+    public class SequenceBehaviourEditor
     {
         [SerializeField] Window m_Owner;
         [SerializeField] SequenceBehaviour m_Asset;
         [SerializeField] Vector2 m_Scroll;
 
         SerializedObject m_SerializedObject;
-        List<TrackEditor> m_TrackEditors;
+        List<TrackBehaviourEditor> m_TrackEditors;
         IReadOnlyList<Blackboard> m_BlackboardList;
 
         SequenceBehaviour Asset { get { return m_Asset; } }
@@ -46,7 +46,7 @@ namespace ActionEditor
                 return;
 
             if(m_TrackEditors == null)
-                m_TrackEditors = new List<TrackEditor>();
+                m_TrackEditors = new List<TrackBehaviourEditor>();
 
             var propTracks = SerializedObject.FindProperty(SequenceBehaviour.PropNameTracks);
             for (int i = 0; i < propTracks.arraySize; i++)
@@ -182,20 +182,20 @@ namespace ActionEditor
             ChangeData();
         }
 
-        TrackEditor CreateTrackEditor(TrackBehaviour track)
+        TrackBehaviourEditor CreateTrackEditor(TrackBehaviour track)
         {
             var customEditorType = GetCustomTrackEditor(track.GetType());
             if (customEditorType == null)
             {
-                return TrackEditor.Create(typeof(TrackEditor), track);
+                return TrackBehaviourEditor.Create(typeof(TrackBehaviourEditor), track);
             }
 
-            return TrackEditor.Create(customEditorType, track);
+            return TrackBehaviourEditor.Create(customEditorType, track);
         }
 
         System.Type GetCustomTrackEditor(System.Type type)
         {
-            var editorTypeList = Utility.GetSubClasses<TrackEditor>();
+            var editorTypeList = Utility.GetSubClasses<TrackBehaviourEditor>();
             for(int i = 0; i < editorTypeList.Length; i++)
             {
                 var editorType = editorTypeList[i];
@@ -209,7 +209,7 @@ namespace ActionEditor
             return null;
         }
 
-        public void RemoveTrack(TrackEditor editor)
+        public void RemoveTrack(TrackBehaviourEditor editor)
         {
             SerializedObject.Update();
 
