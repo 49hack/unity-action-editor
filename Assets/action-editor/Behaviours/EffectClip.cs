@@ -4,10 +4,10 @@ using UnityEngine;
 
 namespace ActionEditor.Sample
 {
-    [ParentTrack(typeof(EffectTrack))]
+    [ParentTrack(typeof(EffectTrackBehaviour))]
     public class EffectClip : ClipBehaviour
     {
-        EffectTrack.Particle m_Particle;
+        EffectTrackBehaviour.Particle m_Particle;
 
         public override void OnEnd()
         {
@@ -20,7 +20,7 @@ namespace ActionEditor.Sample
             m_Particle?.Evaluate(time);
         }
 
-        public void SetParticle(EffectTrack.Particle particle)
+        public void SetParticle(EffectTrackBehaviour.Particle particle)
         {
             m_Particle = particle;
             m_Particle?.Begin();

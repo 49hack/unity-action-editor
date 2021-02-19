@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace ActionEditor.Sample
 {
-    public class EffectTrack : TrackBehaviour
+    public class EffectTrackBehaviour : TrackBehaviour
     {
         public static string PropNameLocator { get { return nameof(m_Locator); } }
         public static string PropNameEffect { get { return nameof(m_Effect); } }
