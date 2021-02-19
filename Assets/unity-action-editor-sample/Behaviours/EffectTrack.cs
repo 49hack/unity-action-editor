@@ -77,6 +77,8 @@ namespace ActionEditor.Sample
                 for(int i = 0; i < m_ParticleList.Length; i++)
                 {
                     var ps = m_ParticleList[i];
+                    if (ps == null)
+                        continue;
 
                     ps.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
                     var seed = ps.randomSeed;
