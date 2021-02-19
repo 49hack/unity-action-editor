@@ -30,42 +30,51 @@ namespace ActionEditor
                         if (blackboard == null)
                             continue;
 
-                        EditorGUILayout.LabelField(blackboard.GetType().Name);
-
                         var serializedObject = new SerializedObject(blackboard);
                         serializedObject.Update();
 
-                        var feilds = BlackboardEditorGUI.CollectFields(blackboard);
-
-                        for (int i = 0; i < feilds.Count; i++)
+                        using (new EditorGUILayout.VerticalScope(GUI.skin.box))
                         {
-                            var field = feilds[i];
-                            var attr = field.GetCustomAttribute<MenuTitle>();
-                            var typeName = attr == null ? field.FieldType.Name : attr.Name;
-                            var fieldProp = serializedObject.FindProperty(field.Name);
-                            if (fieldProp == null)
-                                continue;
+                            var foldoutProp = serializedObject.FindProperty(Blackboard.PropNameFoldout);
+                            foldoutProp.boolValue = EditorGUIEx.Foldout(foldoutProp.boolValue, new GUIContent(blackboard.GetType().Name));
+                            if (!foldoutProp.boolValue)
+                            {
+                                serializedObject.ApplyModifiedProperties();
+                                return;
+                            }
 
-                            var propValue = fieldProp.FindPropertyRelative(SharedValue.PropNameValue);
+                            var feilds = BlackboardEditorGUI.CollectFields(blackboard);
 
-                            var height = EditorGUIEx.GetPropertyHeight(propValue);
-                            var secureRect = GUILayoutUtility.GetRect(1f, height + 2f, GUILayout.ExpandWidth(true));
-                            var rect = new Rect(secureRect.x, secureRect.y, secureRect.width, height);
+                            for (int i = 0; i < feilds.Count; i++)
+                            {
+                                var field = feilds[i];
+                                var attr = field.GetCustomAttribute<MenuTitle>();
+                                var typeName = attr == null ? field.FieldType.Name : attr.Name;
+                                var fieldProp = serializedObject.FindProperty(field.Name);
+                                if (fieldProp == null)
+                                    continue;
 
-                            var labelRect = new Rect(rect.x, rect.y, EditorGUIUtility.labelWidth, EditorGUIUtility.singleLineHeight);
-                            EditorGUI.LabelField(labelRect, new GUIContent(fieldProp.displayName));
+                                var propValue = fieldProp.FindPropertyRelative(SharedValue.PropNameValue);
 
-                            var itemWidth = (rect.width - labelRect.width) * 0.5f;
-                            var propName = fieldProp.FindPropertyRelative(SharedValue.PropNamePropertyName);
-                            var propNameRect = new Rect(rect.x + labelRect.width, rect.y, itemWidth * 0.95f, EditorGUIUtility.singleLineHeight);
-                            propName.stringValue = EditorGUI.TextField(propNameRect, propName.stringValue);
+                                var height = EditorGUIEx.GetPropertyHeight(propValue);
+                                var secureRect = GUILayoutUtility.GetRect(1f, height + 2f, GUILayout.ExpandWidth(true));
+                                var rect = new Rect(secureRect.x, secureRect.y, secureRect.width, height);
 
-                            var valueType = field.FieldType.BaseType.GetField(SharedValue.PropNameValue, BindingFlags.Instance | BindingFlags.NonPublic).FieldType;
-                            var valueRect = new Rect(propNameRect.x + itemWidth, rect.y, itemWidth, rect.height);
-                            EditorGUIEx.PropertyField(valueRect, propValue, GUIContent.none, true, valueType);
+                                var labelRect = new Rect(rect.x, rect.y, EditorGUIUtility.labelWidth, EditorGUIUtility.singleLineHeight);
+                                EditorGUI.LabelField(labelRect, new GUIContent(fieldProp.displayName));
+
+                                var itemWidth = (rect.width - labelRect.width) * 0.5f;
+                                var propName = fieldProp.FindPropertyRelative(SharedValue.PropNamePropertyName);
+                                var propNameRect = new Rect(rect.x + labelRect.width, rect.y, itemWidth * 0.95f, EditorGUIUtility.singleLineHeight);
+                                propName.stringValue = EditorGUI.TextField(propNameRect, propName.stringValue);
+
+                                var valueType = field.FieldType.BaseType.GetField(SharedValue.PropNameValue, BindingFlags.Instance | BindingFlags.NonPublic).FieldType;
+                                var valueRect = new Rect(propNameRect.x + itemWidth, rect.y, itemWidth, rect.height);
+                                EditorGUIEx.PropertyField(valueRect, propValue, GUIContent.none, true, valueType);
+                            }
+
+                            serializedObject.ApplyModifiedProperties();
                         }
-
-                        serializedObject.ApplyModifiedProperties();
                         EditorGUILayout.Space();
                     }
                 }
