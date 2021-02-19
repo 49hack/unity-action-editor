@@ -6,6 +6,10 @@ namespace ActionEditor
 {
     public abstract class Blackboard : MonoBehaviour
     {
+        public static string PropNameFoldout { get { return nameof(m_IsFoldout); } }
+
+        [SerializeField, HideInInspector] bool m_IsFoldout;
+
         IReadOnlyList<SharedValue> m_Values;
 
         protected abstract IReadOnlyList<SharedValue> Collect();
