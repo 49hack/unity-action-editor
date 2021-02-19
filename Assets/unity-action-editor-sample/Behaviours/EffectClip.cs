@@ -9,11 +9,6 @@ namespace ActionEditor.Sample
     {
         EffectTrack.Particle m_Particle;
 
-        public override void OnBegin()
-        {
-            m_Particle?.Begin();
-        }
-
         public override void OnEnd()
         {
             m_Particle?.End();
@@ -28,6 +23,7 @@ namespace ActionEditor.Sample
         public void SetParticle(EffectTrack.Particle particle)
         {
             m_Particle = particle;
+            m_Particle?.Begin();
         }
     }
 }

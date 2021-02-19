@@ -34,6 +34,7 @@ namespace ActionEditor.Sample
             m_Graph.Disconnect(m_Mixer, 0);
             m_Graph.Disconnect(m_Mixer, 1);
 
+            //Debug.LogError(string.Format("fromWeight: {0}, toWeight: {1}", fromWeight, toWeight));
             if(fromClip != null)
             {
                 var playable = ((AnimateClip)fromClip).Playable;
@@ -52,10 +53,15 @@ namespace ActionEditor.Sample
                 if (target != null)
                     target.Rebind();
             }
+
+            m_Mixer.SetInputWeight(0, fromWeight);
+            m_Mixer.SetInputWeight(1, toWeight);
         }
 
         public override void OnChangeWight(Clip fromClip, float fromWeight, Clip toClip, float toWeight)
         {
+            //Debug.LogError(string.Format("fromWeight: {0}, toWeight: {1}", fromWeight, toWeight));
+
             m_Mixer.SetInputWeight(0, fromWeight);
             m_Mixer.SetInputWeight(1, toWeight);
         }

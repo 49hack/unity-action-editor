@@ -82,8 +82,6 @@ namespace ActionEditor.Runtime
         }
         public void SetTime(float time)
         {
-            UpdateClip(time);
-
             for (int i = 0; i < m_ClipContexts.Length; i++)
             {
                 m_ClipContexts[i].SetTime(time);
@@ -92,13 +90,13 @@ namespace ActionEditor.Runtime
             m_Track.SetTime(time);
 
             m_CurrentTime = time;
+
+            UpdateClip(time);
         }
 
 
         public void Progress(float time)
         {
-            UpdateClip(time);
-
             for (int i = 0; i < m_ClipContexts.Length; i++)
             {
                 m_ClipContexts[i].Progress(time);
@@ -107,6 +105,7 @@ namespace ActionEditor.Runtime
             var fromTime = m_CurrentTime;
             m_CurrentTime = time;
             m_Track.SetTime(time);
+            UpdateClip(time);
             m_Track.OnProgress(fromTime, time);
         }
 
@@ -131,7 +130,7 @@ namespace ActionEditor.Runtime
             {
                 var min = m_ClipContexts[indeceis.Last].BeginTime;
                 var max = m_ClipContexts[indeceis.First].EndTime;
-                var weight = Mathf.Clamp01((time - min) / (max - min));
+                var weight = Mathf.Clamp01((time - min) / (max - min) + 0.000001f);
                 if (!m_LatestIndecies.Equals(indeceis))
                 {
                     m_Track.OnChangeClip(m_ClipContexts[indeceis.First].Clip, 1f - weight, m_ClipContexts[indeceis.Last].Clip, weight);
