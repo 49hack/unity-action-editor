@@ -24,7 +24,7 @@ namespace ActionEditor.Sample
 
         public override void OnChangeClip(ClipBehaviour fromClip, float fromWeight, ClipBehaviour toClip, float toWeight)
         {
-            var effectClip = fromClip as EffectClip;
+            var effectClip = fromClip as EffectClipBehaviour;
             if(effectClip != null)
             {
                 effectClip.SetParticle(m_Particle);

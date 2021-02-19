@@ -5,7 +5,7 @@ using UnityEngine;
 namespace ActionEditor.Sample
 {
     [ParentTrack(typeof(EffectTrackBehaviour))]
-    public class EffectClip : ClipBehaviour
+    public class EffectClipBehaviour : ClipBehaviour
     {
         EffectTrackBehaviour.Particle m_Particle;
 
