@@ -147,6 +147,12 @@ namespace ActionEditor
             var e = Event.current;
             switch (e.type)
             {
+                case EventType.MouseDown:
+                    if (rect.Contains(e.mousePosition) && e.button == 0)
+                    {
+                        Selection.objects = new Object[] { Asset };
+                    }
+                    break;
                 case EventType.ContextClick:
                     if (rect.Contains(e.mousePosition))
                     {

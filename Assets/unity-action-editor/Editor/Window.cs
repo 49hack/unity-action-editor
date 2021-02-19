@@ -32,6 +32,7 @@ namespace ActionEditor
         private void OnEnable()
         {
             EditorApplication.update += OnUpdate;
+            EditorApplication.playModeStateChanged += OnPlayModeState;
             m_SequenceEditor?.Enable();
             ChangeDirector(null);
             OnSelect(Selection.activeObject);
@@ -39,6 +40,7 @@ namespace ActionEditor
         private void OnDisable()
         {
             EditorApplication.update -= OnUpdate;
+            EditorApplication.playModeStateChanged -= OnPlayModeState;
             m_SequenceEditor?.Disable();
             ChangeDirector(null);
         }
@@ -54,6 +56,21 @@ namespace ActionEditor
             var selected = Selection.activeObject;
             OnSelect(selected);
         }
+
+        void OnPlayModeState(PlayModeStateChange state)
+        {
+            switch(state)
+            {
+                case PlayModeStateChange.ExitingEditMode:
+                    ChangeDirector(null);
+                    break;
+
+                case PlayModeStateChange.EnteredEditMode:
+                    OnSelect(Selection.activeObject);
+                    break;
+            }
+        }
+
 
         void OnSelect(Object selected)
         {

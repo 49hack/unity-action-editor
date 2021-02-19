@@ -6,13 +6,13 @@ using UnityEngine;
 namespace ActionEditor.Runtime
 {
     
-    [ExecuteInEditMode]
     public class Director : MonoBehaviour, IDirector
     {
         public static string PropNameBlackboardList { get { return nameof(m_BlackboardList); } }
 
         [SerializeField] Sequence m_Sequence;
         [SerializeField] TickMode m_Mode;
+        [SerializeField] bool m_PlayOnAwake; 
         [SerializeField,HideInInspector] List<Blackboard> m_BlackboardList = new List<Blackboard>();
 
         SequenceContext m_Context;
@@ -25,6 +25,14 @@ namespace ActionEditor.Runtime
         public float Length { get { return m_Context == null ? 0f : m_Context.Length; } }
         public float TotalFrame { get { return m_Sequence == null ? 0f : m_Sequence.TotalFrame; } }
 
+        void Awake()
+        {
+            if(m_PlayOnAwake)
+            {
+                Prepare(mode: TickMode.Auto);
+                Play(0f);
+            }
+        }
 
         public void Prepare(Sequence sequence = null, TickMode mode = TickMode.Auto)
         {

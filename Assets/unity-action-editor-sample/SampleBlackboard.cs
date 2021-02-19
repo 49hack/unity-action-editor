@@ -8,6 +8,7 @@ namespace ActionEditor.Sample
     {
         [SerializeField] SharedAnimator m_Animator = new SharedAnimator(nameof(m_Animator));
         [SerializeField] SharedAnimator m_AnimatorB = new SharedAnimator(nameof(m_AnimatorB));
+        [SerializeField] SharedTransform m_Locator = new SharedTransform(nameof(m_Locator));
 
         [SerializeField] SharedAnimationClipContext m_Test;
 
@@ -15,7 +16,8 @@ namespace ActionEditor.Sample
         {
             return new SharedValue[] {
                 m_Animator,
-                m_AnimatorB
+                m_AnimatorB,
+                m_Locator
             };
         }
     }

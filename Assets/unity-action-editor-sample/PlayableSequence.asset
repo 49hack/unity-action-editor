@@ -14,7 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_BeginFrame: 320
   m_EndFrame: 400
-  m_Clip: {fileID: 7400000, guid: b6475d894388e0f4bbe9ba904c073a2e, type: 3}
+  m_Clip:
+    m_SharedType: 0
+    m_PropertyName: 
+    m_FixedValue: {fileID: 7400000, guid: b6475d894388e0f4bbe9ba904c073a2e, type: 3}
 --- !u!114 &-8064724224844161528
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -27,9 +30,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 036a6826b508fd54399c2e645544c181, type: 3}
   m_Name: AnimateClip
   m_EditorClassIdentifier: 
-  m_BeginFrame: 85
-  m_EndFrame: 255
-  m_Clip: {fileID: 7400004, guid: b6475d894388e0f4bbe9ba904c073a2e, type: 3}
+  m_BeginFrame: 50
+  m_EndFrame: 215.00002
+  m_Clip:
+    m_SharedType: 0
+    m_PropertyName: 
+    m_FixedValue: {fileID: 7400004, guid: b6475d894388e0f4bbe9ba904c073a2e, type: 3}
 --- !u!114 &-3860220615278896121
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -49,7 +55,9 @@ MonoBehaviour:
   - {fileID: 4428741029080275819}
   - {fileID: -8621910097148710416}
   m_Animator:
-    m_PropertyName: PlayerAnimator-B
+    m_SharedType: 1
+    m_PropertyName: PlayerAnimator
+    m_FixedValue: {fileID: 0}
 --- !u!114 &-653278389571272300
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -63,8 +71,11 @@ MonoBehaviour:
   m_Name: AnimateClip
   m_EditorClassIdentifier: 
   m_BeginFrame: 0
-  m_EndFrame: 120.00001
-  m_Clip: {fileID: 7400002, guid: b6475d894388e0f4bbe9ba904c073a2e, type: 3}
+  m_EndFrame: 110
+  m_Clip:
+    m_SharedType: 0
+    m_PropertyName: 
+    m_FixedValue: {fileID: 7400002, guid: b6475d894388e0f4bbe9ba904c073a2e, type: 3}
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -79,8 +90,34 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Tracks:
   - {fileID: -3860220615278896121}
+  - {fileID: 732832794976687724}
   m_TotalFrame: 400
   m_FrameRate: 60
+--- !u!114 &732832794976687724
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0ebe9f94c84d4ed489a56ca933e91459, type: 3}
+  m_Name: EffectTrack
+  m_EditorClassIdentifier: 
+  m_TrackName: EffectTrack
+  m_Clips:
+  - {fileID: 7837593755220843781}
+  - {fileID: 4556174820961188720}
+  m_Locator:
+    m_SharedType: 1
+    m_PropertyName: SharedTransform
+    m_FixedValue: {fileID: 0}
+  m_Effect:
+    m_SharedType: 0
+    m_PropertyName: 
+    m_FixedValue: {fileID: 1475368415682648, guid: 7b4e3bb66a9bfd444b7132badd47fddf,
+      type: 3}
 --- !u!114 &4428741029080275819
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -93,6 +130,37 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 036a6826b508fd54399c2e645544c181, type: 3}
   m_Name: AnimateClip
   m_EditorClassIdentifier: 
-  m_BeginFrame: 225
+  m_BeginFrame: 170
   m_EndFrame: 335
-  m_Clip: {fileID: 7400018, guid: b6475d894388e0f4bbe9ba904c073a2e, type: 3}
+  m_Clip:
+    m_SharedType: 0
+    m_PropertyName: 
+    m_FixedValue: {fileID: 7400018, guid: b6475d894388e0f4bbe9ba904c073a2e, type: 3}
+--- !u!114 &4556174820961188720
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 54e0c62c151b73c4ca855ef57562f1f1, type: 3}
+  m_Name: EffectClip
+  m_EditorClassIdentifier: 
+  m_BeginFrame: 112.15687
+  m_EndFrame: 122.15687
+--- !u!114 &7837593755220843781
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 54e0c62c151b73c4ca855ef57562f1f1, type: 3}
+  m_Name: EffectClip
+  m_EditorClassIdentifier: 
+  m_BeginFrame: 0
+  m_EndFrame: 85

@@ -1,0 +1,30 @@
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEditor;
+
+namespace ActionEditor.Sample
+{
+    [System.Serializable]
+    [CustomTrackEditor(typeof(EffectTrack))]
+    public class EffectTrackEditor : TrackEditor
+    {
+        protected override Color BackgroundColor { get { return new Color(0f, 0f, 0f, 0.5f); } }
+
+
+        protected override void DrawContents(Rect rect, SerializedObject serializedObject)
+        {
+            //var propName = serializedObject.FindProperty(Track.PropNameTrackName);
+            //var nameRect = new Rect(rect.x + 2f, rect.y + 2f, rect.width - 4f, EditorGUIUtility.singleLineHeight);
+            //propName.stringValue = EditorGUI.TextField(nameRect, propName.stringValue);
+
+            var effectRect = new Rect(rect.x + 2f, rect.y + 6f, rect.width - 4f, EditorGUIUtility.singleLineHeight);
+            var effectProp = serializedObject.FindProperty(EffectTrack.PropNameEffect);
+            DrawContext(effectRect, effectProp, new GUIContent("Effect"), typeof(GameObject));
+
+            var locatorRect = new Rect(effectRect.x, effectRect.y + effectRect.height + 5f, effectRect.width, EditorGUIUtility.singleLineHeight);
+            var locatorProp = serializedObject.FindProperty(EffectTrack.PropNameLocator);
+            DrawContext(locatorRect, locatorProp, new GUIContent("Locator"), typeof(Transform));
+        }
+    }
+}

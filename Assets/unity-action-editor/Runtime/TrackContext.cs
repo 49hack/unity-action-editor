@@ -82,6 +82,8 @@ namespace ActionEditor.Runtime
         }
         public void SetTime(float time)
         {
+            UpdateClip(time);
+
             for (int i = 0; i < m_ClipContexts.Length; i++)
             {
                 m_ClipContexts[i].SetTime(time);
@@ -89,14 +91,14 @@ namespace ActionEditor.Runtime
 
             m_Track.SetTime(time);
 
-            UpdateClip(time);
-
             m_CurrentTime = time;
         }
 
 
         public void Progress(float time)
         {
+            UpdateClip(time);
+
             for (int i = 0; i < m_ClipContexts.Length; i++)
             {
                 m_ClipContexts[i].Progress(time);
@@ -106,8 +108,6 @@ namespace ActionEditor.Runtime
             m_CurrentTime = time;
             m_Track.SetTime(time);
             m_Track.OnProgress(fromTime, time);
-
-            UpdateClip(time);
         }
 
         void UpdateClip(float time)
