@@ -26,15 +26,12 @@ namespace ActionEditor.Sample
 
         public override void OnBegin()
         {
-            Debug.LogError("Begin");
             m_Playable = AnimationClipPlayable.Create(m_Graph, m_Clip.Value);
             m_Playable.SetTime(0f);
         }
 
         public override void OnEnd()
         {
-            Debug.LogError("End");
-
             if (m_Playable.IsValid())
                 m_Playable.Destroy();
         }
