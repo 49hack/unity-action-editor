@@ -14,7 +14,7 @@ namespace ActionEditor.Sample
 
             var clipRect = new Rect(rect.x, rect.y + 5f, rect.width, EditorGUIUtility.singleLineHeight);
             var clipProp = serializedObject.FindProperty(AnimateClip.PropNameClip);
-            EditorGUI.PropertyField(clipRect, clipProp, GUIContent.none);
+            DrawContext(clipRect, clipProp, GUIContent.none, typeof(AnimationClip));
         }
     }
 }

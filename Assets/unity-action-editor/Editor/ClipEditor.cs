@@ -266,11 +266,11 @@ namespace ActionEditor
             menu.ShowAsContext();
         }
 
-        protected void DrawBinding(Rect position, SerializedProperty property, GUIContent label, System.Type type)
+        protected void DrawContext(Rect position, SerializedProperty property, GUIContent label, System.Type type)
         {
             using (var check = new EditorGUI.ChangeCheckScope())
             {
-                BlackboardEditorGUI.DrawBind(m_BlackboardList, position, property, label, type);
+                BlackboardEditorGUI.DrawContext(m_BlackboardList, position, property, label, type);
                 if (check.changed)
                 {
                     ChangeData();

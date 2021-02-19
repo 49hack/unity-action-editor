@@ -11,7 +11,7 @@ namespace ActionEditor.Sample
     {
         public static string PropNameClip { get { return nameof(m_Clip); } }
 
-        [SerializeField] AnimationClip m_Clip;
+        [SerializeField] SharedAnimationClipContext m_Clip;
 
         PlayableGraph m_Graph;
         AnimationClipPlayable m_Playable;
@@ -21,11 +21,15 @@ namespace ActionEditor.Sample
         public override void OnCreate(Sequence sequence, IReadOnlyList<Blackboard> blackboards)
         {
             m_Graph = ((PlayableSequence)sequence).Graph;
+            Blackboard.Bind(blackboards, m_Clip);
         }
 
         public override void OnBegin()
         {
-            m_Playable = AnimationClipPlayable.Create(m_Graph, m_Clip);
+            if (m_Clip.Value == null)
+                return;
+
+            m_Playable = AnimationClipPlayable.Create(m_Graph, m_Clip.Value);
             m_Playable.SetTime(0f);
         }
 

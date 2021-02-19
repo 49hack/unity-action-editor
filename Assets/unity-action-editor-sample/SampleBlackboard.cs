@@ -9,6 +9,8 @@ namespace ActionEditor.Sample
         [SerializeField] SharedAnimator m_Animator = new SharedAnimator(nameof(m_Animator));
         [SerializeField] SharedAnimator m_AnimatorB = new SharedAnimator(nameof(m_AnimatorB));
 
+        [SerializeField] SharedAnimationClipContext m_Test;
+
         protected override IReadOnlyList<SharedValue> Collect()
         {
             return new SharedValue[] {

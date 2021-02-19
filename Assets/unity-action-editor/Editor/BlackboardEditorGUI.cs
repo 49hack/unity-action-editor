@@ -8,7 +8,7 @@ namespace ActionEditor
 {
     internal static class BlackboardEditorGUI
     {
-        public static void DrawBind(IReadOnlyList<Blackboard> blackboardList, Rect position, SerializedProperty property, GUIContent label, System.Type type)
+        public static void DrawContext(IReadOnlyList<Blackboard> blackboardList, Rect position, SerializedProperty property, GUIContent label, System.Type type)
         {
             using (new Utility.LabelWidthScope(80f))
             {
@@ -20,31 +20,65 @@ namespace ActionEditor
                     labelWidth = labelRect.width;
                 }
 
-                var valueRect = new Rect(position.x + labelWidth, position.y, position.width - labelWidth, position.height);
+                const float SelectorWidth = 20f;
 
-                var nameProp = property.FindPropertyRelative(SharedValue.PropNamePropertyName);
+                var valueRect = new Rect(position.x + labelWidth, position.y, position.width - labelWidth - SelectorWidth, position.height);
+
+                var nameProp = property.FindPropertyRelative(SharedValueContext.PropNamePropertyName);
                 if (blackboardList == null || blackboardList.Count <= 0)
                 {
                     EditorGUI.PropertyField(valueRect, nameProp, GUIContent.none);
                     return;
                 }
 
-                var fields = CollectFields(blackboardList, type);
-                var propNames = GetBlackboardNameList(blackboardList, fields);
-                if(propNames.Length < 0)
+                var isForceSet = false;
+                var sharedTypeProp = property.FindPropertyRelative(SharedValueContext.PropNameSharedType);
+                var sharedTypeValues = System.Enum.GetValues(typeof(SharedValueType));
+                var sharedType = (SharedValueType)sharedTypeValues.GetValue(sharedTypeProp.enumValueIndex);
+                var sharedTypeRect = new Rect(valueRect.x + valueRect.width, valueRect.y, SelectorWidth, valueRect.height);
+
+                using (var check = new EditorGUI.ChangeCheckScope())
                 {
-                    EditorGUI.PropertyField(valueRect, nameProp, GUIContent.none);
-                    return;
+                    EditorGUI.PropertyField(sharedTypeRect, sharedTypeProp, GUIContent.none);
+                    isForceSet = check.changed;
                 }
 
-                var currentIndex = FindIndex(propNames, nameProp.stringValue);
-                bool isForceSet = currentIndex < 0 || string.IsNullOrEmpty(nameProp.stringValue);
-                currentIndex = Mathf.Clamp(currentIndex, 0, propNames.Length - 1);
-                var nextIndex = EditorGUI.Popup(valueRect, currentIndex, propNames);
-                if (isForceSet || currentIndex != nextIndex)
+                switch (sharedType)
                 {
-                    if(propNames.Length > nextIndex)
-                        nameProp.stringValue = propNames[nextIndex];
+                    case SharedValueType.Blackboard:
+                        {
+                            var fields = CollectFields(blackboardList, type);
+                            var propNames = GetBlackboardNameList(blackboardList, fields);
+                            if (propNames.Length < 0)
+                            {
+                                EditorGUI.PropertyField(valueRect, nameProp, GUIContent.none);
+                                return;
+                            }
+
+                            var currentIndex = FindIndex(propNames, nameProp.stringValue);
+                            isForceSet |= currentIndex < 0 || string.IsNullOrEmpty(nameProp.stringValue);
+                            currentIndex = Mathf.Clamp(currentIndex, 0, propNames.Length - 1);
+                            var nextIndex = EditorGUI.Popup(valueRect, currentIndex, propNames);
+                            if (isForceSet || currentIndex != nextIndex)
+                            {
+                                if (propNames.Length > nextIndex)
+                                    nameProp.stringValue = propNames[nextIndex];
+                            }
+                        }
+                        break;
+
+                    case SharedValueType.Runtime:
+                        {
+                            EditorGUI.PropertyField(valueRect, nameProp, GUIContent.none);
+                        }
+                        break;
+
+                    case SharedValueType.Fixed:
+                        {
+                            var fixedValueProp = property.FindPropertyRelative(SharedValueContext.PropNameFixedValue);
+                            EditorGUI.PropertyField(valueRect, fixedValueProp, GUIContent.none);
+                        }
+                        break;
                 }
             }
         }

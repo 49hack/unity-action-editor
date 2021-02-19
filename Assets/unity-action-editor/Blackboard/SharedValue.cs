@@ -4,6 +4,13 @@ using UnityEngine;
 
 namespace ActionEditor
 {
+    public enum SharedValueType
+    {
+        Fixed,
+        Blackboard,
+        Runtime
+    }
+
     [System.Serializable]
     public abstract class SharedValue
     {
@@ -36,14 +43,26 @@ namespace ActionEditor
         public SharedValue(string propertyName) : base(propertyName) { }
     }
 
-    [System.Serializable]
-    public class SharedValueContext<T>
+    public class SharedValueContext
     {
-        public static string PropNamePropertyName { get { return nameof(m_PropertyName); } }
+        public static string PropNameSharedType { get { return SharedValueContext<object>.PropNameSharedType; } }
+        public static string PropNameFixedValue { get { return SharedValueContext<object>.PropNameFixedValue; } }
+        public static string PropNamePropertyName { get { return SharedValueContext<object>.PropNamePropertyName; } }
+    }
 
+    [System.Serializable]
+    public class SharedValueContext<T> : SharedValueContext
+    {
+        new public static string PropNameSharedType { get { return nameof(m_SharedType); } }
+        new public static string PropNameFixedValue { get { return nameof(m_FixedValue); } }
+        new public static string PropNamePropertyName { get { return nameof(m_PropertyName); } }
+
+        [SerializeField] SharedValueType m_SharedType = SharedValueType.Fixed;
         [SerializeField] string m_PropertyName;
+        [SerializeField] T m_FixedValue;
 
         SharedValue<T> m_Value;
+
 
         public string PropertyName { get { return m_PropertyName; } }
 
@@ -51,18 +70,41 @@ namespace ActionEditor
         {
             get
             {
-                return m_Value == null ? default(T) : m_Value.Value;
+                return GetValue();
             }
             set
             {
-                Debug.Assert(m_Value != null, "Value is not bind.");
-                m_Value.Value = value;
+                SetValue(value);
             }
         }
 
         public void Bind(SharedValue<T> value)
         {
             m_Value = value;
+        }
+
+        T GetValue()
+        {
+            switch(m_SharedType)
+            {
+                case SharedValueType.Blackboard:
+                case SharedValueType.Runtime:
+                    return m_Value == null ? default(T) : m_Value.Value;
+            }
+            return m_FixedValue;
+        }
+
+        void SetValue(T value)
+        {
+            switch (m_SharedType)
+            {
+                case SharedValueType.Blackboard:
+                case SharedValueType.Runtime:
+                    Debug.Assert(m_Value != null, "Value is not bind.");
+                    m_Value.Value = value;
+                    return;
+            }
+            m_FixedValue = value;
         }
     }
 }
