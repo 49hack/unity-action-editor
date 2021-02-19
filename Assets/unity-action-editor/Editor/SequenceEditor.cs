@@ -9,14 +9,14 @@ namespace ActionEditor
     public class SequenceEditor
     {
         [SerializeField] Window m_Owner;
-        [SerializeField] Sequence m_Asset;
+        [SerializeField] SequenceBehaviour m_Asset;
         [SerializeField] Vector2 m_Scroll;
 
         SerializedObject m_SerializedObject;
         List<TrackEditor> m_TrackEditors;
         IReadOnlyList<Blackboard> m_BlackboardList;
 
-        Sequence Asset { get { return m_Asset; } }
+        SequenceBehaviour Asset { get { return m_Asset; } }
         
         SerializedObject SerializedObject
         {
@@ -33,7 +33,7 @@ namespace ActionEditor
             }
         }
 
-        public void Initialize(Window owner, Sequence sequence)
+        public void Initialize(Window owner, SequenceBehaviour sequence)
         {
             m_Owner = owner;
             m_Asset = sequence;
@@ -48,11 +48,11 @@ namespace ActionEditor
             if(m_TrackEditors == null)
                 m_TrackEditors = new List<TrackEditor>();
 
-            var propTracks = SerializedObject.FindProperty(Sequence.PropNameTracks);
+            var propTracks = SerializedObject.FindProperty(SequenceBehaviour.PropNameTracks);
             for (int i = 0; i < propTracks.arraySize; i++)
             {
                 var item = propTracks.GetArrayElementAtIndex(i);
-                var track = (Track)item.objectReferenceValue;
+                var track = (TrackBehaviour)item.objectReferenceValue;
                 var editor = CreateTrackEditor(track);
                 editor.OnChangeData += ChangeData;
                 editor.OnRemoveTrack += RemoveTrack;
@@ -92,10 +92,10 @@ namespace ActionEditor
 
             using (new Utility.LabelWidthScope(80f))
             {
-                var propTotalFrame = SerializedObject.FindProperty(Sequence.PropNameTotalFrame);
+                var propTotalFrame = SerializedObject.FindProperty(SequenceBehaviour.PropNameTotalFrame);
                 propTotalFrame.floatValue = EditorGUILayout.DelayedFloatField("Total Frame", propTotalFrame.floatValue);
 
-                var propFrameRate = SerializedObject.FindProperty(Sequence.PropNameFrameRate);
+                var propFrameRate = SerializedObject.FindProperty(SequenceBehaviour.PropNameFrameRate);
                 propFrameRate.floatValue = EditorGUILayout.DelayedIntField("Frame Rate", (int)propFrameRate.floatValue);
             }
 
@@ -127,7 +127,7 @@ namespace ActionEditor
 
         void ShowAddTrackContextMenu()
         {
-            var trackTypeList = Utility.GetSubClasses<Track>();
+            var trackTypeList = Utility.GetSubClasses<TrackBehaviour>();
 
             GenericMenu menu = new GenericMenu();
 
@@ -152,7 +152,7 @@ namespace ActionEditor
 
             SerializedObject.Update();
 
-            var propTracks = SerializedObject.FindProperty(Sequence.PropNameTracks);
+            var propTracks = SerializedObject.FindProperty(SequenceBehaviour.PropNameTracks);
             var count = propTracks.arraySize;
             propTracks.InsertArrayElementAtIndex(count);
             propTracks.arraySize = count + 1;
@@ -162,7 +162,7 @@ namespace ActionEditor
             track.name = type.Name;
 
             var so = new SerializedObject(track);
-            var propName = so.FindProperty(Track.PropNameTrackName);
+            var propName = so.FindProperty(TrackBehaviour.PropNameTrackName);
             propName.stringValue = track.name;
             so.ApplyModifiedProperties();
 
@@ -172,7 +172,7 @@ namespace ActionEditor
 
             propTrack.objectReferenceValue = track;
 
-            var trackEditor = CreateTrackEditor((Track)track);
+            var trackEditor = CreateTrackEditor((TrackBehaviour)track);
             trackEditor.OnChangeData += ChangeData;
             trackEditor.OnRemoveTrack += RemoveTrack;
             m_TrackEditors.Add(trackEditor);
@@ -182,7 +182,7 @@ namespace ActionEditor
             ChangeData();
         }
 
-        TrackEditor CreateTrackEditor(Track track)
+        TrackEditor CreateTrackEditor(TrackBehaviour track)
         {
             var customEditorType = GetCustomTrackEditor(track.GetType());
             if (customEditorType == null)
@@ -213,7 +213,7 @@ namespace ActionEditor
         {
             SerializedObject.Update();
 
-            var propTracks = SerializedObject.FindProperty(Sequence.PropNameTracks);
+            var propTracks = SerializedObject.FindProperty(SequenceBehaviour.PropNameTracks);
             var index = Utility.IndexOf(propTracks, editor.Asset);
             if(index >= 0)
             {

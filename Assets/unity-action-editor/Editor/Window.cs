@@ -87,7 +87,7 @@ namespace ActionEditor
                 return;
             }
 
-            if (selected is Sequence sequence)
+            if (selected is SequenceBehaviour sequence)
             {
                 ChangeDirector(EditorDirector.Create(sequence));
                 return;

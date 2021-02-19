@@ -6,7 +6,7 @@ using UnityEngine.Animations;
 
 namespace ActionEditor.Sample
 {
-    public class AnimateTrack : Track
+    public class AnimateTrack : TrackBehaviour
     {
         [SerializeField] SharedAnimatorContext m_Animator = new SharedAnimatorContext();
 
@@ -16,7 +16,7 @@ namespace ActionEditor.Sample
         AnimationPlayableOutput m_PlayableOutput;
         AnimationMixerPlayable m_Mixer;
 
-        public override void OnCreate(Sequence sequence, IReadOnlyList<Blackboard> blackboards)
+        public override void OnCreate(SequenceBehaviour sequence, IReadOnlyList<Blackboard> blackboards)
         {
             Blackboard.Bind(blackboards, m_Animator);
             Debug.Assert(m_Animator.Value != null, "Animator is null.");
@@ -29,7 +29,7 @@ namespace ActionEditor.Sample
             m_PlayableOutput.SetSourcePlayable(m_Mixer);
         }
 
-        public override void OnChangeClip(Clip fromClip, float fromWeight, Clip toClip, float toWeight)
+        public override void OnChangeClip(ClipBehaviour fromClip, float fromWeight, ClipBehaviour toClip, float toWeight)
         {
             m_Graph.Disconnect(m_Mixer, 0);
             m_Graph.Disconnect(m_Mixer, 1);
@@ -58,7 +58,7 @@ namespace ActionEditor.Sample
             m_Mixer.SetInputWeight(1, toWeight);
         }
 
-        public override void OnChangeWight(Clip fromClip, float fromWeight, Clip toClip, float toWeight)
+        public override void OnChangeWight(ClipBehaviour fromClip, float fromWeight, ClipBehaviour toClip, float toWeight)
         {
             //Debug.LogError(string.Format("fromWeight: {0}, toWeight: {1}", fromWeight, toWeight));
 

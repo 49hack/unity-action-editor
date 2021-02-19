@@ -9,9 +9,9 @@ using UnityEditor;
 namespace ActionEditor
 {
     [CreateAssetMenu(menuName = "Action Editor/Sequence", fileName = "ActionSequence")]
-    public class Sequence : ScriptableObject
+    public class SequenceBehaviour : ScriptableObject
     {
-        [SerializeField] Track[] m_Tracks = new Track[0];
+        [SerializeField] TrackBehaviour[] m_Tracks = new TrackBehaviour[0];
         [SerializeField] float m_TotalFrame = 120f;
         [SerializeField] float m_FrameRate = 60f;
 

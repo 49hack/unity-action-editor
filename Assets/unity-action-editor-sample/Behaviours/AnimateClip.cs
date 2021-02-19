@@ -7,7 +7,7 @@ using UnityEngine.Animations;
 namespace ActionEditor.Sample
 {
     [ParentTrack(typeof(AnimateTrack))]
-    public class AnimateClip : Clip
+    public class AnimateClip : ClipBehaviour
     {
         public static string PropNameClip { get { return nameof(m_Clip); } }
 
@@ -18,7 +18,7 @@ namespace ActionEditor.Sample
 
         public AnimationClipPlayable Playable { get { return m_Playable; } }
 
-        public override void OnCreate(Sequence sequence, IReadOnlyList<Blackboard> blackboards)
+        public override void OnCreate(SequenceBehaviour sequence, IReadOnlyList<Blackboard> blackboards)
         {
             m_Graph = ((PlayableSequence)sequence).Graph;
             Blackboard.Bind(blackboards, m_Clip);

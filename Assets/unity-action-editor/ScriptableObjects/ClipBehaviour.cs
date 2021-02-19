@@ -5,7 +5,7 @@ using System.Reflection;
 
 namespace ActionEditor
 {
-    public abstract class Clip : ScriptableObject
+    public abstract class ClipBehaviour : ScriptableObject
     {
         [SerializeField, HideInInspector] float m_BeginFrame;
         [SerializeField, HideInInspector] float m_EndFrame;
@@ -16,7 +16,7 @@ namespace ActionEditor
         public float BeginFrame { get { return m_BeginFrame; } }
         public float EndFrame { get { return m_EndFrame; } }
 
-        public Runtime.ClipContext CreateContext(float frameRate, Sequence sequence, IReadOnlyList<Blackboard> blackboards)
+        public Runtime.ClipContext CreateContext(float frameRate, SequenceBehaviour sequence, IReadOnlyList<Blackboard> blackboards)
         {
             return new Runtime.ClipContext(this, frameRate, sequence, blackboards);
         }
@@ -27,7 +27,7 @@ namespace ActionEditor
             m_EndFrame = m_BeginFrame + 10f;
         }
 
-        public virtual void OnCreate(Sequence sequence, IReadOnlyList<Blackboard> blackboards) { }
+        public virtual void OnCreate(SequenceBehaviour sequence, IReadOnlyList<Blackboard> blackboards) { }
         public virtual void OnSetTime(float time) { }
         public virtual void OnBegin() { }
         public virtual void OnEnd() { }

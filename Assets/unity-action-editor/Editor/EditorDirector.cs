@@ -9,9 +9,9 @@ namespace ActionEditor
     public class EditorDirector : IDirector
     {
         SequenceContext m_Context;
-        Sequence m_Sequence;
+        SequenceBehaviour m_Sequence;
 
-        public static EditorDirector Create(Sequence sequence)
+        public static EditorDirector Create(SequenceBehaviour sequence)
         {
             var director = new EditorDirector();
             director.m_Sequence = sequence;
@@ -19,14 +19,14 @@ namespace ActionEditor
         }
 
         public Status Status { get { return m_Context == null ? Status.Initial : m_Context.Status; } }
-        public Sequence Sequence { get { return m_Sequence; } }
+        public SequenceBehaviour Sequence { get { return m_Sequence; } }
         public IReadOnlyList<Blackboard> Blackboard { get { return null; } }
         public float CurrentTime { get { return m_Context == null ? 0f : m_Context.Current; } set { if (m_Context == null) return; m_Context.Current = value; } }
         public float CurrentFrame { get { return m_Context == null ? 0f : m_Context.CurrentFrame; } set { if (m_Context == null) return; m_Context.CurrentFrame = value; } }
         public float Length { get { return m_Context == null ? 0f : m_Context.Length; } }
         public float TotalFrame { get { return m_Sequence == null ? 0f : m_Sequence.TotalFrame; } }
 
-        public void Prepare(Sequence sequence = null, TickMode mode = TickMode.Auto)
+        public void Prepare(SequenceBehaviour sequence = null, TickMode mode = TickMode.Auto)
         {
             if (m_Context != null)
             {

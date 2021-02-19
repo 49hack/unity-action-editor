@@ -19,7 +19,7 @@ namespace ActionEditor
         public bool HasPrev { get; private set; }
         public bool HasNext { get; private set; }
 
-        public ClipViewInfo(Clip clip, Clip prev, Clip next, Navigator navigator, float tolalFrame, Rect fullRect)
+        public ClipViewInfo(ClipBehaviour clip, ClipBehaviour prev, ClipBehaviour next, Navigator navigator, float tolalFrame, Rect fullRect)
         {
             ContentMin = 0f;
             ContentMax = 0f;
@@ -64,7 +64,7 @@ namespace ActionEditor
             }
         }
 
-        static (float min, float max) Calculate(Clip clip, Navigator navigator)
+        static (float min, float max) Calculate(ClipBehaviour clip, Navigator navigator)
         {
             var beginFrame = clip.BeginFrame;
             var endFrame = clip.EndFrame;

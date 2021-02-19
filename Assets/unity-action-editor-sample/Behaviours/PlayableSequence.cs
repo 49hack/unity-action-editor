@@ -6,7 +6,7 @@ using UnityEngine.Playables;
 namespace ActionEditor.Sample
 {
     [CreateAssetMenu(menuName = "Action Editor/Playable Sequence", fileName = "PlayableSequence")]
-    public class PlayableSequence : Sequence
+    public class PlayableSequence : SequenceBehaviour
     {
         PlayableGraph m_Graph;
 

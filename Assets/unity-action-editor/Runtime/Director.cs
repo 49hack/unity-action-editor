@@ -10,7 +10,7 @@ namespace ActionEditor.Runtime
     {
         public static string PropNameBlackboardList { get { return nameof(m_BlackboardList); } }
 
-        [SerializeField] Sequence m_Sequence;
+        [SerializeField] SequenceBehaviour m_Sequence;
         [SerializeField] TickMode m_Mode;
         [SerializeField] bool m_PlayOnAwake; 
         [SerializeField,HideInInspector] List<Blackboard> m_BlackboardList = new List<Blackboard>();
@@ -18,7 +18,7 @@ namespace ActionEditor.Runtime
         SequenceContext m_Context;
 
         public Status Status { get { return m_Context == null ? Status.Initial : m_Context.Status; } }
-        public Sequence Sequence { get { return m_Sequence; } }
+        public SequenceBehaviour Sequence { get { return m_Sequence; } }
         public IReadOnlyList<Blackboard> Blackboard { get { return m_BlackboardList; } }
         public float CurrentTime { get { return m_Context == null ? 0f : m_Context.Current; } set { if (m_Context == null) return; m_Context.Current = value; } }
         public float CurrentFrame { get { return m_Context == null ? 0f : m_Context.CurrentFrame; } set { if (m_Context == null) return; m_Context.CurrentFrame = value; } }
@@ -34,7 +34,7 @@ namespace ActionEditor.Runtime
             }
         }
 
-        public void Prepare(Sequence sequence = null, TickMode mode = TickMode.Auto)
+        public void Prepare(SequenceBehaviour sequence = null, TickMode mode = TickMode.Auto)
         {
             m_Mode = mode;
 

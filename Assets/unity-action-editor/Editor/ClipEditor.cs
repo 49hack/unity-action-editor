@@ -8,7 +8,7 @@ namespace ActionEditor
     [System.Serializable]
     public class ClipEditor
     {
-        public static ClipEditor Create(System.Type type, Clip clip)
+        public static ClipEditor Create(System.Type type, ClipBehaviour clip)
         {
             var editor = System.Activator.CreateInstance(type) as ClipEditor;
             editor.Initialize(clip);
@@ -17,7 +17,7 @@ namespace ActionEditor
 
         enum DragType { None, Min, Max, Range }
 
-        [SerializeField] Clip m_Clip;
+        [SerializeField] ClipBehaviour m_Clip;
 
         SerializedObject m_SerializedObject;
         DragType m_DragType;
@@ -35,9 +35,9 @@ namespace ActionEditor
 
         #endregion // Virtual
 
-        public Clip Asset { get { return m_Clip; } }
+        public ClipBehaviour Asset { get { return m_Clip; } }
 
-        void Initialize(Clip clip)
+        void Initialize(ClipBehaviour clip)
         {
             m_Clip = clip;
         }
@@ -60,13 +60,13 @@ namespace ActionEditor
         {
             get
             {
-                var prop = SerializedObject.FindProperty(Clip.PropNameBeginFrame);
+                var prop = SerializedObject.FindProperty(ClipBehaviour.PropNameBeginFrame);
                 return prop.floatValue;
             }
             set
             {
                 SerializedObject.Update();
-                var prop = SerializedObject.FindProperty(Clip.PropNameBeginFrame);
+                var prop = SerializedObject.FindProperty(ClipBehaviour.PropNameBeginFrame);
                 prop.floatValue = value;
                 SerializedObject.ApplyModifiedProperties();
             }
@@ -75,13 +75,13 @@ namespace ActionEditor
         {
             get
             {
-                var prop = SerializedObject.FindProperty(Clip.PropNameEndFrame);
+                var prop = SerializedObject.FindProperty(ClipBehaviour.PropNameEndFrame);
                 return prop.floatValue;
             }
             set
             {
                 SerializedObject.Update();
-                var prop = SerializedObject.FindProperty(Clip.PropNameEndFrame);
+                var prop = SerializedObject.FindProperty(ClipBehaviour.PropNameEndFrame);
                 prop.floatValue = value;
                 SerializedObject.ApplyModifiedProperties();
             }

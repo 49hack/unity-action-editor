@@ -46,12 +46,12 @@ namespace ActionEditor.Runtime
             }
         }
 
-        Track m_Track;
+        TrackBehaviour m_Track;
         ClipContext[] m_ClipContexts;
         ClipIndices m_LatestIndecies = new ClipIndices(-1, -1);
         float m_CurrentTime;
 
-        public TrackContext(Track track, Clip[] clips, float frameRate, Sequence sequence, IReadOnlyList<Blackboard> blackboards)
+        public TrackContext(TrackBehaviour track, ClipBehaviour[] clips, float frameRate, SequenceBehaviour sequence, IReadOnlyList<Blackboard> blackboards)
         {
             m_CurrentTime = -1f;
             m_Track = track;

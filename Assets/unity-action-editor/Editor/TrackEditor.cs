@@ -9,14 +9,14 @@ namespace ActionEditor
     [System.Serializable]
     public class TrackEditor
     {
-        public static TrackEditor Create(System.Type editorType, Track track)
+        public static TrackEditor Create(System.Type editorType, TrackBehaviour track)
         {
             var editor = System.Activator.CreateInstance(editorType) as TrackEditor;
             editor.Initialize(track);
             return editor;
         }
 
-        [SerializeField] Track m_Track;
+        [SerializeField] TrackBehaviour m_Track;
 
         SerializedObject m_SerializedObject;
         List<Vector3> m_IndicatePointList = new List<Vector3>();
@@ -32,7 +32,7 @@ namespace ActionEditor
 
         protected virtual void DrawContents(Rect rect, SerializedObject serializedObject)
         {
-            var propName = serializedObject.FindProperty(Track.PropNameTrackName);
+            var propName = serializedObject.FindProperty(TrackBehaviour.PropNameTrackName);
             var nameRect = new Rect(rect.x + 2f, rect.y + 2f, rect.width - 4f, EditorGUIUtility.singleLineHeight);
             propName.stringValue = EditorGUI.TextField(nameRect, propName.stringValue);
         }
@@ -43,7 +43,7 @@ namespace ActionEditor
         }
         #endregion // Virtual
 
-        public Track Asset { get { return m_Track; } }
+        public TrackBehaviour Asset { get { return m_Track; } }
 
         SerializedObject SerializedObject
         {
@@ -58,7 +58,7 @@ namespace ActionEditor
             }
         }
 
-        void Initialize(Track track)
+        void Initialize(TrackBehaviour track)
         {
             m_Track = track;
             m_ClipEditors = new List<ClipEditor>();
@@ -73,11 +73,11 @@ namespace ActionEditor
             if (m_ClipEditors == null)
                 m_ClipEditors = new List<ClipEditor>();
 
-            var propClips = SerializedObject.FindProperty(Track.PropNameClips);
+            var propClips = SerializedObject.FindProperty(TrackBehaviour.PropNameClips);
             for (int i = 0; i < propClips.arraySize; i++)
             {
                 var item = propClips.GetArrayElementAtIndex(i);
-                var clip = (Clip)item.objectReferenceValue;
+                var clip = (ClipBehaviour)item.objectReferenceValue;
                 var editor = CreateClipEditor(clip);
                 editor.OnRemoveClip += RemoveClip;
                 editor.OnChangeData += ChangeData;
@@ -284,7 +284,7 @@ namespace ActionEditor
         {
             List<System.Type> result = new List<System.Type>();
 
-            var clipTypeList = Utility.GetSubClasses<Clip>();
+            var clipTypeList = Utility.GetSubClasses<ClipBehaviour>();
             for(int i = 0; i < clipTypeList.Length; i++)
             {
                 var type = clipTypeList[i];
@@ -308,11 +308,11 @@ namespace ActionEditor
 
             var index = FindInsertIndex(param.beginFrame);
 
-            var propClips = SerializedObject.FindProperty(Track.PropNameClips);
+            var propClips = SerializedObject.FindProperty(TrackBehaviour.PropNameClips);
             propClips.InsertArrayElementAtIndex(index);
             var propClip = propClips.GetArrayElementAtIndex(index);
 
-            var clip = (Clip)ScriptableObject.CreateInstance(param.type);
+            var clip = (ClipBehaviour)ScriptableObject.CreateInstance(param.type);
             clip.name = param.type.Name;
             clip.PostCreate(param.beginFrame);
 
@@ -345,7 +345,7 @@ namespace ActionEditor
             ChangeData();
         }
 
-        ClipEditor CreateClipEditor(Clip clip)
+        ClipEditor CreateClipEditor(ClipBehaviour clip)
         {
             var cutomEditor = GetCustomClipEditor(clip.GetType());
             if (cutomEditor == null)
@@ -371,11 +371,11 @@ namespace ActionEditor
         }
         int FindInsertIndex(float beginFrame)
         {
-            var propClips = SerializedObject.FindProperty(Track.PropNameClips);
+            var propClips = SerializedObject.FindProperty(TrackBehaviour.PropNameClips);
             for(int i = 0; i < propClips.arraySize; i++)
             {
                 var item = propClips.GetArrayElementAtIndex(i);
-                var clip = (Clip)item.objectReferenceValue;
+                var clip = (ClipBehaviour)item.objectReferenceValue;
                 if (clip == null)
                     continue;
 
@@ -387,7 +387,7 @@ namespace ActionEditor
 
             return propClips.arraySize;
         }
-        int FindIndex(ClipEditor[] array, Clip clip)
+        int FindIndex(ClipEditor[] array, ClipBehaviour clip)
         {
             for(int i = 0; i < array.Length; i++)
             {
@@ -396,14 +396,14 @@ namespace ActionEditor
             }
             return -1;
         }
-        public List<Clip> Sort(SerializedProperty propClips)
+        public List<ClipBehaviour> Sort(SerializedProperty propClips)
         {
-            List<Clip> list = new List<Clip>();
+            List<ClipBehaviour> list = new List<ClipBehaviour>();
             var count = propClips.arraySize;
             for(int i = 0; i < count; i++)
             {
                 var item = propClips.GetArrayElementAtIndex(i);
-                list.Add((Clip)item.objectReferenceValue);
+                list.Add((ClipBehaviour)item.objectReferenceValue);
             }
 
             list.Sort((a, b) => { return Mathf.CeilToInt((b.BeginFrame - a.BeginFrame) * 1000f); });
@@ -419,7 +419,7 @@ namespace ActionEditor
         {
             SerializedObject.Update();
 
-            var propClips = SerializedObject.FindProperty(Track.PropNameClips);
+            var propClips = SerializedObject.FindProperty(TrackBehaviour.PropNameClips);
             var index = Utility.IndexOf(propClips, editor.Asset);
             if (index >= 0)
             {

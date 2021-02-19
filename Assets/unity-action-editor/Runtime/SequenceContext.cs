@@ -6,7 +6,7 @@ namespace ActionEditor.Runtime
 {
     public class SequenceContext
     {
-        Sequence m_Sequence;
+        SequenceBehaviour m_Sequence;
         TrackContext[] m_TrackContexts;
         Status m_State;
         float m_ElapsedTime;
@@ -47,7 +47,7 @@ namespace ActionEditor.Runtime
 
         public bool IsPlaying { get { return m_State == Status.Playing; } }
 
-        public SequenceContext(Sequence sequence, Track[] tracks, IReadOnlyList<Blackboard> blackboards)
+        public SequenceContext(SequenceBehaviour sequence, TrackBehaviour[] tracks, IReadOnlyList<Blackboard> blackboards)
         {
             SetState(Status.Stoppped);
 

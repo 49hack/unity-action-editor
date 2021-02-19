@@ -9,13 +9,13 @@ namespace ActionEditor.Runtime
         public float BeginTime { get { return m_Clip.BeginFrame / m_FrameRate; } }
         public float EndTime { get { return m_Clip.EndFrame / m_FrameRate; } }
         public bool IsPlaying { get { return IsPlayingAt(m_CurrentTime); } }
-        public Clip Clip { get { return m_Clip; } }
-        Clip m_Clip;
+        public ClipBehaviour Clip { get { return m_Clip; } }
+        ClipBehaviour m_Clip;
         float m_CurrentTime;
         float m_FrameRate;
         bool m_IsBegined = false;
 
-        public ClipContext(Clip clip, float frameRate, Sequence sequence, IReadOnlyList<Blackboard> blackboards)
+        public ClipContext(ClipBehaviour clip, float frameRate, SequenceBehaviour sequence, IReadOnlyList<Blackboard> blackboards)
         {
             m_Clip = clip;
             m_Clip.OnCreate(sequence, blackboards);

@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace ActionEditor.Sample
 {
-    public class EffectTrack : Track
+    public class EffectTrack : TrackBehaviour
     {
         public static string PropNameLocator { get { return nameof(m_Locator); } }
         public static string PropNameEffect { get { return nameof(m_Effect); } }
@@ -14,7 +14,7 @@ namespace ActionEditor.Sample
 
         Particle m_Particle;
 
-        public override void OnCreate(Sequence sequence, IReadOnlyList<Blackboard> blackboards)
+        public override void OnCreate(SequenceBehaviour sequence, IReadOnlyList<Blackboard> blackboards)
         {
             Blackboard.Bind(blackboards, m_Effect);
             Blackboard.Bind(blackboards, m_Locator);
@@ -22,7 +22,7 @@ namespace ActionEditor.Sample
             m_Particle = new Particle(m_Effect.Value, m_Locator.Value);
         }
 
-        public override void OnChangeClip(Clip fromClip, float fromWeight, Clip toClip, float toWeight)
+        public override void OnChangeClip(ClipBehaviour fromClip, float fromWeight, ClipBehaviour toClip, float toWeight)
         {
             var effectClip = fromClip as EffectClip;
             if(effectClip != null)

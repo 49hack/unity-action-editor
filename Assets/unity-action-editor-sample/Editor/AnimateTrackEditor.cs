@@ -14,7 +14,7 @@ namespace ActionEditor.Sample
 
         protected override void DrawContents(Rect rect, SerializedObject serializedObject)
         {
-            var propName = serializedObject.FindProperty(Track.PropNameTrackName);
+            var propName = serializedObject.FindProperty(TrackBehaviour.PropNameTrackName);
             var nameRect = new Rect(rect.x + 2f, rect.y + 2f, rect.width - 4f, EditorGUIUtility.singleLineHeight);
             propName.stringValue = EditorGUI.TextField(nameRect, propName.stringValue);
 
