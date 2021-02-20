@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace ActionEditor.Sample
+namespace ActionEditor
 {
     [ParentTrack(typeof(EffectTrackBehaviour))]
     public class EffectClipBehaviour : ClipBehaviour

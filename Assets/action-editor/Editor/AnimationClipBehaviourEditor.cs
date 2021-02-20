@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 
-namespace ActionEditor.Sample
+namespace ActionEditor
 {
     [CustomClipEditor(typeof(AnimationClipBehaviour))]
     public class AnimationClipBehaviourEditor : ClipBehaviourEditor

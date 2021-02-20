@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Playables;
 
-namespace ActionEditor.Sample
+namespace ActionEditor
 {
     [CreateAssetMenu(menuName = "Action Editor/Playable Sequence", fileName = "PlayableSequence")]
     public class PlayableSequence : SequenceBehaviour

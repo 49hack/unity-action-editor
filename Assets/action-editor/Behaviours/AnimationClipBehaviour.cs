@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.Playables;
 using UnityEngine.Animations;
 
-namespace ActionEditor.Sample
+namespace ActionEditor
 {
     [ParentTrack(typeof(AnimationTrackBehaviour))]
     public class AnimationClipBehaviour : ClipBehaviour
