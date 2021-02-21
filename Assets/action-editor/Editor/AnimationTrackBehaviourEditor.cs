@@ -17,10 +17,6 @@ namespace ActionEditor
             var propName = serializedObject.FindProperty(TrackBehaviour.PropNameTrackName);
             var nameRect = new Rect(rect.x + 2f, rect.y + 2f, rect.width - 4f, EditorGUIUtility.singleLineHeight);
             propName.stringValue = EditorGUI.TextField(nameRect, propName.stringValue);
-
-            var animRect = new Rect(rect.x + 2f, rect.y + nameRect.height + 5f, rect.width - 4f, EditorGUIUtility.singleLineHeight);
-            var animProp = serializedObject.FindProperty(AnimationTrackBehaviour.PropNameAnimator);
-            DrawContext(animRect, animProp, new GUIContent("Animator"), typeof(Animator));
         }
     }
 }

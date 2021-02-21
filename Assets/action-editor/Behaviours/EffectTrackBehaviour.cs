@@ -49,13 +49,12 @@ namespace ActionEditor
                     return;
 
                 m_Root = GameObject.Instantiate(root);
-                if(parent != null)
+                if (parent != null)
                 {
                     m_Root.transform.SetParent(parent, false);
                 }
 
                 m_ParticleList = m_Root.GetComponentsInChildren<ParticleSystem>(true);
-
                 End();
             }
 
@@ -80,13 +79,13 @@ namespace ActionEditor
                     if (ps == null)
                         continue;
 
-                    ps.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+                    ps.Stop(false, ParticleSystemStopBehavior.StopEmittingAndClear);
                     var seed = ps.randomSeed;
                     var autoSeed = ps.useAutoRandomSeed;
                     ps.randomSeed = 1;
                     ps.useAutoRandomSeed = false;
 
-                    m_ParticleList[i].Simulate(time, true, true, false);
+                    m_ParticleList[i].Simulate(time, false, true, false);
 
                     ps.randomSeed = seed;
                     ps.useAutoRandomSeed = autoSeed;

@@ -12,7 +12,7 @@ namespace ActionEditor
         Manual
     }
 
-    public enum Status
+    public enum SequenceStatus
     {
         Initial,
         Stoppped,
@@ -22,14 +22,14 @@ namespace ActionEditor
 
     public interface IDirector
     {
-        Status Status { get; }
+        SequenceStatus Status { get; }
         SequenceBehaviour Sequence { get; }
         IReadOnlyList<Blackboard> Blackboard { get; }
         float CurrentTime { get; set; }
         float CurrentFrame { get; set; }
         float Length { get; }
         float TotalFrame { get; }
-        void Prepare(SequenceBehaviour sequence = null, TickMode mode = TickMode.Auto);
+        SequenceContext Prepare(SequenceBehaviour sequence = null, TickMode mode = TickMode.Auto);
         void Play(float? time = null);
         void Stop();
         void Pause();

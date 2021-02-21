@@ -17,7 +17,7 @@ namespace ActionEditor.Runtime
 
         SequenceContext m_Context;
 
-        public Status Status { get { return m_Context == null ? Status.Initial : m_Context.Status; } }
+        public SequenceStatus Status { get { return m_Context == null ? SequenceStatus.Initial : m_Context.Status; } }
         public SequenceBehaviour Sequence { get { return m_Sequence; } }
         public IReadOnlyList<Blackboard> Blackboard { get { return m_BlackboardList; } }
         public float CurrentTime { get { return m_Context == null ? 0f : m_Context.Current; } set { if (m_Context == null) return; m_Context.Current = value; } }
@@ -34,7 +34,7 @@ namespace ActionEditor.Runtime
             }
         }
 
-        public void Prepare(SequenceBehaviour sequence = null, TickMode mode = TickMode.Auto)
+        public SequenceContext Prepare(SequenceBehaviour sequence = null, TickMode mode = TickMode.Auto)
         {
             m_Mode = mode;
 
@@ -50,9 +50,10 @@ namespace ActionEditor.Runtime
             }
 
             if (m_Sequence == null)
-                return;
+                return null;
 
             m_Context = m_Sequence.CreateContext(Blackboard);
+            return m_Context;
         }
 
         public void Play(float? time = null)
@@ -90,6 +91,13 @@ namespace ActionEditor.Runtime
         {
             m_Context?.Dispose();
             m_Context = null;
+        }
+
+        public void AddBlackboard(Blackboard blackboard)
+        {
+            if (m_BlackboardList.Contains(blackboard))
+                return;
+            m_BlackboardList.Add(blackboard);
         }
 
         void OnDestroy()

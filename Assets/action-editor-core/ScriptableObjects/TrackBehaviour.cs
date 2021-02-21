@@ -19,6 +19,7 @@ namespace ActionEditor
         }
 
         public virtual void OnCreate(SequenceBehaviour sequence, IReadOnlyList<Blackboard> blackboards) { }
+        public virtual void OnInterrupt() { }
         public virtual void SetTime(float time) { }
         public virtual void OnPlay() { }
         public virtual void OnStop() { }

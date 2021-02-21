@@ -11,7 +11,7 @@ namespace ActionEditor
     [CreateAssetMenu(menuName = "Action Editor/Sequence", fileName = "ActionSequence")]
     public class SequenceBehaviour : ScriptableObject
     {
-        [SerializeField] TrackBehaviour[] m_Tracks = new TrackBehaviour[0];
+        [SerializeField] protected TrackBehaviour[] m_Tracks = new TrackBehaviour[0];
         [SerializeField] float m_TotalFrame = 120f;
         [SerializeField] float m_FrameRate = 60f;
 
@@ -22,7 +22,7 @@ namespace ActionEditor
         public float TotalFrame { get { return m_TotalFrame; } }
         public float FrameRate { get { return m_FrameRate; } }
 
-        public Runtime.SequenceContext CreateContext(IReadOnlyList<Blackboard> blackboards)
+        public virtual Runtime.SequenceContext CreateContext(IReadOnlyList<Blackboard> blackboards)
         {
             this.OnCreate(blackboards);
 
@@ -30,6 +30,7 @@ namespace ActionEditor
         }
 
         public virtual void OnCreate(IReadOnlyList<Blackboard> blackboards) { }
+        public virtual void OnInterrupt() { }
         public virtual void OnSetTime(float time) { }
         public virtual void OnPlay() { }
         public virtual void OnStop() { }

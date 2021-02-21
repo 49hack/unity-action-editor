@@ -71,6 +71,12 @@ namespace ActionEditor.Runtime
             var clipToTime = Mathf.Clamp(toTime - BeginTime, 0f, EndTime - BeginTime);
             m_Clip.OnProgress(clipFromTime, clipToTime);
         }
+
+        public void Interrupt()
+        {
+            m_Clip?.OnInterrupt();
+        }
+
         public void Dispose()
         {
             m_Clip.OnDispose();

@@ -47,8 +47,8 @@ namespace ActionEditor
                 {
                     case SharedValueType.Blackboard:
                         {
-                            var fields = CollectFields(blackboardList, type);
-                            var propNames = GetBlackboardNameList(blackboardList, fields);
+                            var fieldInfos = CollectFields(blackboardList, type);
+                            var propNames = GetBlackboardNameList(fieldInfos);
                             if (propNames.Length < 0)
                             {
                                 EditorGUI.PropertyField(valueRect, nameProp, GUIContent.none);
@@ -83,15 +83,15 @@ namespace ActionEditor
             }
         }
 
-        public static List<FieldInfo> CollectFields(IReadOnlyList<Blackboard> blackboardList, System.Type valueType)
+        public static (Blackboard blackboard, List<FieldInfo>)[] CollectFields(IReadOnlyList<Blackboard> blackboardList, System.Type valueType)
         {
-            List<FieldInfo> result = new List<FieldInfo>();
+            var result = new (Blackboard blackboard, List<FieldInfo>)[blackboardList.Count];
 
             for (int bi = 0; bi < blackboardList.Count; bi++)
             {
                 var blackboard = blackboardList[bi];
                 var fields = CollectFields(blackboard, valueType);
-                result.AddRange(fields);
+                result[bi] = (blackboard, fields);
             }
 
             return result;
@@ -131,25 +131,25 @@ namespace ActionEditor
             return result;
         }
 
-        static string[] GetBlackboardNameList(IReadOnlyList<Blackboard> blackboardList, List<FieldInfo> fieldInfos)
+        static string[] GetBlackboardNameList((Blackboard blackboard, List<FieldInfo> fields)[] fieldInfos)
         {
-            var result = new string[fieldInfos.Count];
+            var result = new List<string>();
 
-            for (int bi = 0; bi < blackboardList.Count; bi++)
+            for (int bi = 0; bi < fieldInfos.Length; bi++)
             {
-                var blackboard = blackboardList[bi];
+                var blackboard = fieldInfos[bi].blackboard;
 
-                for (int i = 0; i < fieldInfos.Count; i++)
+                for (int i = 0; i < fieldInfos[bi].fields.Count; i++)
                 {
-                    var field = fieldInfos[i];
+                    var field = fieldInfos[bi].fields[i];
                     var sharedValue = field.GetValue(blackboard);
                     var type = sharedValue.GetType();
                     var nameField = typeof(SharedValue).GetField(SharedValue.PropNamePropertyName, BindingFlags.Instance | BindingFlags.NonPublic);
-                    result[i] = (string)nameField.GetValue(sharedValue);
+                    result.Add((string)nameField.GetValue(sharedValue));
                 }
             }
 
-            return result;
+            return result.ToArray();
         }
 
         static int FindIndex(string[] array, string value)

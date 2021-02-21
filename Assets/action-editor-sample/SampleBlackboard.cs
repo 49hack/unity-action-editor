@@ -7,15 +7,13 @@ namespace ActionEditor.Sample
     public class SampleBlackboard : Blackboard
     {
         [SerializeField] SharedAnimator m_Animator = new SharedAnimator(nameof(m_Animator));
-        [SerializeField] SharedAnimator m_AnimatorB = new SharedAnimator(nameof(m_AnimatorB));
-        [SerializeField] SharedTransform m_Locator = new SharedTransform(nameof(m_Locator));
+        [SerializeField] SharedRuntimeAnimatorController m_AnimatorController = new SharedRuntimeAnimatorController(nameof(m_AnimatorController));
 
         protected override IReadOnlyList<SharedValue> Collect()
         {
             return new SharedValue[] {
                 m_Animator,
-                m_AnimatorB,
-                m_Locator
+                m_AnimatorController,
             };
         }
     }

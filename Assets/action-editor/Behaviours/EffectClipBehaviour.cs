@@ -15,6 +15,11 @@ namespace ActionEditor
             m_Particle = null;
         }
 
+        public override void OnInterrupt()
+        {
+            OnEnd();
+        }
+
         public override void OnSetTime(float time)
         {
             m_Particle?.Evaluate(time);

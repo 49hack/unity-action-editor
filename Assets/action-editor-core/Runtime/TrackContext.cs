@@ -172,6 +172,19 @@ namespace ActionEditor.Runtime
             return new ClipIndices(first, first);
         }
 
+        public void Interrupt()
+        {
+            m_Track?.OnInterrupt();
+
+            if (m_ClipContexts != null)
+            {
+                for (int i = 0; i < m_ClipContexts.Length; i++)
+                {
+                    m_ClipContexts[i].Interrupt();
+                }
+            }
+        }
+
         public void Dispose()
         {
             m_Track.OnDispose();

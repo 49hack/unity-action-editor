@@ -18,7 +18,7 @@ namespace ActionEditor
             return director;
         }
 
-        public Status Status { get { return m_Context == null ? Status.Initial : m_Context.Status; } }
+        public SequenceStatus Status { get { return m_Context == null ? SequenceStatus.Initial : m_Context.Status; } }
         public SequenceBehaviour Sequence { get { return m_Sequence; } }
         public IReadOnlyList<Blackboard> Blackboard { get { return null; } }
         public float CurrentTime { get { return m_Context == null ? 0f : m_Context.Current; } set { if (m_Context == null) return; m_Context.Current = value; } }
@@ -26,7 +26,7 @@ namespace ActionEditor
         public float Length { get { return m_Context == null ? 0f : m_Context.Length; } }
         public float TotalFrame { get { return m_Sequence == null ? 0f : m_Sequence.TotalFrame; } }
 
-        public void Prepare(SequenceBehaviour sequence = null, TickMode mode = TickMode.Auto)
+        public SequenceContext Prepare(SequenceBehaviour sequence = null, TickMode mode = TickMode.Auto)
         {
             if (m_Context != null)
             {
@@ -40,9 +40,10 @@ namespace ActionEditor
             }
 
             if (m_Sequence == null)
-                return;
+                return null;
 
             m_Context = m_Sequence.CreateContext(Blackboard);
+            return m_Context;
         }
 
         public void Play(float? time = null)

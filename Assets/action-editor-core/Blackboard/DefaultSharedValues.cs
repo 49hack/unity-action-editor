@@ -93,4 +93,7 @@ namespace ActionEditor
 
     [System.Serializable, MenuTitle("Animation Clip")] public class SharedAnimationClip : SharedValue<AnimationClip> { public SharedAnimationClip(string propertyName) : base(propertyName) { } }
     [System.Serializable] public class SharedAnimationClipContext : SharedValueContext<AnimationClip> { }
+
+    [System.Serializable, MenuTitle("Runtime Animator Controller")] public class SharedRuntimeAnimatorController : SharedValue<RuntimeAnimatorController> { public SharedRuntimeAnimatorController(string propertyName) : base(propertyName) { } }
+    [System.Serializable] public class SharedRuntimeAnimatorControllerContext : SharedValueContext<RuntimeAnimatorController> { }
 }

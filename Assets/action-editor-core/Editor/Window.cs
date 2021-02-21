@@ -168,7 +168,7 @@ namespace ActionEditor
         {
             using (new EditorGUI.DisabledGroupScope(CheckState() != State.Playable))
             {
-                bool isPlaying = m_Director.Status == Status.Playing;
+                bool isPlaying = m_Director.Status == SequenceStatus.Playing;
 
                 const float ButtonWidth = 50f;
                 if (GUILayout.Button("<<", EditorStyles.toolbarButton, GUILayout.Width(ButtonWidth)))
@@ -214,7 +214,7 @@ namespace ActionEditor
             if (m_Director.Sequence == null)
                 return State.NoSequence;
 
-            if (m_Director.Status == Status.Initial)
+            if (m_Director.Status == SequenceStatus.Initial)
                 return State.NeedPrepare;
 
             if(m_Director is EditorDirector)
@@ -230,7 +230,7 @@ namespace ActionEditor
             if (m_Director == null)
                 return;
 
-            if (m_Director.Status != Status.Playing)
+            if (m_Director.Status != SequenceStatus.Playing)
                 return;
 
             var delta = EditorApplication.timeSinceStartup - m_LatestTickTime;
@@ -244,7 +244,7 @@ namespace ActionEditor
             if (m_Director == null)
                 return;
 
-            var isPlaying = m_Director.Status == Status.Playing;
+            var isPlaying = m_Director.Status == SequenceStatus.Playing;
             var current = m_Director.CurrentTime;
             m_Director.Prepare(mode: TickMode.Manual);
             if (isPlaying)

@@ -1,0 +1,132 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-8869476062939878843
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 54e0c62c151b73c4ca855ef57562f1f1, type: 3}
+  m_Name: EffectClipBehaviour
+  m_EditorClassIdentifier: 
+  m_BeginFrame: 54.999992
+  m_EndFrame: 230
+--- !u!114 &-7738503171342346593
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2eefbe11866342f4280dbdfbd27ba35e, type: 3}
+  m_Name: AnimationClipBehaviour
+  m_EditorClassIdentifier: 
+  m_BeginFrame: 0
+  m_EndFrame: 39.999996
+  m_Clip:
+    m_SharedType: 0
+    m_PropertyName: 
+    m_FixedValue: {fileID: 7400018, guid: f320efa63ce12874a9ad50add869c0b5, type: 3}
+--- !u!114 &-6343275608062261952
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0ebe9f94c84d4ed489a56ca933e91459, type: 3}
+  m_Name: EffectTrackBehaviour
+  m_EditorClassIdentifier: 
+  m_TrackName: EffectTrackBehaviour
+  m_Clips:
+  - {fileID: -8869476062939878843}
+  m_Locator:
+    m_SharedType: 1
+    m_PropertyName: m_AttackLocator
+    m_FixedValue: {fileID: 0}
+  m_Effect:
+    m_SharedType: 0
+    m_PropertyName: 
+    m_FixedValue: {fileID: 5132014792344170750, guid: fb04270a5433e6249bbc67798f71d6ea,
+      type: 3}
+--- !u!114 &-3982754373068485640
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2eefbe11866342f4280dbdfbd27ba35e, type: 3}
+  m_Name: AnimationClipBehaviour
+  m_EditorClassIdentifier: 
+  m_BeginFrame: 34
+  m_EndFrame: 86
+  m_Clip:
+    m_SharedType: 0
+    m_PropertyName: 
+    m_FixedValue: {fileID: 7400018, guid: f320efa63ce12874a9ad50add869c0b5, type: 3}
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0245e2cb7c4cf3545b913595ea247e9b, type: 3}
+  m_Name: Action3
+  m_EditorClassIdentifier: 
+  m_Tracks:
+  - {fileID: 6081770487075884805}
+  - {fileID: -6343275608062261952}
+  m_TotalFrame: 230
+  m_FrameRate: 60
+  m_BlendableAnimator:
+    m_SharedType: 1
+    m_PropertyName: m_BlendableAnimator
+    m_FixedValue: {fileID: 0}
+--- !u!114 &96056797704895257
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2eefbe11866342f4280dbdfbd27ba35e, type: 3}
+  m_Name: AnimationClipBehaviour
+  m_EditorClassIdentifier: 
+  m_BeginFrame: 70
+  m_EndFrame: 230
+  m_Clip:
+    m_SharedType: 0
+    m_PropertyName: 
+    m_FixedValue: {fileID: 7400000, guid: f320efa63ce12874a9ad50add869c0b5, type: 3}
+--- !u!114 &6081770487075884805
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c49cdbf9fb909e4ca09c680f7c8b8fe, type: 3}
+  m_Name: AnimationTrackBehaviour
+  m_EditorClassIdentifier: 
+  m_TrackName: AnimationTrackBehaviour
+  m_Clips:
+  - {fileID: -7738503171342346593}
+  - {fileID: -3982754373068485640}
+  - {fileID: 96056797704895257}

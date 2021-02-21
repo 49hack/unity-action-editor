@@ -57,9 +57,9 @@ namespace ActionEditor
         new public static string PropNameFixedValue { get { return nameof(m_FixedValue); } }
         new public static string PropNamePropertyName { get { return nameof(m_PropertyName); } }
 
-        [SerializeField] SharedValueType m_SharedType = SharedValueType.Fixed;
-        [SerializeField] string m_PropertyName;
-        [SerializeField] T m_FixedValue;
+        [SerializeField] protected SharedValueType m_SharedType = SharedValueType.Fixed;
+        [SerializeField] protected string m_PropertyName;
+        [SerializeField] protected T m_FixedValue;
 
         SharedValue<T> m_Value;
 

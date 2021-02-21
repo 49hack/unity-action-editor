@@ -6,12 +6,17 @@ namespace ActionEditor.Runtime
 {
     public class SequenceContext
     {
-        SequenceBehaviour m_Sequence;
-        TrackContext[] m_TrackContexts;
-        Status m_State;
-        float m_ElapsedTime;
+        public delegate void ChangeStatus(SequenceStatus status);
 
-        public Status Status { get { return m_State; } }
+        protected SequenceBehaviour m_Sequence;
+        protected SequenceStatus m_State;
+        protected float m_ElapsedTime;
+
+        TrackContext[] m_TrackContexts;
+
+        public event ChangeStatus OnChangeStatus;
+
+        public SequenceStatus Status { get { return m_State; } }
         public float Current
         {
             get
@@ -45,11 +50,11 @@ namespace ActionEditor.Runtime
             }
         }
 
-        public bool IsPlaying { get { return m_State == Status.Playing; } }
+        public bool IsPlaying { get { return m_State == SequenceStatus.Playing; } }
 
         public SequenceContext(SequenceBehaviour sequence, TrackBehaviour[] tracks, IReadOnlyList<Blackboard> blackboards)
         {
-            SetState(Status.Stoppped);
+            SetState(SequenceStatus.Stoppped);
 
             m_Sequence = sequence;
             m_TrackContexts = new TrackContext[tracks.Length];
@@ -59,9 +64,10 @@ namespace ActionEditor.Runtime
             }
         }
 
-        void SetState(Status state)
+        void SetState(SequenceStatus state)
         {
             m_State = state;
+            OnChangeStatus?.Invoke(state);
         }
 
         public void Play(float time)
@@ -70,7 +76,7 @@ namespace ActionEditor.Runtime
                 return;
 
             Current = time;
-            SetState(Status.Playing);
+            SetState(SequenceStatus.Playing);
 
             m_Sequence.OnPlay();
 
@@ -85,7 +91,7 @@ namespace ActionEditor.Runtime
             if (m_Sequence == null)
                 return;
 
-            SetState(Status.Stoppped);
+            SetState(SequenceStatus.Stoppped);
 
             m_Sequence.OnStop();
 
@@ -100,7 +106,7 @@ namespace ActionEditor.Runtime
             if (m_Sequence == null)
                 return;
 
-            SetState(Status.Paused);
+            SetState(SequenceStatus.Paused);
 
             m_Sequence.OnPause();
 
@@ -115,7 +121,7 @@ namespace ActionEditor.Runtime
             if (m_Sequence == null)
                 return;
 
-            SetState(Status.Playing);
+            SetState(SequenceStatus.Playing);
 
             m_Sequence.OnResume();
 
@@ -125,7 +131,7 @@ namespace ActionEditor.Runtime
             }
         }
 
-        void SetTime(float time)
+        protected virtual void SetTime(float time)
         {
             if (m_Sequence == null)
                 return;
@@ -143,7 +149,7 @@ namespace ActionEditor.Runtime
             if (m_Sequence == null)
                 return;
 
-            if (m_State != Status.Playing)
+            if (m_State != SequenceStatus.Playing)
             {
                 return;
             }
@@ -162,6 +168,19 @@ namespace ActionEditor.Runtime
             if(Current >= Length)
             {
                 Stop();
+            }
+        }
+
+        public void Interrupt()
+        {
+            m_Sequence?.OnInterrupt();
+
+            if(m_TrackContexts != null)
+            {
+                for(int i = 0; i < m_TrackContexts.Length; i++)
+                {
+                    m_TrackContexts[i].Interrupt();
+                }
             }
         }
 
