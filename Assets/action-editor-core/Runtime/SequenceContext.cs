@@ -149,7 +149,7 @@ namespace ActionEditor.Runtime
             if (m_Sequence == null)
                 return;
 
-            if (m_State != SequenceStatus.Playing)
+            if (m_State != SequenceStatus.Playing && m_State != SequenceStatus.Interrupted)
             {
                 return;
             }
@@ -182,6 +182,8 @@ namespace ActionEditor.Runtime
                     m_TrackContexts[i].Interrupt();
                 }
             }
+
+            SetState(SequenceStatus.Interrupted);
         }
 
         public void Dispose()

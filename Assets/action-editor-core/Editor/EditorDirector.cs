@@ -19,7 +19,7 @@ namespace ActionEditor
         }
 
         public SequenceStatus Status { get { return m_Context == null ? SequenceStatus.Initial : m_Context.Status; } }
-        public SequenceBehaviour Sequence { get { return m_Sequence; } }
+        public SequenceBehaviour Sequence { get { return m_Sequence; } set { m_Sequence = value; } }
         public IReadOnlyList<Blackboard> Blackboard { get { return null; } }
         public float CurrentTime { get { return m_Context == null ? 0f : m_Context.Current; } set { if (m_Context == null) return; m_Context.Current = value; } }
         public float CurrentFrame { get { return m_Context == null ? 0f : m_Context.CurrentFrame; } set { if (m_Context == null) return; m_Context.CurrentFrame = value; } }

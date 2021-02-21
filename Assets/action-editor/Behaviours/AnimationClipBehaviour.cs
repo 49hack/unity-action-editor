@@ -24,13 +24,13 @@ namespace ActionEditor
             Blackboard.Bind(blackboards, m_Clip);
         }
 
-        public override void OnBegin()
+        public override void OnBegin(float time, float absoluteTime)
         {
             m_Playable = AnimationClipPlayable.Create(m_Graph, m_Clip.Value);
             m_Playable.SetTime(0f);
         }
 
-        public override void OnEnd()
+        public override void OnEnd(float time, float absoluteTime)
         {
             if (m_Playable.IsValid())
                 m_Playable.Destroy();

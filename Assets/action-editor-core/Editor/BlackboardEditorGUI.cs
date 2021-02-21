@@ -8,9 +8,9 @@ namespace ActionEditor
 {
     internal static class BlackboardEditorGUI
     {
-        public static void DrawContext(IReadOnlyList<Blackboard> blackboardList, Rect position, SerializedProperty property, GUIContent label, System.Type type)
+        public static void DrawContext(IReadOnlyList<Blackboard> blackboardList, Rect position, SerializedProperty property, GUIContent label, System.Type type, float titleWidth = 80f)
         {
-            using (new Utility.LabelWidthScope(80f))
+            using (new Utility.LabelWidthScope(titleWidth))
             {
                 var labelWidth = 0f;
                 if (!string.IsNullOrEmpty(label.text))

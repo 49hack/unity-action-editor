@@ -31,6 +31,8 @@ namespace ActionEditor.Runtime
         {
             var isPlayingAt = IsPlayingAt(time);
 
+            m_CurrentTime = time;
+
             if (isPlayingAt && !m_IsBegined)
             {
                 Begin();
@@ -40,8 +42,6 @@ namespace ActionEditor.Runtime
                 End();
             }
 
-            m_CurrentTime = time;
-
             var clipTime = Mathf.Clamp(time - BeginTime, 0f, EndTime - BeginTime);
             if (isPlayingAt)
                 m_Clip.OnSetTime(clipTime);
@@ -49,14 +49,16 @@ namespace ActionEditor.Runtime
 
         public void Begin()
         {
+            var clipTime = Mathf.Clamp(m_CurrentTime - BeginTime, 0f, EndTime - BeginTime);
             m_IsBegined = true;
-            m_Clip.OnBegin();
+            m_Clip.OnBegin(clipTime, m_CurrentTime);
         }
 
         public void End()
         {
+            var clipTime = Mathf.Clamp(m_CurrentTime - BeginTime, 0f, EndTime - BeginTime);
             m_IsBegined = false;
-            m_Clip.OnEnd();
+            m_Clip.OnEnd(clipTime, m_CurrentTime);
         }
         public void Progress(float toTime)
         {
@@ -74,7 +76,8 @@ namespace ActionEditor.Runtime
 
         public void Interrupt()
         {
-            m_Clip?.OnInterrupt();
+            var clipTime = Mathf.Clamp(m_CurrentTime - BeginTime, 0f, EndTime - BeginTime);
+            m_Clip?.OnInterrupt(clipTime, BeginTime);
         }
 
         public void Dispose()

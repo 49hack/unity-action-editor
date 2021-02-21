@@ -13,6 +13,22 @@ namespace ActionEditor
         [SerializeField] SharedGameObjectContext m_Effect;
 
         Particle m_Particle;
+        bool m_IsInterrupted;
+
+        public override void OnPlay()
+        {
+            m_IsInterrupted = false;
+        }
+
+        public override void OnStop()
+        {
+            m_IsInterrupted = false;
+        }
+
+        public override void OnInterrupt()
+        {
+            m_IsInterrupted = true;
+        }
 
         public override void OnCreate(SequenceBehaviour sequence, IReadOnlyList<Blackboard> blackboards)
         {
@@ -24,6 +40,9 @@ namespace ActionEditor
 
         public override void OnChangeClip(ClipBehaviour fromClip, float fromWeight, ClipBehaviour toClip, float toWeight)
         {
+            if (m_IsInterrupted)
+                return;
+
             var effectClip = fromClip as EffectClipBehaviour;
             if(effectClip != null)
             {
@@ -33,6 +52,7 @@ namespace ActionEditor
 
         public override void OnDispose()
         {
+            m_IsInterrupted = false;
             m_Particle?.Dispose();
         }
 
@@ -60,12 +80,18 @@ namespace ActionEditor
 
             public void Begin()
             {
-                m_Root?.SetActive(true);
+                if (m_Root != null)
+                {
+                    m_Root.SetActive(true);
+                }
             }
 
             public void End()
             {
-                m_Root?.SetActive(false);
+                if (m_Root != null)
+                {
+                    m_Root.SetActive(false);
+                }
             }
 
             public void Evaluate(float time)

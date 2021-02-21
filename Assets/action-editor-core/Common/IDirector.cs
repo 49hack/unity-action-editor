@@ -16,6 +16,7 @@ namespace ActionEditor
     {
         Initial,
         Stoppped,
+        Interrupted,
         Playing,
         Paused,
     }
@@ -23,7 +24,7 @@ namespace ActionEditor
     public interface IDirector
     {
         SequenceStatus Status { get; }
-        SequenceBehaviour Sequence { get; }
+        SequenceBehaviour Sequence { get; set; }
         IReadOnlyList<Blackboard> Blackboard { get; }
         float CurrentTime { get; set; }
         float CurrentFrame { get; set; }

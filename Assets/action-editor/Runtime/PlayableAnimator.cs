@@ -10,20 +10,21 @@ namespace ActionEditor
 
     [RequireComponent(typeof(Animator))]
     [RequireComponent(typeof(Director))]
-    [RequireComponent(typeof(BlendableAnimatorBlackboard))]
-    public class BlendableAnimator : MonoBehaviour
+    [RequireComponent(typeof(PlayableAnimatorBlackboard))]
+    public class PlayableAnimator : MonoBehaviour
     {
         [SerializeField] RuntimeAnimatorController m_AnimatorController;
 
         Animator m_Animator;
         Director m_Director;
-        BlendableAnimatorBlackboard m_Blackboard;
+        PlayableAnimatorBlackboard m_Blackboard;
         AnimationGraph m_GraphController;
 
         AnimationGraph.Handler m_AnimatorHandler;
         AnimationGraph.Handler m_SequenceHandler;
 
         Coroutine m_SequenceFadeCoroutine;
+        Context m_CurrentSequence;
 
         public bool IsInitialized { get { return m_GraphController != null; } }
 
@@ -46,16 +47,17 @@ namespace ActionEditor
             }
         }
 
-        BlendableAnimatorBlackboard Blackboard
+        PlayableAnimatorBlackboard Blackboard
         {
             get
             {
                 if (m_Blackboard == null)
-                    m_Blackboard = GetComponent<BlendableAnimatorBlackboard>();
+                    m_Blackboard = GetComponent<PlayableAnimatorBlackboard>();
                 return m_Blackboard;
             }
         }
-
+        public bool CanInterrupt { get { return !Blackboard.InterruptBlock.Blocked; } }
+        public RestartData RestartData { get { return Blackboard.RestartData; } }
         public PlayableGraph Graph { get { return m_GraphController.Graph; } }
         public AnimationMixerPlayable SequenceMixer { get { return m_SequenceHandler.Mixer; } }
 
@@ -123,6 +125,11 @@ namespace ActionEditor
 
         public void Dispose()
         {
+            m_SequenceHandler?.Dispose();
+            m_SequenceHandler = null;
+            m_AnimatorHandler?.Dispose();
+            m_AnimatorHandler = null;
+
             m_GraphController?.Dispose();
             m_GraphController = null;
         }
@@ -139,9 +146,14 @@ namespace ActionEditor
             m_GraphController.SetRootWeight(weight);
         }
 
-        public Context PlayAnimation(string stateName, float fadeDuration = 0.5f)
+        public Context PlayAnimation(string stateName, float fadeDuration = 0.25f)
         {
-            var ctx = new Context(null);
+            if (m_CurrentSequence != null)
+            {
+                m_CurrentSequence.SequenceContext.Interrupt();
+            }
+
+            var ctx = new Context(m_CurrentSequence);
             StartCoroutine(FadeAnimation(stateName, fadeDuration, () => {
                 ctx.Complete();
             }));
@@ -152,14 +164,32 @@ namespace ActionEditor
         {
             m_AnimatorHandler.AnimatorController.CrossFade(stateName, fadeDuration);
 
-            yield return null;
+            if (m_SequenceFadeCoroutine != null)
+            {
+                StopCoroutine(m_SequenceFadeCoroutine);
+                m_SequenceFadeCoroutine = null;
+            }
+
+            var startSequenceWeight = m_GraphController.GetSequenceWeight();
+            var time = 0f;
+            while(time <= fadeDuration)
+            {
+                var t = time / fadeDuration;
+                var sequenceWeight = Mathf.Lerp(startSequenceWeight, 0f, t);
+                SetSequenceWeight(sequenceWeight);
+                time += Time.deltaTime;
+                yield return null;
+            }
+
+            SetSequenceWeight(0f);
 
             var stateInfo = m_AnimatorHandler.AnimatorController.GetCurrentAnimatorStateInfo(0);
-            var duration = stateInfo.length;
-            var time = 0f;
-
-            while(time <= duration + fadeDuration)
+            var waitDuration = stateInfo.length - fadeDuration;
+            time = 0f;
+            
+            while (time <= waitDuration)
             {
+                var t = time / waitDuration;
                 time += Time.deltaTime;
                 yield return null;
             }
@@ -167,25 +197,42 @@ namespace ActionEditor
             onComplete?.Invoke();
         }
 
-        public Context PlaySequence(PlayableSequence sequence, float fadeDuration = 0.5f)
+        public Context PlaySequence(PlayableSequence sequence, float time = 0f, float fadeDuration = 0.5f)
         {
-            var ctx = m_Director.Prepare(sequence, TickMode.Auto);
-            m_Director.Play(0f);
+            var ctx = (PlayableSequenceContext)m_Director.Prepare(sequence, TickMode.Auto);
+            m_Director.Play(time);
 
-            var result = new Context(ctx);
-
-            ctx.OnChangeStatus += (state) => {
-                if (state != SequenceStatus.Stoppped)
-                    return;
-                FadeSequence(0f, 0.5f, () => {
-                    result.Complete();
-                    result = null;
-                });
-            };
+            m_CurrentSequence = new Context(ctx);
+            ctx.OnChangeStatus += OnChangeSequenceState;
 
             FadeSequence(1f, fadeDuration);
 
-            return result;
+            return m_CurrentSequence;
+        }
+
+        void OnChangeSequenceState(SequenceStatus state)
+        {
+            switch (state)
+            {
+                case SequenceStatus.Stoppped:
+                    if(m_CurrentSequence != null && m_CurrentSequence.IsInterrupted)
+                    {
+                        SetSequenceWeight(0f);
+                        m_CurrentSequence = null;
+                        break;
+                    }
+
+                    FadeSequence(0f, 0.5f, () => {
+                        var ctx = m_CurrentSequence;
+                        m_CurrentSequence = null;
+                        ctx?.Complete();
+                    });
+                    break;
+
+                case SequenceStatus.Interrupted:
+                    m_CurrentSequence?.Interupt();
+                    break;
+            }
         }
 
         void FadeSequence(float toSequenceWeight, float duration, System.Action onComplete = null)
@@ -219,22 +266,48 @@ namespace ActionEditor
         public class Context
         {
             public event System.Action OnCompleted;
-            SequenceContext m_Ctx;
+            public event System.Action OnInterrupt;
+            PlayableSequenceContext m_Ctx;
+            Context m_Inner;
 
-            public Context(SequenceContext ctx)
+            internal PlayableSequenceContext SequenceContext { get { return m_Ctx; } }
+
+            public bool IsCancled { get { return m_Inner == null ? m_IsCancled : m_Inner.IsCancled; } }
+            public bool IsInterrupted { get { return m_Inner == null ? m_IsInterrupt : m_Inner.IsInterrupted; } }
+            bool m_IsCancled;
+            bool m_IsInterrupt;
+
+            public Context(PlayableSequenceContext ctx)
             {
                 m_Ctx = ctx;
             }
-
-            public void Stop()
+            public Context(Context inner)
             {
-                m_Ctx?.Stop();
+                m_Inner = inner;
             }
 
-            public void Complete()
+            public void Cancel()
             {
+                m_IsCancled = true;
+                m_Ctx?.Stop();
+                m_Inner?.Cancel();
+            }
+
+            internal void Interupt()
+            {
+                m_IsInterrupt = true;
+                m_Inner?.Interupt();
+                OnInterrupt?.Invoke();
+            }
+
+            internal void Complete()
+            {
+                if (m_IsCancled)
+                    return;
+
                 m_Ctx?.Dispose();
                 OnCompleted?.Invoke();
+                OnCompleted = null;
             }
         }
     }

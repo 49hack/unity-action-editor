@@ -10,8 +10,6 @@ namespace ActionEditor.Runtime
     {
         PlayableSequence Sequence { get { return (PlayableSequence)m_Sequence; } }
 
-        AnimatorControllerPlayable m_ControllerPlayable;
-
         public PlayableSequenceContext(SequenceBehaviour sequence, TrackBehaviour[] tracks, IReadOnlyList<Blackboard> blackboards) : base(sequence, tracks, blackboards)
         {
         }

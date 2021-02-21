@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 54e0c62c151b73c4ca855ef57562f1f1, type: 3}
   m_Name: EffectClipBehaviour
   m_EditorClassIdentifier: 
-  m_BeginFrame: 56
-  m_EndFrame: 143.99998
+  m_BeginFrame: 56.000004
+  m_EndFrame: 169.99998
 --- !u!114 &-7738503171342346593
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -89,7 +89,9 @@ MonoBehaviour:
   m_Tracks:
   - {fileID: 6081770487075884805}
   - {fileID: -6343275608062261952}
-  m_TotalFrame: 150
+  - {fileID: 7745988130265816912}
+  - {fileID: 1400698831195689978}
+  m_TotalFrame: 174
   m_FrameRate: 60
   m_BlendableAnimator:
     m_SharedType: 1
@@ -108,11 +110,50 @@ MonoBehaviour:
   m_Name: AnimationClipBehaviour
   m_EditorClassIdentifier: 
   m_BeginFrame: 72
-  m_EndFrame: 150
+  m_EndFrame: 200
   m_Clip:
     m_SharedType: 0
     m_PropertyName: 
     m_FixedValue: {fileID: 7400000, guid: f320efa63ce12874a9ad50add869c0b5, type: 3}
+--- !u!114 &1400698831195689978
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9f3e5ac13b8bbe0459bcbbbe7372d765, type: 3}
+  m_Name: RestartTimingTrackBehaviour
+  m_EditorClassIdentifier: 
+  m_TrackName: RestartTimingTrackBehaviour
+  m_Clips:
+  - {fileID: 9025845265898324470}
+  m_RestartData:
+    m_SharedType: 1
+    m_PropertyName: m_RestartData
+    m_FixedValue:
+      m_RestartTime: 0
+--- !u!114 &5522542864806201657
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 59e74b44e62a0434287c1fee1e825de5, type: 3}
+  m_Name: InterruptBlockClipBehaviour
+  m_EditorClassIdentifier: 
+  m_BeginFrame: 56.000004
+  m_EndFrame: 169.99998
+  m_Interrupt:
+    m_SharedType: 1
+    m_PropertyName: m_InterruptBlock
+    m_FixedValue:
+      m_IsBlock: 0
 --- !u!114 &6081770487075884805
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -130,3 +171,42 @@ MonoBehaviour:
   - {fileID: -7738503171342346593}
   - {fileID: -3982754373068485640}
   - {fileID: 96056797704895257}
+--- !u!114 &7745988130265816912
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b891a7db848dbb74996364b039864efc, type: 3}
+  m_Name: InterruptBlockTrackBehaviour
+  m_EditorClassIdentifier: 
+  m_TrackName: InterruptBlockTrackBehaviour
+  m_Clips:
+  - {fileID: 5522542864806201657}
+  m_Interrupt:
+    m_SharedType: 1
+    m_PropertyName: m_InterruptBlock
+    m_FixedValue:
+      m_IsBlock: 0
+--- !u!114 &9025845265898324470
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1b3e20207c1eb2444bad6ed23f40f6a5, type: 3}
+  m_Name: RestartTimingClipBehaviour
+  m_EditorClassIdentifier: 
+  m_BeginFrame: 34
+  m_EndFrame: 56
+  m_RestartData:
+    m_SharedType: 1
+    m_PropertyName: m_RestartData
+    m_FixedValue:
+      m_RestartTime: 0

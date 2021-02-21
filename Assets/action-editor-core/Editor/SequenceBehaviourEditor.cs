@@ -86,7 +86,7 @@ namespace ActionEditor
             m_Owner.ChangeData();
         }
 
-        public void DrawSetting()
+        public void DrawToolBar()
         {
             SerializedObject.Update();
 
@@ -97,6 +97,31 @@ namespace ActionEditor
 
                 var propFrameRate = SerializedObject.FindProperty(SequenceBehaviour.PropNameFrameRate);
                 propFrameRate.floatValue = EditorGUILayout.DelayedIntField("Frame Rate", (int)propFrameRate.floatValue);
+            }
+
+            SerializedObject.ApplyModifiedProperties();
+        }
+
+        public void DrawSetting(IReadOnlyList<Blackboard> blackborads)
+        {
+            SerializedObject.Update();
+
+            using (new EditorGUILayout.VerticalScope(GUI.skin.box))
+            {
+                EditorGUILayout.LabelField("Sequence Paramater");
+                using (new EditorGUILayout.VerticalScope(GUI.skin.box))
+                {
+                    var fieldInfos = Utility.CollectFields<SharedValueContext>(Asset);
+                    for (int i = 0; i < fieldInfos.Count; i++)
+                    {
+                        var field = fieldInfos[i];
+                        var name = field.Name;
+                        var prop = SerializedObject.FindProperty(name);
+                        var instance = (SharedValueContext)field.GetValue(Asset);
+                        var rect = GUILayoutUtility.GetRect(1f, EditorGUIUtility.singleLineHeight, GUILayout.ExpandWidth(true));
+                        BlackboardEditorGUI.DrawContext(blackborads, rect, prop, new GUIContent(prop.displayName), instance.ValueType, EditorGUIUtility.labelWidth);
+                    }
+                }
             }
 
             SerializedObject.ApplyModifiedProperties();

@@ -13,7 +13,7 @@ namespace ActionEditor
     {
         [SerializeField] SharedBlendableAnimatorContext m_BlendableAnimator;
 
-        BlendableAnimator m_Animator;
+        PlayableAnimator m_Animator;
 
         public PlayableGraph Graph { get { return m_Animator.Graph; } }
         public AnimationMixerPlayable ChildMixer { get { return m_Animator.SequenceMixer; } }

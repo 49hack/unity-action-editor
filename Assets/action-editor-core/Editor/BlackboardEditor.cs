@@ -40,7 +40,7 @@ namespace ActionEditor
                             if (!foldoutProp.boolValue)
                             {
                                 serializedObject.ApplyModifiedProperties();
-                                return;
+                                continue;
                             }
 
                             var feilds = BlackboardEditorGUI.CollectFields(blackboard);

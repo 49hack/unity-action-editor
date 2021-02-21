@@ -177,6 +177,28 @@ namespace ActionEditor
             }
         }
 
+        public static List<FieldInfo> CollectFields<T>(object obj)
+        {
+            List<FieldInfo> result = new List<FieldInfo>();
+            if (obj == null)
+                return result;
+
+            var fieldInfos = obj.GetType().GetFields(BindingFlags.Public | BindingFlags.Instance | BindingFlags.NonPublic);
+
+            var targetType = typeof(T);
+            for (int i = 0; i < fieldInfos.Length; i++)
+            {
+                var fieldInfo = fieldInfos[i];
+                var type = fieldInfo.FieldType;
+                if (!targetType.IsAssignableFrom(type))
+                    continue;
+
+                result.Add(fieldInfo);
+            }
+
+            return result;
+        }
+
         public static System.Type[] GetSubClasses<T>()
         {
             List<System.Type> result = new List<System.Type>();

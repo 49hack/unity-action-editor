@@ -43,15 +43,17 @@ namespace ActionEditor
         public SharedValue(string propertyName) : base(propertyName) { }
     }
 
-    public class SharedValueContext
+    public abstract class SharedValueContext
     {
         public static string PropNameSharedType { get { return SharedValueContext<object>.PropNameSharedType; } }
         public static string PropNameFixedValue { get { return SharedValueContext<object>.PropNameFixedValue; } }
         public static string PropNamePropertyName { get { return SharedValueContext<object>.PropNamePropertyName; } }
+
+        public abstract System.Type ValueType { get; }
     }
 
     [System.Serializable]
-    public class SharedValueContext<T> : SharedValueContext
+    public abstract class SharedValueContext<T> : SharedValueContext
     {
         new public static string PropNameSharedType { get { return nameof(m_SharedType); } }
         new public static string PropNameFixedValue { get { return nameof(m_FixedValue); } }
@@ -65,6 +67,7 @@ namespace ActionEditor
 
 
         public string PropertyName { get { return m_PropertyName; } }
+        public override System.Type ValueType { get { return typeof(T); } }
 
         public T Value
         {

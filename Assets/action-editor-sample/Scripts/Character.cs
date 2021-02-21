@@ -20,7 +20,7 @@ namespace ActionEditor.Sample
         }
 
         [SerializeField] ActionPoint[] m_Points;
-        [SerializeField] BlendableAnimator m_Animator;
+        [SerializeField] PlayableAnimator m_Animator;
         [SerializeField] NavMeshAgent m_Agent;
         [SerializeField] State m_Status = State.Idle;
         [SerializeField] Transform m_Target;
@@ -80,7 +80,7 @@ namespace ActionEditor.Sample
                     break;
 
                 case State.Action:
-                    Action();
+                    Action(0f);
                     break;
             }
             
@@ -93,13 +93,31 @@ namespace ActionEditor.Sample
 
         void Damage()
         {
+            if(!m_Animator.CanInterrupt)
+            {
+                return;
+            }
+            if (m_Status == State.Damaged)
+                return;
+
             m_Agent.isStopped = true;
             m_Agent.velocity = Vector3.zero;
             var prevState = m_Status;
             var ctx = m_Animator.PlayAnimation("Damaged");
             ctx.OnCompleted += () => {
+                if(ctx.IsInterrupted)
+                {
+                    ctx.Cancel();
+                    if (m_Animator.RestartData.CanRestart)
+                    {
+                        m_Agent.isStopped = false;
+                        Action(m_Animator.RestartData.RestartTime);
+                        return;
+                    }
+                }
+
                 m_Agent.isStopped = false;
-                m_Status = prevState;
+                m_Status = State.Idle;
             };
             m_Status = State.Damaged;
         }
@@ -125,11 +143,13 @@ namespace ActionEditor.Sample
             transform.rotation = Quaternion.Slerp(transform.rotation, rotation, 0.25f);
         }
 
-        void Action()
+        void Action(float time)
         {
+            m_Animator.RestartData.Prohibit();
+
             m_Agent.isStopped = true;
             var actionPoint = m_Points[m_CurrentIndex];
-            var ctx = m_Animator.PlaySequence(actionPoint.Sequence);
+            var ctx = m_Animator.PlaySequence(actionPoint.Sequence, time);
             ctx.OnCompleted += () => {
                 m_Status = State.Idle;
             };

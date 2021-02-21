@@ -74,6 +74,9 @@ namespace ActionEditor
 
         void OnSelect(Object selected)
         {
+            if (Application.isPlaying)
+                return;
+
             if (selected is GameObject go)
             {
                 if (string.IsNullOrEmpty(go.scene.name))
@@ -119,8 +122,17 @@ namespace ActionEditor
 
             if (state == State.Disable)
                 return;
-            
-            if(state == State.NoSequence)
+
+            var sequence = m_Director.Sequence;
+            var nextSequence = (SequenceBehaviour)EditorGUILayout.ObjectField("Sequence Asset", sequence, typeof(SequenceBehaviour), false);
+            if (sequence != nextSequence)
+            {
+                m_Director.Sequence = nextSequence;
+                m_SequenceEditor = null;
+                ChangeData();
+            }
+
+            if (state == State.NoSequence)
             {
                 EditorGUILayout.HelpBox("Assign a sequence asset into Director", MessageType.Warning);
                 return;
@@ -137,19 +149,32 @@ namespace ActionEditor
                 m_SequenceEditor.Initialize(this, m_Director.Sequence);
             }
 
-            // Tool bar
-            using (new EditorGUILayout.HorizontalScope(EditorStyles.toolbar, GUILayout.ExpandWidth(true)))
-            {
-                DrawPlayer();
-
-                EditorGUILayout.Space();
-
-                m_SequenceEditor.DrawSetting();
-
-                GUILayout.FlexibleSpace();
-            }
+            m_SequenceEditor.DrawSetting(m_Director.Blackboard);
 
             m_BlackboardEditor.Draw(m_Director.Blackboard);
+
+            // Tool bar
+            if (m_SequenceEditor != null)
+            {
+                var style = EditorStyles.toolbar;
+                using (new EditorGUILayout.HorizontalScope(style, GUILayout.ExpandWidth(true)))
+                {
+                    DrawPlayer();
+
+                    EditorGUILayout.Space();
+
+                    m_SequenceEditor.DrawToolBar();
+
+                    GUILayout.FlexibleSpace();
+
+                    if(GUILayout.Button("Refresh", EditorStyles.toolbarButton))
+                    {
+                        m_SequenceEditor = null;
+                        ChangeData();
+                        return;
+                    }
+                }
+            }
 
             m_Navigator.OnGUI(m_Director.TotalFrame, m_Director.TotalFrame, m_Director.CurrentFrame);
             m_Director.CurrentFrame = m_Indicator.OnGUI(m_Director.TotalFrame, m_Director.TotalFrame, m_Director.CurrentFrame, m_Director.Sequence.FrameRate, m_Navigator.MinFrame, m_Navigator.MaxFrame, Focus);
