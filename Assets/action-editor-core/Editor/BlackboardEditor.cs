@@ -70,7 +70,8 @@ namespace ActionEditor
 
                                 var valueType = field.FieldType.BaseType.GetField(SharedValue.PropNameValue, BindingFlags.Instance | BindingFlags.NonPublic).FieldType;
                                 var valueRect = new Rect(propNameRect.x + itemWidth, rect.y, itemWidth, rect.height);
-                                EditorGUIEx.PropertyField(valueRect, propValue, GUIContent.none, true, valueType);
+                                var valueName = propValue.propertyType == SerializedPropertyType.Generic ? valueType.Name : "";
+                                EditorGUIEx.PropertyField(valueRect, propValue, new GUIContent(valueName), true, valueType);
                             }
 
                             serializedObject.ApplyModifiedProperties();

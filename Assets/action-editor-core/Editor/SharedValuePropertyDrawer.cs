@@ -18,69 +18,29 @@ namespace ActionEditor
         {
             var rect = position;
 
-            var labelRect = new Rect(rect.x, rect.y, EditorGUIUtility.labelWidth, EditorGUIUtility.singleLineHeight);
-            EditorGUI.LabelField(labelRect, new GUIContent(property.displayName));
+            var labelRect = new Rect(rect.x, rect.y, EditorGUIUtility.labelWidth * 0.5f, EditorGUIUtility.singleLineHeight);
+            if (!string.IsNullOrEmpty(label.text))
+            {
+                EditorGUI.LabelField(labelRect, label.text);
+            }
 
-            var itemWidth = (rect.width - labelRect.width) * 0.5f;
+            var nameWidth = (rect.width - labelRect.width) * 0.3f;
             var propName = property.FindPropertyRelative(SharedValue.PropNamePropertyName);
-            var propNameRect = new Rect(rect.x + labelRect.width, rect.y, itemWidth * 0.95f, EditorGUIUtility.singleLineHeight);
+            var propNameRect = new Rect(rect.x + labelRect.width, rect.y, nameWidth * 0.95f, EditorGUIUtility.singleLineHeight);
             propName.stringValue = EditorGUI.TextField(propNameRect, propName.stringValue);
 
+            var itemWidth = (rect.width - labelRect.width) * 0.7f;
             var valueProp = property.FindPropertyRelative(SharedValue.PropNameValue);
-            var valueType = GetPropertyType(valueProp);
-            var valueRect = new Rect(propNameRect.x + itemWidth, rect.y, itemWidth, rect.height);
-            EditorGUIEx.PropertyField(valueRect, valueProp, GUIContent.none, true, valueType);
-        }
-
-        static System.Type GetPropertyType(SerializedProperty property, bool isArrayListType = false)
-        {
-            var fieldInfo = GetFieldInfo(property);
-
-            if (isArrayListType && property.isArray && property.propertyType != SerializedPropertyType.String)
-                return fieldInfo.FieldType.IsArray
-                    ? fieldInfo.FieldType.GetElementType()
-                    : fieldInfo.FieldType.GetGenericArguments()[0];
-            return fieldInfo.FieldType;
-        }
-
-        static FieldInfo GetFieldInfo(SerializedProperty property)
-        {
-            FieldInfo GetField(System.Type type, string path)
+            var valueType = EditorGUIEx.GetPropertyType(valueProp);
+            var valueOffset = valueProp.propertyType == SerializedPropertyType.Generic ? 13f : 0f;
+            var valueRect = new Rect(propNameRect.x + nameWidth + valueOffset, rect.y, itemWidth - valueOffset, rect.height);
+            using (new Utility.LabelWidthScope(valueRect.width * 0.5f))
             {
-                return type.GetField(path, BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static);
+                var valueName = valueProp.propertyType == SerializedPropertyType.Generic ? valueType.Name : "";
+                EditorGUI.PropertyField(valueRect, valueProp, new GUIContent(valueName), true);
             }
-
-            var parentType = property.serializedObject.targetObject.GetType();
-            var splits = property.propertyPath.Split('.');
-            var fieldInfo = GetField(parentType, splits[0]);
-            for (var i = 1; i < splits.Length; i++)
-            {
-                if (splits[i] == "Array")
-                {
-                    i += 2;
-                    if (i >= splits.Length)
-                        continue;
-
-                    var type = fieldInfo.FieldType.IsArray
-                        ? fieldInfo.FieldType.GetElementType()
-                        : fieldInfo.FieldType.GetGenericArguments()[0];
-
-                    fieldInfo = GetField(type, splits[i]);
-                }
-                else
-                {
-                    fieldInfo = i + 1 < splits.Length && splits[i + 1] == "Array"
-                        ? GetField(parentType, splits[i])
-                        : GetField(fieldInfo.FieldType.BaseType, splits[i]);
-                }
-
-                if (fieldInfo == null)
-                    throw new System.Exception("Invalid FieldInfo. " + property.propertyPath);
-
-                parentType = fieldInfo.FieldType;
-            }
-
-            return fieldInfo;
         }
+
+        
     }
 }
