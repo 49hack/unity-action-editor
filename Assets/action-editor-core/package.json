@@ -1,0 +1,20 @@
+{
+    "name": "com.49hack.unity-action-editor-core",
+    "displayName": "Action Editor for Unity - Core -", 
+    "version": "0.0.1",               
+    "unity": "2019.4",
+    "description": "Core module for Action Editor for Unity",
+    "author": {
+        "name": "49hack",
+        "url": "https://github.com/49hack"
+    },
+
+    "keywords": [
+        "action",
+        "sequence",
+        "core"
+    ],
+
+    "dependencies": {
+    },
+}
