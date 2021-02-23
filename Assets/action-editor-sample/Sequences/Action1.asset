@@ -109,7 +109,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2eefbe11866342f4280dbdfbd27ba35e, type: 3}
   m_Name: AnimationClipBehaviour
   m_EditorClassIdentifier: 
-  m_BeginFrame: 72
+  m_BeginFrame: 74
   m_EndFrame: 200
   m_Clip:
     m_SharedType: 0

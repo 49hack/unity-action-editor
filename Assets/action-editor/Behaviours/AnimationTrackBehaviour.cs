@@ -6,6 +6,8 @@ using UnityEngine.Animations;
 
 namespace ActionEditor
 {
+    [ParentSequence(typeof(PlayableSequence))]
+    [MenuTitle("Playable/Animation")]
     public class AnimationTrackBehaviour : TrackBehaviour
     {
         AnimationMixerPlayable m_Mixer;

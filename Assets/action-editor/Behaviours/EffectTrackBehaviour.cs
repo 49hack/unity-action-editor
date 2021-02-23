@@ -4,6 +4,8 @@ using UnityEngine;
 
 namespace ActionEditor
 {
+    [ParentSequence(typeof(PlayableSequence))]
+    [MenuTitle("Playable/Effect")]
     public class EffectTrackBehaviour : TrackBehaviour
     {
         public static string PropNameLocator { get { return nameof(m_Locator); } }

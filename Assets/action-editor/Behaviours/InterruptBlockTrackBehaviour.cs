@@ -4,6 +4,8 @@ using UnityEngine;
 
 namespace ActionEditor
 {
+    [ParentSequence(typeof(PlayableSequence))]
+    [MenuTitle("Playable/Interrupt")]
     public class InterruptBlockTrackBehaviour : TrackBehaviour
     {
         [SerializeField] SharedInterruptBlockContext m_Interrupt;

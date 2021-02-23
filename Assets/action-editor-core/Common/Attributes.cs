@@ -44,6 +44,16 @@ namespace ActionEditor
             Target = type;
         }
     }
+    [System.AttributeUsage(System.AttributeTargets.Class)]
+    public class ParentSequence : System.Attribute
+    {
+        public System.Type Target { get; private set; }
+
+        public ParentSequence(System.Type type)
+        {
+            Target = type;
+        }
+    }
 
     public class BindingType : System.Attribute
     {

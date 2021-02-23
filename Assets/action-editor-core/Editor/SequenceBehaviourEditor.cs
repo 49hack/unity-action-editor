@@ -156,15 +156,27 @@ namespace ActionEditor
 
             GenericMenu menu = new GenericMenu();
 
-            for(int i = 0; i < trackTypeList.Length; i++)
+            var sequenceType = Asset.GetType();
+            for (int i = 0; i < trackTypeList.Length; i++)
             {
                 var type = trackTypeList[i];
                 var name = type.Name;
+
+                var parentAttr = Utility.GetAttribute<ParentSequence>(type);
+                if (parentAttr != null)
+                {
+                    if (!sequenceType.IsAssignableFrom(parentAttr.Target))
+                    {
+                        continue;
+                    }
+                }
+
                 var nameAttr = Utility.GetAttribute<MenuTitle>(type);
                 if(nameAttr != null)
                 {
                     name = nameAttr.Name;
                 }
+                
                 menu.AddItem(new GUIContent(name), false, OnCreateTrack, type);
             }
 

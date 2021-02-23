@@ -4,6 +4,8 @@ using UnityEngine;
 
 namespace ActionEditor
 {
+    [ParentSequence(typeof(PlayableSequence))]
+    [MenuTitle("Playable/Restart Timing")]
     public class RestartTimingTrackBehaviour : TrackBehaviour
     {
         [SerializeField] SharedRestartDataContext m_RestartData;
