@@ -28,6 +28,7 @@ namespace ActionEditor
         [SerializeField] SequenceBehaviourEditor m_SequenceEditor;
         [SerializeField] double m_LatestTickTime = 0f;
         IDirector m_Director;
+        ActionEditorTime m_Timeline;
 
         private void OnEnable()
         {
@@ -179,7 +180,10 @@ namespace ActionEditor
             m_Navigator.OnGUI(m_Director.TotalFrame, m_Director.TotalFrame, m_Director.CurrentFrame);
             m_Director.CurrentFrame = m_Indicator.OnGUI(m_Director.TotalFrame, m_Director.TotalFrame, m_Director.CurrentFrame, m_Director.Sequence.FrameRate, m_Navigator.MinFrame, m_Navigator.MaxFrame, Focus);
 
-            m_SequenceEditor.Draw(m_Navigator, m_Director.TotalFrame, m_Director.CurrentFrame, m_Director.Blackboard);
+            if (m_Timeline == null)
+                m_Timeline = new ActionEditorTime(m_Navigator, m_Indicator);
+
+            m_SequenceEditor.Draw(m_Timeline, m_Director.TotalFrame, m_Director.CurrentFrame, m_Director.Blackboard);
         }
 
         void Focus(float totalFrame, float focusFrame)

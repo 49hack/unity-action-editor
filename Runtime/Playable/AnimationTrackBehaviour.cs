@@ -19,6 +19,9 @@ namespace ActionEditor
 
         public override void OnChangeClip(ClipBehaviour fromClip, float fromWeight, ClipBehaviour toClip, float toWeight)
         {
+            if (!m_Mixer.IsValid())
+                return;
+
             m_Mixer.DisconnectInput(0);
             m_Mixer.DisconnectInput(1);
 
@@ -40,6 +43,9 @@ namespace ActionEditor
 
         public override void OnChangeWight(ClipBehaviour fromClip, float fromWeight, ClipBehaviour toClip, float toWeight)
         {
+            if (!m_Mixer.IsValid())
+                return;
+
             m_Mixer.SetInputWeight(0, fromWeight);
             m_Mixer.SetInputWeight(1, toWeight);
         }

@@ -22,9 +22,12 @@ namespace ActionEditor
         SerializedObject m_SerializedObject;
         DragType m_DragType;
         IReadOnlyList<Blackboard> m_BlackboardList;
+        ActionEditorTime m_EditorTime;
 
         public event System.Action OnChangeData;
         public event System.Action<ClipBehaviourEditor> OnRemoveClip;
+
+        protected float FrameRate { get { return m_EditorTime.FrameRate; } }
 
         #region Virtual
         protected virtual Color BackgroundColor { get { return new Color(0f, 0f, 0f, 0.25f); } }
@@ -32,7 +35,10 @@ namespace ActionEditor
         {
             EditorGUI.DrawRect(rect, BackgroundColor);
         }
-
+        protected virtual void AddContextMenu(GenericMenu menu)
+        {
+            menu.AddItem(new GUIContent("Delete"), false, OnClickDelete, null);
+        }
         #endregion // Virtual
 
         public ClipBehaviour Asset { get { return m_Clip; } }
@@ -42,7 +48,7 @@ namespace ActionEditor
             m_Clip = clip;
         }
 
-        SerializedObject SerializedObject
+        protected SerializedObject SerializedObject
         {
             get
             {
@@ -112,7 +118,7 @@ namespace ActionEditor
             OnRemoveClip?.Invoke(this);
         }
 
-        public void Draw(Rect viewRect, ClipViewInfo info, Navigator navigator, float totalFrame, float currentFrame, IReadOnlyList<Blackboard> blackboards)
+        public void Draw(Rect viewRect, ClipViewInfo info, ActionEditorTime editorTime, float totalFrame, float currentFrame, IReadOnlyList<Blackboard> blackboards)
         {
             if (Asset == null)
                 return;
@@ -120,12 +126,13 @@ namespace ActionEditor
                 return;
 
             m_BlackboardList = blackboards;
+            m_EditorTime = editorTime;
 
             var beginFrame = BeginFrame;
             var endFrame = EndFrame;
 
             var fullRect = new Rect(info.Min, viewRect.y + 2f, info.Max - info.Min, viewRect.height - 4f);
-            if (endFrame <= navigator.MinFrame || beginFrame >= navigator.MaxFrame)
+            if (endFrame <= editorTime.MinFrame || beginFrame >= editorTime.MaxFrame)
             {
                 return;
             }
@@ -188,8 +195,8 @@ namespace ActionEditor
                         {
                             case DragType.Min:
                                 {
-                                    var next = Utility.Remap(e.mousePosition.x, viewRect.xMin, viewRect.xMax, navigator.MinFrame, navigator.MaxFrame);
-                                    BeginFrame = ClipViewUtility.Adjust(next, viewRect, navigator);
+                                    var next = Utility.Remap(e.mousePosition.x, viewRect.xMin, viewRect.xMax, editorTime.MinFrame, editorTime.MaxFrame);
+                                    BeginFrame = ClipViewUtility.Adjust(next, viewRect, editorTime);
                                     BeginFrame = Mathf.Min(BeginFrame, EndFrame);
                                     BeginFrame = Mathf.Max(BeginFrame, info.StopMin);
                                 }
@@ -197,8 +204,8 @@ namespace ActionEditor
 
                             case DragType.Max:
                                 {
-                                    var next = Utility.Remap(e.mousePosition.x, viewRect.xMin, viewRect.xMax, navigator.MinFrame, navigator.MaxFrame);
-                                    EndFrame = ClipViewUtility.Adjust(next, viewRect, navigator);
+                                    var next = Utility.Remap(e.mousePosition.x, viewRect.xMin, viewRect.xMax, editorTime.MinFrame, editorTime.MaxFrame);
+                                    EndFrame = ClipViewUtility.Adjust(next, viewRect, editorTime);
                                     EndFrame = Mathf.Max(BeginFrame, EndFrame);
                                     EndFrame = Mathf.Min(EndFrame, info.StopMax);
                                 }
@@ -206,7 +213,7 @@ namespace ActionEditor
 
                             case DragType.Range:
                                 {
-                                    var delta = Utility.Remap(e.delta.x, 0f, viewRect.width, 0f, navigator.Range);
+                                    var delta = Utility.Remap(e.delta.x, 0f, viewRect.width, 0f, editorTime.Range);
                                     if (0f > delta)
                                     {
                                         if (0f > BeginFrame + delta)
@@ -246,8 +253,8 @@ namespace ActionEditor
                 case EventType.Ignore:
                     if (dragCtrlId == GUIUtility.hotControl)
                     {
-                        BeginFrame = ClipViewUtility.Adjust(BeginFrame, viewRect, navigator);
-                        EndFrame = ClipViewUtility.Adjust(EndFrame, viewRect, navigator);
+                        BeginFrame = ClipViewUtility.Adjust(BeginFrame, viewRect, editorTime);
+                        EndFrame = ClipViewUtility.Adjust(EndFrame, viewRect, editorTime);
 
                         m_DragType = DragType.None;
                         GUIUtility.hotControl = 0;
@@ -261,7 +268,7 @@ namespace ActionEditor
         {
             GenericMenu menu = new GenericMenu();
 
-            menu.AddItem(new GUIContent("Delete"), false, OnClickDelete, null);
+            AddContextMenu(menu);
 
             menu.ShowAsContext();
         }

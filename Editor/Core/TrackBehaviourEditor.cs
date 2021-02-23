@@ -23,9 +23,12 @@ namespace ActionEditor
         Vector3[] m_IndicatePoints;
         List<ClipBehaviourEditor> m_ClipEditors;
         IReadOnlyList<Blackboard> m_BlackboardList;
+        ActionEditorTime m_EditorTime;
 
         public event System.Action OnChangeData;
         public event System.Action<TrackBehaviourEditor> OnRemoveTrack;
+
+        protected float FrameRate { get { return m_EditorTime.FrameRate; } }
 
         #region Virtual
         protected virtual Color BackgroundColor { get { return new Color(0f, 0f, 0f, 0.5f); } }
@@ -45,7 +48,7 @@ namespace ActionEditor
 
         public TrackBehaviour Asset { get { return m_Track; } }
 
-        SerializedObject SerializedObject
+        protected SerializedObject SerializedObject
         {
             get
             {
@@ -117,7 +120,7 @@ namespace ActionEditor
             OnRemoveTrack?.Invoke(this);
         }
 
-        public void Draw(Navigator navigator, float totalFrame, float currentFrame, IReadOnlyList<Blackboard> blackboards)
+        public void Draw(ActionEditorTime editorTime, float totalFrame, float currentFrame, IReadOnlyList<Blackboard> blackboards)
         {
             if (Asset == null)
                 return;
@@ -126,13 +129,14 @@ namespace ActionEditor
                 return;
 
             m_BlackboardList = blackboards;
+            m_EditorTime = editorTime;
 
             var rect = GUILayoutUtility.GetRect(1f, 64f, GUILayout.ExpandWidth(true));
 
             SerializedObject.Update();
 
             OnGUITrack(rect);
-            OnGUIClip(rect, navigator, totalFrame, currentFrame);
+            OnGUIClip(rect, editorTime, totalFrame, currentFrame);
 
             SerializedObject.ApplyModifiedProperties();
         }
@@ -165,9 +169,9 @@ namespace ActionEditor
             }
         }
 
-        void OnGUIClip(Rect fullRect, Navigator navigator, float totalFrame, float currentFrame)
+        void OnGUIClip(Rect fullRect, ActionEditorTime editorTime, float totalFrame, float currentFrame)
         {
-            var rect = new Rect(navigator.Rect.x, fullRect.y + Utility.Space, navigator.Rect.width, fullRect.height - Utility.Space * 2f);
+            var rect = new Rect(editorTime.Rect.x, fullRect.y + Utility.Space, editorTime.Rect.width, fullRect.height - Utility.Space * 2f);
 
             var e = Event.current;
             switch (e.type)
@@ -186,18 +190,18 @@ namespace ActionEditor
                             if (m_IndicatePointList == null)
                                 m_IndicatePointList = new List<Vector3>();
 
-                            var intervalFrame = Utility.CalculateFrameInterval(navigator.MinFrame, navigator.MaxFrame, xMin, xMax, 1f / 48f);
+                            var intervalFrame = Utility.CalculateFrameInterval(editorTime.MinFrame, editorTime.MaxFrame, xMin, xMax, 1f / 48f);
                             if (1 < intervalFrame)
                             {
-                                var subIntervalFrame = Utility.CalculateFrameInterval(navigator.MinFrame, navigator.MaxFrame, xMin, xMax, 1f / 6f);
-                                Utility.Indicate(navigator.MinFrame, navigator.MaxFrame, 0, Mathf.Max(subIntervalFrame, 1), xMin, xMax, (x, f) =>
+                                var subIntervalFrame = Utility.CalculateFrameInterval(editorTime.MinFrame, editorTime.MaxFrame, xMin, xMax, 1f / 6f);
+                                Utility.Indicate(editorTime.MinFrame, editorTime.MaxFrame, 0, Mathf.Max(subIntervalFrame, 1), xMin, xMax, (x, f) =>
                                 {
                                     m_IndicatePointList.Add(new Vector3(x, yMin));
                                     m_IndicatePointList.Add(new Vector3(x, yMax));
                                 });
                             }
 
-                            Utility.Indicate(navigator.MinFrame, navigator.MaxFrame, 0, Mathf.Max(intervalFrame, 1), xMin, xMax, (x, f) => {
+                            Utility.Indicate(editorTime.MinFrame, editorTime.MaxFrame, 0, Mathf.Max(intervalFrame, 1), xMin, xMax, (x, f) => {
                                 m_IndicatePointList.Add(new Vector3(x, yMin));
                                 m_IndicatePointList.Add(new Vector3(x, yMax));
                             });
@@ -221,9 +225,9 @@ namespace ActionEditor
 
                         using (new Utility.HandlesColorScope(Color.red))
                         {
-                            if (navigator.MinFrame <= currentFrame && navigator.MaxFrame >= currentFrame)
+                            if (editorTime.MinFrame <= currentFrame && editorTime.MaxFrame >= currentFrame)
                             {
-                                float x = Utility.Remap(currentFrame, navigator.MinFrame, navigator.MaxFrame, xMin, xMax);
+                                float x = Utility.Remap(currentFrame, editorTime.MinFrame, editorTime.MaxFrame, xMin, xMax);
                                 Handles.DrawLine(new Vector2(x, fullRect.y), new Vector2(x, fullRect.yMax));
                             }
                         }
@@ -237,11 +241,11 @@ namespace ActionEditor
                 var prev = (i - 1) >= 0 ? m_ClipEditors[i - 1].Asset : null;
                 var current = m_ClipEditors[i].Asset;
                 var next = (i + 1) < m_ClipEditors.Count ? m_ClipEditors[i + 1].Asset : null;
-                clipInfos.Add(new ClipViewInfo(current, prev, next, navigator, totalFrame, rect));
+                clipInfos.Add(new ClipViewInfo(current, prev, next, editorTime, totalFrame, rect));
             }
             for (int i = 0; i < m_ClipEditors.Count; i++)
             {
-                m_ClipEditors[i].Draw(rect, clipInfos[i], navigator, totalFrame, currentFrame, m_BlackboardList);
+                m_ClipEditors[i].Draw(rect, clipInfos[i], editorTime, totalFrame, currentFrame, m_BlackboardList);
             }
 
             switch (e.type)
@@ -249,7 +253,7 @@ namespace ActionEditor
                 case EventType.MouseDown:
                     if (rect.Contains(e.mousePosition) && e.button == 1)
                     {
-                        var beginFrame = Utility.Remap(e.mousePosition.x, rect.xMin, rect.xMax, navigator.MinFrame, navigator.MaxFrame);
+                        var beginFrame = Utility.Remap(e.mousePosition.x, rect.xMin, rect.xMax, editorTime.MinFrame, editorTime.MaxFrame);
                         ShowCreateClipContextMenu(beginFrame);
                         e.Use();
                     }
@@ -326,7 +330,6 @@ namespace ActionEditor
             propClip.objectReferenceValue = clip;
 
             SerializedObject.ApplyModifiedProperties();
-            //EditorUtility.SetDirty(clip);
             EditorUtility.SetDirty(Asset);
             AssetDatabase.SaveAssets();
 

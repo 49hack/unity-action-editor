@@ -127,7 +127,7 @@ namespace ActionEditor
             SerializedObject.ApplyModifiedProperties();
         }
 
-        public void Draw(Navigator navigator, float totalFrame, float currentFrame, IReadOnlyList<Blackboard> blackboards)
+        public void Draw(ActionEditorTime editorTime, float totalFrame, float currentFrame, IReadOnlyList<Blackboard> blackboards)
         {
             if (SerializedObject == null)
                 return;
@@ -140,7 +140,7 @@ namespace ActionEditor
 
                 for (int i = 0; i < m_TrackEditors.Count; i++)
                 {
-                    m_TrackEditors[i].Draw(navigator, totalFrame, currentFrame, m_BlackboardList);
+                    m_TrackEditors[i].Draw(editorTime, totalFrame, currentFrame, m_BlackboardList);
                 }
 
                 if (GUILayout.Button("Add Track", GUILayout.Width(Utility.HeaderWidth)))

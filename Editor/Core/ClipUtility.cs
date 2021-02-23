@@ -19,7 +19,7 @@ namespace ActionEditor
         public bool HasPrev { get; private set; }
         public bool HasNext { get; private set; }
 
-        public ClipViewInfo(ClipBehaviour clip, ClipBehaviour prev, ClipBehaviour next, Navigator navigator, float tolalFrame, Rect fullRect)
+        public ClipViewInfo(ClipBehaviour clip, ClipBehaviour prev, ClipBehaviour next, ActionEditorTime editorTime, float tolalFrame, Rect fullRect)
         {
             ContentMin = 0f;
             ContentMax = 0f;
@@ -32,7 +32,7 @@ namespace ActionEditor
             HasPrev = prev != null;
             HasNext = next != null;
 
-            var value = Calculate(clip, navigator);
+            var value = Calculate(clip, editorTime);
             Min = value.min;
             Max = value.max;
             ContentMin = Min;
@@ -40,40 +40,40 @@ namespace ActionEditor
 
             if(prev != null)
             {
-                var prevValue = Calculate(prev, navigator);
+                var prevValue = Calculate(prev, editorTime);
                 if(prevValue.max > ContentMin)
                 {
                     ContentMin = prevValue.max;
                 }
 
-                StopMin = ClipViewUtility.Adjust(navigator.ToFrame(prevValue.min), fullRect, navigator, 1);
+                StopMin = ClipViewUtility.Adjust(editorTime.ToFrame(prevValue.min), fullRect, editorTime, 1);
 
-                StopMax2 = ClipViewUtility.Adjust(navigator.ToFrame(prevValue.max), fullRect, navigator, 1);
+                StopMax2 = ClipViewUtility.Adjust(editorTime.ToFrame(prevValue.max), fullRect, editorTime, 1);
             }
 
             if(next != null)
             {
-                var nextValue = Calculate(next, navigator);
+                var nextValue = Calculate(next, editorTime);
                 if (nextValue.min < ContentMax)
                 {
                     ContentMax = nextValue.min;
                 }
 
-                StopMax = ClipViewUtility.Adjust(navigator.ToFrame(nextValue.max), fullRect, navigator, -1);
-                StopMin2 = ClipViewUtility.Adjust(navigator.ToFrame(nextValue.min), fullRect, navigator, -1);
+                StopMax = ClipViewUtility.Adjust(editorTime.ToFrame(nextValue.max), fullRect, editorTime, -1);
+                StopMin2 = ClipViewUtility.Adjust(editorTime.ToFrame(nextValue.min), fullRect, editorTime, -1);
             }
         }
 
-        static (float min, float max) Calculate(ClipBehaviour clip, Navigator navigator)
+        static (float min, float max) Calculate(ClipBehaviour clip, ActionEditorTime editorTime)
         {
             var beginFrame = clip.BeginFrame;
             var endFrame = clip.EndFrame;
 
-            beginFrame = Mathf.Max(beginFrame, navigator.MinFrame);
-            endFrame = Mathf.Min(endFrame, navigator.MaxFrame);
+            beginFrame = Mathf.Max(beginFrame, editorTime.MinFrame);
+            endFrame = Mathf.Min(endFrame, editorTime.MaxFrame);
 
-            var min = navigator.ToPosition(beginFrame);
-            var max = navigator.ToPosition(endFrame);
+            var min = editorTime.ToPosition(beginFrame);
+            var max = editorTime.ToPosition(endFrame);
 
             return (min, max);
         }
@@ -112,13 +112,13 @@ namespace ActionEditor
             }
         }
 
-        public static float Adjust(float next, Rect viewRect, Navigator navigator, int offset = 0)
+        public static float Adjust(float next, Rect viewRect, ActionEditorTime editorTime, int offset = 0)
         {
-            var intervalFrame = Utility.CalculateFrameInterval(navigator.MinFrame, navigator.MaxFrame, viewRect.xMin, viewRect.xMax, 1f / Utility.SubIndicateInterval);
+            var intervalFrame = Utility.CalculateFrameInterval(editorTime.MinFrame, editorTime.MaxFrame, viewRect.xMin, viewRect.xMax, 1f / Utility.SubIndicateInterval);
             var current = intervalFrame * Mathf.RoundToInt(next / intervalFrame) + offset;
 
-            var adjusted = Utility.Remap(current, navigator.MinFrame, navigator.MaxFrame, viewRect.xMin, viewRect.xMax);
-            next = Utility.Remap(adjusted, viewRect.xMin, viewRect.xMax, navigator.MinFrame, navigator.MaxFrame);
+            var adjusted = Utility.Remap(current, editorTime.MinFrame, editorTime.MaxFrame, viewRect.xMin, viewRect.xMax);
+            next = Utility.Remap(adjusted, viewRect.xMin, viewRect.xMax, editorTime.MinFrame, editorTime.MaxFrame);
 
             return next;
         }

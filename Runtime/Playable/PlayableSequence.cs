@@ -14,9 +14,11 @@ namespace ActionEditor
         [SerializeField] SharedBlendableAnimatorContext m_BlendableAnimator;
 
         PlayableAnimator m_Animator;
+        PlayableGraph m_Graph;
+        AnimationMixerPlayable m_ChildMixer;
 
-        public PlayableGraph Graph { get { return m_Animator.Graph; } }
-        public AnimationMixerPlayable ChildMixer { get { return m_Animator.SequenceMixer; } }
+        public PlayableGraph Graph { get { return m_Graph; } }
+        public AnimationMixerPlayable ChildMixer { get { return m_ChildMixer; } }
 
         public override Runtime.SequenceContext CreateContext(IReadOnlyList<Blackboard> blackboards)
         {
@@ -38,8 +40,10 @@ namespace ActionEditor
                 animator.Initialize();
 
             m_Animator = animator;
+            m_Graph = m_Animator.Graph;
+            m_ChildMixer = m_Animator.SequenceMixer;
 
-            if(!initialized)
+            if (!initialized)
             {
                 animator.SetSequenceWeight(1f);
             }

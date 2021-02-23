@@ -13,10 +13,14 @@ namespace ActionEditor
         List<Vector3> m_IndicatePointList = new List<Vector3>();
         Vector3[] m_IndicatePoints;
         Rect m_ControlRect;
+        float m_FrameRate;
+
+        public float FrameRate { get { return m_FrameRate; } }
 
         public float OnGUI(float totalFrame, float durationFrame, float currentFrame, float frameRate, float startFrame, float endFrame, System.Action<float, float> onFocus)
         {
             var e = Event.current;
+            m_FrameRate = frameRate;
 
             var rectTemp = GUILayoutUtility.GetRect(1f, 45f, GUILayout.ExpandWidth(true));
             var rect = new Rect(rectTemp.x, rectTemp.y, rectTemp.width - Utility.ScrollBarWidth, rectTemp.height);

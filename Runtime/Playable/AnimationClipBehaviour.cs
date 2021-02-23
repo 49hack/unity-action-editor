@@ -26,6 +26,9 @@ namespace ActionEditor
 
         public override void OnBegin(float time, float absoluteTime)
         {
+            if (!m_Graph.IsValid())
+                return;
+
             m_Playable = AnimationClipPlayable.Create(m_Graph, m_Clip.Value);
             m_Playable.SetTime(0f);
         }
