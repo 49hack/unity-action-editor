@@ -8,10 +8,15 @@ namespace ActionEditor
     [MenuTitle("Playable/Effect")]
     public class EffectTrackBehaviour : TrackBehaviour
     {
-        public static string PropNameLocator { get { return nameof(m_Locator); } }
+        public static string PropNameHasLocator { get { return nameof(m_HasLocator); } }
+        public static string PropNameLocatorIndex { get { return nameof(m_LocatorIndex); } }
+        public static string PropNameLocatorArray { get { return nameof(m_LocatorArray); } }
         public static string PropNameEffect { get { return nameof(m_Effect); } }
 
-        [SerializeField] SharedTransformContext m_Locator;
+
+        [SerializeField] bool m_HasLocator;
+        [SerializeField] SharedTransformArrayContext m_LocatorArray;
+        [SerializeField] int m_LocatorIndex;
         [SerializeField] SharedGameObjectContext m_Effect;
 
         Particle m_Particle;
@@ -35,9 +40,20 @@ namespace ActionEditor
         public override void OnCreate(SequenceBehaviour sequence, IReadOnlyList<Blackboard> blackboards)
         {
             Blackboard.Bind(blackboards, m_Effect);
-            Blackboard.Bind(blackboards, m_Locator);
+            Blackboard.Bind(blackboards, m_LocatorArray);
 
-            m_Particle = new Particle(m_Effect.Value, m_Locator.Value);
+            if (m_Effect.Value != null)
+            {
+                var obj = GameObject.Instantiate(m_Effect.Value);
+
+                var locator = default(Transform);
+                if(m_LocatorArray.Value != null && m_LocatorArray.Value.Length > m_LocatorIndex)
+                {
+                    locator = m_LocatorArray.Value[m_LocatorIndex];
+                }
+
+                m_Particle = new Particle(obj, locator);
+            }
         }
 
         public override void OnChangeClip(ClipBehaviour fromClip, float fromWeight, ClipBehaviour toClip, float toWeight)
@@ -70,7 +86,8 @@ namespace ActionEditor
                 if (root == null)
                     return;
 
-                m_Root = GameObject.Instantiate(root);
+                m_Root = root;
+
                 if (parent != null)
                 {
                     m_Root.transform.SetParent(parent, false);

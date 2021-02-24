@@ -96,4 +96,7 @@ namespace ActionEditor
 
     [System.Serializable, MenuTitle("Runtime Animator Controller")] public class SharedRuntimeAnimatorController : SharedValue<RuntimeAnimatorController> { public SharedRuntimeAnimatorController(string propertyName) : base(propertyName) { } }
     [System.Serializable] public class SharedRuntimeAnimatorControllerContext : SharedValueContext<RuntimeAnimatorController> { }
+
+    [System.Serializable, MenuTitle("Transform Array")] public class SharedTransformArray : SharedValue<Transform[]> { public SharedTransformArray(string propertyName) : base(propertyName) { } }
+    [System.Serializable] public class SharedTransformArrayContext : SharedValueContext<Transform[]> { }
 }

@@ -14,17 +14,26 @@ namespace ActionEditor
 
         protected override void DrawContents(Rect rect, SerializedObject serializedObject)
         {
-            //var propName = serializedObject.FindProperty(Track.PropNameTrackName);
-            //var nameRect = new Rect(rect.x + 2f, rect.y + 2f, rect.width - 4f, EditorGUIUtility.singleLineHeight);
-            //propName.stringValue = EditorGUI.TextField(nameRect, propName.stringValue);
-
             var effectRect = new Rect(rect.x + 2f, rect.y + 6f, rect.width - 4f, EditorGUIUtility.singleLineHeight);
             var effectProp = serializedObject.FindProperty(EffectTrackBehaviour.PropNameEffect);
             DrawContext(effectRect, effectProp, new GUIContent("Effect"), typeof(GameObject));
 
             var locatorRect = new Rect(effectRect.x, effectRect.y + effectRect.height + 5f, effectRect.width, EditorGUIUtility.singleLineHeight);
-            var locatorProp = serializedObject.FindProperty(EffectTrackBehaviour.PropNameLocator);
-            DrawContext(locatorRect, locatorProp, new GUIContent("Locator"), typeof(Transform));
+
+            var toggleRect = new Rect(locatorRect.x, locatorRect.y, EditorGUIUtility.singleLineHeight, locatorRect.height);
+            var toggleProp = serializedObject.FindProperty(EffectTrackBehaviour.PropNameHasLocator);
+            toggleProp.boolValue = EditorGUI.ToggleLeft(toggleRect, "", toggleProp.boolValue);
+            if(toggleProp.boolValue)
+            {
+                var itemWidth = (locatorRect.width - toggleRect.width);
+                var selectRect = new Rect(locatorRect.x + toggleRect.width, locatorRect.y, itemWidth * 0.75f, locatorRect.height);
+                var locatorProp = serializedObject.FindProperty(EffectTrackBehaviour.PropNameLocatorArray);
+                DrawContext(selectRect, locatorProp, GUIContent.none, typeof(Transform[]));
+
+                var indexRect = new Rect(selectRect.x + selectRect.width, selectRect.y, itemWidth * 0.25f, locatorRect.height);
+                var indexProp = serializedObject.FindProperty(EffectTrackBehaviour.PropNameLocatorIndex);
+                indexProp.intValue = EditorGUI.IntField(indexRect, "", indexProp.intValue);
+            }
         }
     }
 }
