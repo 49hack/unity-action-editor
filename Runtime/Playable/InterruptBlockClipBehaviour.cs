@@ -4,6 +4,7 @@ using UnityEngine;
 
 namespace ActionEditor
 {
+    [MenuTitle("Playable/Interrupt Block")]
     [ParentTrack(typeof(InterruptBlockTrackBehaviour))]
     public class InterruptBlockClipBehaviour : ClipBehaviour
     {

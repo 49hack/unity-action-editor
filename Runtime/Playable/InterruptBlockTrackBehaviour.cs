@@ -5,7 +5,7 @@ using UnityEngine;
 namespace ActionEditor
 {
     [ParentSequence(typeof(PlayableSequence))]
-    [MenuTitle("Playable/Interrupt")]
+    [MenuTitle("Playable/Interrupt Block")]
     public class InterruptBlockTrackBehaviour : TrackBehaviour
     {
         [SerializeField] SharedInterruptBlockContext m_Interrupt;
@@ -17,17 +17,17 @@ namespace ActionEditor
 
         public override void OnPlay()
         {
-            m_Interrupt.Value.Change(false);
+            m_Interrupt.Value?.Change(false);
         }
 
         public override void OnStop()
         {
-            m_Interrupt.Value.Change(false);
+            m_Interrupt.Value?.Change(false);
         }
 
         public override void OnDispose()
         {
-            m_Interrupt.Value.Change(false);
+            m_Interrupt.Value?.Change(false);
         }
     }
 }
