@@ -146,6 +146,38 @@ namespace ActionEditor
             m_GraphController.SetRootWeight(weight);
         }
 
+        public Context PlayAnimation(int stateId, float fadeDuration = 0.25f)
+        {
+            if (m_CurrentSequence != null)
+            {
+                m_CurrentSequence.SequenceContext.Interrupt();
+            }
+
+            m_AnimatorHandler.AnimatorController.Play(stateId);
+
+            var ctx = new Context(m_CurrentSequence);
+            StartCoroutine(FadeAnimation(fadeDuration, () => {
+                ctx.Complete();
+            }));
+            return ctx;
+        }
+
+        public Context CrossFadeAnimation(int stateId, float fadeDuration = 0.25f)
+        {
+            if (m_CurrentSequence != null)
+            {
+                m_CurrentSequence.SequenceContext.Interrupt();
+            }
+
+            m_AnimatorHandler.AnimatorController.CrossFade(stateId, fadeDuration);
+
+            var ctx = new Context(m_CurrentSequence);
+            StartCoroutine(FadeAnimation(fadeDuration, () => {
+                ctx.Complete();
+            }));
+            return ctx;
+        }
+
         public Context PlayAnimation(string stateName, float fadeDuration = 0.25f)
         {
             if (m_CurrentSequence != null)
@@ -153,17 +185,33 @@ namespace ActionEditor
                 m_CurrentSequence.SequenceContext.Interrupt();
             }
 
+            m_AnimatorHandler.AnimatorController.Play(stateName);
+
             var ctx = new Context(m_CurrentSequence);
-            StartCoroutine(FadeAnimation(stateName, fadeDuration, () => {
+            StartCoroutine(FadeAnimation(fadeDuration, () => {
                 ctx.Complete();
             }));
             return ctx;
         }
 
-        IEnumerator FadeAnimation(string stateName, float fadeDuration, System.Action onComplete)
+        public Context CrossFadeAnimation(string stateName, float fadeDuration = 0.25f)
         {
+            if (m_CurrentSequence != null)
+            {
+                m_CurrentSequence.SequenceContext.Interrupt();
+            }
+
             m_AnimatorHandler.AnimatorController.CrossFade(stateName, fadeDuration);
 
+            var ctx = new Context(m_CurrentSequence);
+            StartCoroutine(FadeAnimation(fadeDuration, () => {
+                ctx.Complete();
+            }));
+            return ctx;
+        }
+
+        IEnumerator FadeAnimation(float fadeDuration, System.Action onComplete)
+        {
             if (m_SequenceFadeCoroutine != null)
             {
                 StopCoroutine(m_SequenceFadeCoroutine);
