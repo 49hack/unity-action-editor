@@ -7,11 +7,11 @@ namespace ActionEditor
 {
     public class Window : EditorWindow
     {
-        static System.Action s_OnRefresh;
+        static System.Action<IDirector> s_SetDirector;
 
-        public static void Refresh()
+        public static void SetDirector(IDirector director)
         {
-            s_OnRefresh?.Invoke();
+            s_SetDirector?.Invoke(director);
         }
 
         enum State
@@ -41,7 +41,7 @@ namespace ActionEditor
         {
             EditorApplication.update += OnUpdate;
             EditorApplication.playModeStateChanged += OnPlayModeState;
-            s_OnRefresh += OnRefresh;
+            s_SetDirector += ChangeDirector;
             m_SequenceEditor?.Enable();
             ChangeDirector(null);
             OnSelect(Selection.activeObject);
@@ -50,7 +50,7 @@ namespace ActionEditor
         {
             EditorApplication.update -= OnUpdate;
             EditorApplication.playModeStateChanged -= OnPlayModeState;
-            s_OnRefresh -= OnRefresh;
+            s_SetDirector -= ChangeDirector;
             m_SequenceEditor?.Disable();
             ChangeDirector(null);
         }
@@ -65,11 +65,6 @@ namespace ActionEditor
         {
             var selected = Selection.activeObject;
             OnSelect(selected);
-        }
-
-        public void OnRefresh()
-        {
-            ChangeDirector(m_Director);
         }
 
         void OnPlayModeState(PlayModeStateChange state)
