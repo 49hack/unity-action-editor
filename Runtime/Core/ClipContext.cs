@@ -8,6 +8,7 @@ namespace ActionEditor.Runtime
     {
         public float BeginTime { get { return m_Clip.BeginFrame / m_FrameRate; } }
         public float EndTime { get { return m_Clip.EndFrame / m_FrameRate; } }
+        public float Length { get { return EndTime - BeginTime; } }
         public bool IsPlaying { get { return IsPlayingAt(m_CurrentTime); } }
         public ClipBehaviour Clip { get { return m_Clip; } }
         ClipBehaviour m_Clip;
@@ -42,23 +43,23 @@ namespace ActionEditor.Runtime
                 End();
             }
 
-            var clipTime = Mathf.Clamp(time - BeginTime, 0f, EndTime - BeginTime);
+            var clipTime = Mathf.Clamp(time - BeginTime, 0f, Length);
             if (isPlayingAt)
-                m_Clip.OnSetTime(clipTime);
+                m_Clip.OnSetTime(clipTime, Length);
         }
 
         public void Begin()
         {
-            var clipTime = Mathf.Clamp(m_CurrentTime - BeginTime, 0f, EndTime - BeginTime);
+            var clipTime = Mathf.Clamp(m_CurrentTime - BeginTime, 0f, Length);
             m_IsBegined = true;
-            m_Clip.OnBegin(clipTime, m_CurrentTime);
+            m_Clip.OnBegin(clipTime, m_CurrentTime, Length);
         }
 
         public void End()
         {
-            var clipTime = Mathf.Clamp(m_CurrentTime - BeginTime, 0f, EndTime - BeginTime);
+            var clipTime = Mathf.Clamp(m_CurrentTime - BeginTime, 0f, Length);
             m_IsBegined = false;
-            m_Clip.OnEnd(clipTime, m_CurrentTime);
+            m_Clip.OnEnd(clipTime, m_CurrentTime, Length);
         }
         public void Progress(float toTime)
         {
@@ -69,15 +70,15 @@ namespace ActionEditor.Runtime
             if (!IsPlaying)
                 return;
 
-            var clipFromTime = Mathf.Clamp(fromTime - BeginTime, 0f, EndTime - BeginTime);
-            var clipToTime = Mathf.Clamp(toTime - BeginTime, 0f, EndTime - BeginTime);
-            m_Clip.OnProgress(clipFromTime, clipToTime);
+            var clipFromTime = Mathf.Clamp(fromTime - BeginTime, 0f, Length);
+            var clipToTime = Mathf.Clamp(toTime - BeginTime, 0f, Length);
+            m_Clip.OnProgress(clipFromTime, clipToTime, Length);
         }
 
         public void Interrupt()
         {
-            var clipTime = Mathf.Clamp(m_CurrentTime - BeginTime, 0f, EndTime - BeginTime);
-            m_Clip?.OnInterrupt(clipTime, BeginTime);
+            var clipTime = Mathf.Clamp(m_CurrentTime - BeginTime, 0f, Length);
+            m_Clip?.OnInterrupt(clipTime, BeginTime, Length);
         }
 
         public void Dispose()

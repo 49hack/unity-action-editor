@@ -28,11 +28,11 @@ namespace ActionEditor
         }
 
         public virtual void OnCreate(SequenceBehaviour sequence, IReadOnlyList<Blackboard> blackboards) { }
-        public virtual void OnInterrupt(float clipTime, float absoluteTime) { }
-        public virtual void OnSetTime(float time) { }
-        public virtual void OnBegin(float time, float absoluteTime) { }
-        public virtual void OnEnd(float time, float absoluteTime) { }
-        public virtual void OnProgress(float fromTime, float toTime) { }
+        public virtual void OnInterrupt(float clipTime, float absoluteTime, float duration) { }
+        public virtual void OnSetTime(float time, float duration) { }
+        public virtual void OnBegin(float time, float absoluteTime, float duration) { }
+        public virtual void OnEnd(float time, float absoluteTime, float duration) { }
+        public virtual void OnProgress(float fromTime, float toTime, float duration) { }
         public virtual void OnDispose() { }
     }
 }

@@ -9,18 +9,18 @@ namespace ActionEditor
     {
         EffectTrackBehaviour.Particle m_Particle;
 
-        public override void OnEnd(float time, float absoluteTime)
+        public override void OnEnd(float time, float absoluteTime, float duration)
         {
             m_Particle?.End();
             m_Particle = null;
         }
 
-        public override void OnInterrupt(float time, float absoluteTime)
+        public override void OnInterrupt(float time, float absoluteTime, float duration)
         {
-            OnEnd(time, absoluteTime);
+            OnEnd(time, absoluteTime, duration);
         }
 
-        public override void OnSetTime(float time)
+        public override void OnSetTime(float time, float duration)
         {
             m_Particle?.Evaluate(time);
         }

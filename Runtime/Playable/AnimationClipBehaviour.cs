@@ -24,7 +24,7 @@ namespace ActionEditor
             Blackboard.Bind(blackboards, m_Clip);
         }
 
-        public override void OnBegin(float time, float absoluteTime)
+        public override void OnBegin(float time, float absoluteTime, float duration)
         {
             if (!m_Graph.IsValid())
                 return;
@@ -33,23 +33,23 @@ namespace ActionEditor
             m_Playable.SetTime(0f);
         }
 
-        public override void OnEnd(float time, float absoluteTime)
+        public override void OnEnd(float time, float absoluteTime, float duration)
         {
             if (m_Playable.IsValid())
                 m_Playable.Destroy();
         }
 
-        public override void OnSetTime(float time)
+        public override void OnSetTime(float time, float duration)
         {
             if (m_Playable.IsValid())
                 m_Playable.SetTime(time);
         }
 
 #if UNITY_EDITOR
-        public override void OnProgress(float fromTime, float toTime)
+        public override void OnProgress(float fromTime, float toTime, float duration)
         {
             if (!Application.isPlaying)
-                OnSetTime(toTime);
+                OnSetTime(toTime, duration);
         }
 #endif
     }

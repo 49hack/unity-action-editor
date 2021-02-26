@@ -17,12 +17,12 @@ namespace ActionEditor
             Blackboard.Bind(blackboards, m_RestartData);
         }
 
-        public override void OnInterrupt(float clipTime, float absoluteTime)
+        public override void OnInterrupt(float clipTime, float absoluteTime, float duration)
         {
             m_IsInterrupted = true;
         }
 
-        public override void OnBegin(float time, float absoluteTime)
+        public override void OnBegin(float time, float absoluteTime, float duration)
         {
             if (m_IsInterrupted)
                 return;
@@ -30,7 +30,7 @@ namespace ActionEditor
             m_RestartData.Value.Permit(absoluteTime);
         }
 
-        public override void OnEnd(float time, float absoluteTime)
+        public override void OnEnd(float time, float absoluteTime, float duration)
         {
             if (m_IsInterrupted)
                 return;
