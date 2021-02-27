@@ -90,7 +90,7 @@ namespace ActionEditor
 
         Animator m_Animator;
         PlayableGraph m_Graph;
-        AnimationMixerPlayable m_RootMixer;
+        AnimationLayerMixerPlayable m_RootMixer;
         AnimationMixerPlayable m_AnimatorControllerMixer;
         AnimationMixerPlayable m_SequenceMixer;
         int m_MaxMixingCount;
@@ -109,17 +109,34 @@ namespace ActionEditor
             m_Graph = PlayableGraph.Create(name);
             m_Graph.SetTimeUpdateMode(DirectorUpdateMode.GameTime);
 
-            m_RootMixer = AnimationMixerPlayable.Create(m_Graph, 2, false);
+
             m_AnimatorControllerMixer = AnimationMixerPlayable.Create(m_Graph, maxMixingCount, false);
             m_SequenceMixer = AnimationMixerPlayable.Create(m_Graph, maxMixingCount, false);
-
-            m_RootMixer.ConnectInput(0, m_AnimatorControllerMixer, 0, 1f);
-            m_RootMixer.ConnectInput(1, m_SequenceMixer, 0, 0f);
-
             m_PlayableOutput = AnimationPlayableOutput.Create(m_Graph, "Animation", animator);
-            m_PlayableOutput.SetSourcePlayable(m_RootMixer);
+
+            ResetRootMixer();
 
             m_Graph.Play();
+        }
+
+        void ResetRootMixer()
+        {
+            var animatorWight = 1f;
+            var sequenceWeight = 0f;
+            if(m_RootMixer.IsValid())
+            {
+                animatorWight = m_RootMixer.GetInputWeight(0);
+                sequenceWeight = m_RootMixer.GetInputWeight(1);
+
+                m_RootMixer.DisconnectInput(0);
+                m_RootMixer.DisconnectInput(1);
+            }
+
+            m_RootMixer = AnimationLayerMixerPlayable.Create(m_Graph, 2);
+            m_RootMixer.ConnectInput(0, m_AnimatorControllerMixer, 0, animatorWight);
+            m_RootMixer.ConnectInput(1, m_SequenceMixer, 0, sequenceWeight);
+
+            m_PlayableOutput.SetSourcePlayable(m_RootMixer);
         }
 
         public Handler Add(RuntimeAnimatorController controller)
@@ -167,17 +184,20 @@ namespace ActionEditor
             return handler;
         }
 
-        public void SetRootWeight(float animatorWeight)
-        {
-            var weight = Mathf.Clamp01(animatorWeight);
-            m_RootMixer.SetInputWeight(0, weight);
-            m_RootMixer.SetInputWeight(1, 1f - weight);
-        }
-
         public void SetRootWeight(int index, float weight)
         {
             weight = Mathf.Clamp01(weight);
             m_RootMixer.SetInputWeight(index, weight);
+        }
+
+        public void SetSequenceAvatarMask(AvatarMask mask)
+        {
+            if(mask == null)
+            {
+                ResetRootMixer();
+                return;
+            }
+            m_RootMixer.SetLayerMaskFromAvatarMask(1, mask);
         }
 
         public float GetAnimatorWeight()

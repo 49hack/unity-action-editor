@@ -26,24 +26,7 @@ namespace ActionEditor
 
             // マスクが設定されていればアニメーターも動かす
             playableSequence.AnimatorWeight = m_AvatarMask.Value == null ? 0f : 1f;
-
-            SetLayer();
-        }
-
-        void SetLayer()
-        {
-            if (m_AvatarMask.Value != null)
-            {
-                m_Mixer.SetLayerMaskFromAvatarMask(0, m_AvatarMask.Value);
-                m_Mixer.SetLayerMaskFromAvatarMask(1, m_AvatarMask.Value);
-                m_Mixer.SetLayerAdditive(0, true);
-                m_Mixer.SetLayerAdditive(1, true);
-            }
-            else
-            {
-                m_Mixer.SetLayerAdditive(0, false);
-                m_Mixer.SetLayerAdditive(1, false);
-            }
+            playableSequence.AvatarMask = m_AvatarMask.Value;
         }
 
         public override void OnChangeClip(ClipBehaviour fromClip, float fromWeight, ClipBehaviour toClip, float toWeight)
@@ -68,8 +51,6 @@ namespace ActionEditor
 
             m_Mixer.SetInputWeight(0, fromWeight);
             m_Mixer.SetInputWeight(1, toWeight);
-
-            SetLayer();
         }
 
         public override void OnChangeWight(ClipBehaviour fromClip, float fromWeight, ClipBehaviour toClip, float toWeight)

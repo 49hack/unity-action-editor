@@ -20,6 +20,7 @@ namespace ActionEditor
         public PlayableGraph Graph { get { return m_Graph; } }
         public AnimationLayerMixerPlayable ChildMixer { get { return m_ChildMixer; } }
         internal float AnimatorWeight { get; set; }
+        internal AvatarMask AvatarMask { get; set; }
 
         public override Runtime.SequenceContext CreateContext(IReadOnlyList<Blackboard> blackboards)
         {
@@ -27,9 +28,11 @@ namespace ActionEditor
 
             var ctx = new Runtime.PlayableSequenceContext(this, m_Tracks, blackboards);
 
-            if (!Application.isPlaying)
+            if (m_Animator != null)
             {
-                if (m_Animator != null)
+                m_Animator.SetSequenceAvatarMask(AvatarMask);
+
+                if (!Application.isPlaying)
                 {
                     m_Animator.SetAnimatorWeight(AnimatorWeight);
                     m_Animator.SetSequenceWeight(1f);

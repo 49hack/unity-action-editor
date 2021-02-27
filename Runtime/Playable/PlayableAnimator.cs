@@ -26,8 +26,6 @@ namespace ActionEditor
         Coroutine m_SequenceFadeCoroutine;
         Context m_CurrentSequence;
 
-        public bool IsInitialized { get { return m_GraphController != null; } }
-
         public Animator Animator
         {
             get
@@ -94,6 +92,11 @@ namespace ActionEditor
 
             SetSequenceWeight(0f);
             SetAnimatorWeight(1f);
+        }
+
+        internal void SetSequenceAvatarMask(AvatarMask mask)
+        {
+            m_GraphController?.SetSequenceAvatarMask(mask);
         }
 
         public void Evaluate()
