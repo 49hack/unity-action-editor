@@ -17,6 +17,10 @@ namespace ActionEditor
             var propName = serializedObject.FindProperty(TrackBehaviour.PropNameTrackName);
             var nameRect = new Rect(rect.x + 2f, rect.y + 2f, rect.width - 4f, EditorGUIUtility.singleLineHeight);
             propName.stringValue = EditorGUI.TextField(nameRect, propName.stringValue);
+
+            var propAvatarMask = serializedObject.FindProperty(AnimationTrackBehaviour.PropNameAvatarMask);
+            var avatarMaskRect = new Rect(rect.x + 2f, rect.y + nameRect.height + 8f, rect.width - 4f, EditorGUIUtility.singleLineHeight);
+            DrawContext(avatarMaskRect, propAvatarMask, new GUIContent("Avatar Mask"), typeof(AvatarMask));
         }
     }
 }

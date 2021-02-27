@@ -91,6 +91,9 @@ namespace ActionEditor
     [System.Serializable, MenuTitle("Animator")] public class SharedAnimator : SharedValue<Animator> { public SharedAnimator(string propertyName) : base(propertyName) { } }
     [System.Serializable] public class SharedAnimatorContext : SharedValueContext<Animator> { }
 
+    [System.Serializable, MenuTitle("Avatar Mask")] public class SharedAvatarMask : SharedValue<AvatarMask> { public SharedAvatarMask(string propertyName) : base(propertyName) { } }
+    [System.Serializable] public class SharedAvatarMaskContext : SharedValueContext<AvatarMask> { }
+
     [System.Serializable, MenuTitle("Animation Clip")] public class SharedAnimationClip : SharedValue<AnimationClip> { public SharedAnimationClip(string propertyName) : base(propertyName) { } }
     [System.Serializable] public class SharedAnimationClipContext : SharedValueContext<AnimationClip> { }
 

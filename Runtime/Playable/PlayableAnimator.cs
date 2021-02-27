@@ -59,7 +59,7 @@ namespace ActionEditor
         public bool CanInterrupt { get { return !Blackboard.InterruptBlock.Blocked; } }
         public RestartData RestartData { get { return Blackboard.RestartData; } }
         public PlayableGraph Graph { get { return m_GraphController.Graph; } }
-        public AnimationMixerPlayable SequenceMixer { get { return m_SequenceHandler.Mixer; } }
+        public AnimationLayerMixerPlayable SequenceMixer { get { return m_SequenceHandler.Mixer; } }
 
         private void OnValidate()
         {
@@ -88,11 +88,12 @@ namespace ActionEditor
 
             m_SequenceHandler = m_GraphController.CreateMixer(2);
             m_SequenceHandler.Weight = 1f;
-            if (Application.isPlaying)
-            {
-                m_AnimatorHandler = m_GraphController.Add(m_AnimatorController);
-                m_AnimatorHandler.Weight = 1f;
-            }
+
+            m_AnimatorHandler = m_GraphController.Add(m_AnimatorController);
+            m_AnimatorHandler.Weight = 1f;
+
+            SetSequenceWeight(0f);
+            SetAnimatorWeight(1f);
         }
 
         public void Evaluate()
@@ -137,13 +138,13 @@ namespace ActionEditor
         public void SetSequenceWeight(float weight)
         {
             weight = Mathf.Clamp01(weight);
-            m_GraphController.SetRootWeight(1f - weight);
+            m_GraphController.SetRootWeight(1, weight);
         }
 
         public void SetAnimatorWeight(float weight)
         {
             weight = Mathf.Clamp01(weight);
-            m_GraphController.SetRootWeight(weight);
+            m_GraphController.SetRootWeight(0, weight);
         }
 
         public Context PlayAnimation(int stateId, float fadeDuration = 0.25f)
@@ -225,11 +226,13 @@ namespace ActionEditor
                 var t = time / fadeDuration;
                 var sequenceWeight = Mathf.Lerp(startSequenceWeight, 0f, t);
                 SetSequenceWeight(sequenceWeight);
+                SetAnimatorWeight(1f - sequenceWeight);
                 time += Time.deltaTime;
                 yield return null;
             }
 
             SetSequenceWeight(0f);
+            SetAnimatorWeight(1f);
 
             var stateInfo = m_AnimatorHandler.AnimatorController.GetCurrentAnimatorStateInfo(0);
             var waitDuration = stateInfo.length - fadeDuration;
@@ -253,7 +256,7 @@ namespace ActionEditor
             m_CurrentSequence = new Context(ctx);
             ctx.OnChangeStatus += OnChangeSequenceState;
 
-            FadeSequence(1f, fadeDuration);
+            FadeSequence(1f, ctx.AnimatorWeight, fadeDuration);
 
             return m_CurrentSequence;
         }
@@ -266,11 +269,12 @@ namespace ActionEditor
                     if(m_CurrentSequence != null && m_CurrentSequence.IsInterrupted)
                     {
                         SetSequenceWeight(0f);
+                        SetAnimatorWeight(1f);
                         m_CurrentSequence = null;
                         break;
                     }
 
-                    FadeSequence(0f, 0.5f, () => {
+                    FadeSequence(0f, 1f, 0.5f, () => {
                         var ctx = m_CurrentSequence;
                         m_CurrentSequence = null;
                         ctx?.Complete();
@@ -283,29 +287,33 @@ namespace ActionEditor
             }
         }
 
-        void FadeSequence(float toSequenceWeight, float duration, System.Action onComplete = null)
+        void FadeSequence(float toSequenceWeight, float animatorWeight, float duration, System.Action onComplete = null)
         {
             if(m_SequenceFadeCoroutine != null)
             {
                 StopCoroutine(m_SequenceFadeCoroutine);
                 m_SequenceFadeCoroutine = null;
             }
-            m_SequenceFadeCoroutine = StartCoroutine(_CrossFade(toSequenceWeight, duration, onComplete));
+            m_SequenceFadeCoroutine = StartCoroutine(_CrossFade(toSequenceWeight, animatorWeight, duration, onComplete));
         }
-        IEnumerator _CrossFade(float toSequenceWeight, float duration, System.Action onComplete)
+        IEnumerator _CrossFade(float toSequenceWeight, float toAnimatorWeight, float duration, System.Action onComplete)
         {
-            var startWeight = m_GraphController.GetSequenceWeight();
+            var startSequenceWeight = m_GraphController.GetSequenceWeight();
+            var startAnimatorWeight = m_GraphController.GetAnimatorWeight();
             var time = 0f;
             while(time <= duration)
             {
                 var t = time / duration;
-                var weight = Mathf.Lerp(startWeight, toSequenceWeight, t);
-                SetSequenceWeight(weight);
+                var seqWeight = Mathf.Lerp(startSequenceWeight, toSequenceWeight, t);
+                var animWeight = Mathf.Lerp(startAnimatorWeight, toAnimatorWeight, t);
+                SetSequenceWeight(seqWeight);
+                SetAnimatorWeight(animWeight);
                 time += Time.deltaTime;
                 yield return null;
             }
 
             SetSequenceWeight(toSequenceWeight);
+            SetAnimatorWeight(toAnimatorWeight);
 
             m_SequenceFadeCoroutine = null;
             onComplete?.Invoke();
@@ -322,6 +330,7 @@ namespace ActionEditor
 
             public bool IsCancled { get { return m_Inner == null ? m_IsCancled : m_Inner.IsCancled; } }
             public bool IsInterrupted { get { return m_Inner == null ? m_IsInterrupt : m_Inner.IsInterrupted; } }
+            public float AnimatorWeight { get { return m_Inner == null ? m_Ctx == null ? 0f : m_Ctx.AnimatorWeight : m_Inner.AnimatorWeight; } }
             bool m_IsCancled;
             bool m_IsInterrupt;
 

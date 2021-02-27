@@ -27,7 +27,7 @@ namespace ActionEditor
             if (m_IsInterrupted)
                 return;
 
-            m_RestartData.Value.Permit(absoluteTime);
+            m_RestartData.Value?.Permit(absoluteTime);
         }
 
         public override void OnEnd(float time, float absoluteTime, float duration)
@@ -35,7 +35,7 @@ namespace ActionEditor
             if (m_IsInterrupted)
                 return;
 
-            m_RestartData.Value.Prohibit();
+            m_RestartData.Value?.Prohibit();
         }
 
         public override void OnDispose()

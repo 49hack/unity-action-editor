@@ -24,18 +24,27 @@ namespace ActionEditor
 
                 var valueRect = new Rect(position.x + labelWidth, position.y, position.width - labelWidth - SelectorWidth, position.height);
 
-                var nameProp = property.FindPropertyRelative(SharedValueContext.PropNamePropertyName);
-                if (blackboardList == null || blackboardList.Count <= 0)
-                {
-                    EditorGUI.PropertyField(valueRect, nameProp, GUIContent.none);
-                    return;
-                }
+                
 
                 var isForceSet = false;
                 var sharedTypeProp = property.FindPropertyRelative(SharedValueContext.PropNameSharedType);
                 var sharedTypeValues = System.Enum.GetValues(typeof(SharedValueType));
                 var sharedType = (SharedValueType)sharedTypeValues.GetValue(sharedTypeProp.enumValueIndex);
                 var sharedTypeRect = new Rect(valueRect.x + valueRect.width, valueRect.y, SelectorWidth, valueRect.height);
+
+                var nameProp = property.FindPropertyRelative(SharedValueContext.PropNamePropertyName);
+                if (blackboardList == null || blackboardList.Count <= 0)
+                {
+                    if (sharedType != SharedValueType.Fixed)
+                    {
+                        EditorGUI.PropertyField(valueRect, nameProp, GUIContent.none);
+                    } else
+                    {
+                        var fixedValueProp = property.FindPropertyRelative(SharedValueContext.PropNameFixedValue);
+                        EditorGUI.PropertyField(valueRect, fixedValueProp, GUIContent.none);
+                    }
+                    return;
+                }
 
                 using (var check = new EditorGUI.ChangeCheckScope())
                 {

@@ -1,7 +1,7 @@
 {
   "name": "com.49hack.unity-action-editor",
   "displayName":  "Action Editor for Unity",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "unity": "2019.4",
   "description": "This tool provide that sequence assets and editor for character action.",
   "keywords": [ ],

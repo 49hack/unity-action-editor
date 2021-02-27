@@ -10,11 +10,40 @@ namespace ActionEditor
     [MenuTitle("Playable/Animation")]
     public class AnimationTrackBehaviour : TrackBehaviour
     {
-        AnimationMixerPlayable m_Mixer;
+        public static string PropNameAvatarMask { get { return nameof(m_AvatarMask); } }
+
+        [SerializeField] SharedAvatarMaskContext m_AvatarMask = new SharedAvatarMaskContext();
+
+        AnimationLayerMixerPlayable m_Mixer;
+        
 
         public override void OnCreate(SequenceBehaviour sequence, IReadOnlyList<Blackboard> blackboards)
         {
-            m_Mixer = ((PlayableSequence)sequence).ChildMixer;
+            Blackboard.Bind(blackboards, m_AvatarMask);
+
+            var playableSequence = (PlayableSequence)sequence;
+            m_Mixer = playableSequence.ChildMixer;
+
+            // マスクが設定されていればアニメーターも動かす
+            playableSequence.AnimatorWeight = m_AvatarMask.Value == null ? 0f : 1f;
+
+            SetLayer();
+        }
+
+        void SetLayer()
+        {
+            if (m_AvatarMask.Value != null)
+            {
+                m_Mixer.SetLayerMaskFromAvatarMask(0, m_AvatarMask.Value);
+                m_Mixer.SetLayerMaskFromAvatarMask(1, m_AvatarMask.Value);
+                m_Mixer.SetLayerAdditive(0, true);
+                m_Mixer.SetLayerAdditive(1, true);
+            }
+            else
+            {
+                m_Mixer.SetLayerAdditive(0, false);
+                m_Mixer.SetLayerAdditive(1, false);
+            }
         }
 
         public override void OnChangeClip(ClipBehaviour fromClip, float fromWeight, ClipBehaviour toClip, float toWeight)
@@ -39,6 +68,8 @@ namespace ActionEditor
 
             m_Mixer.SetInputWeight(0, fromWeight);
             m_Mixer.SetInputWeight(1, toWeight);
+
+            SetLayer();
         }
 
         public override void OnChangeWight(ClipBehaviour fromClip, float fromWeight, ClipBehaviour toClip, float toWeight)

@@ -15,16 +15,28 @@ namespace ActionEditor
 
         PlayableAnimator m_Animator;
         PlayableGraph m_Graph;
-        AnimationMixerPlayable m_ChildMixer;
+        AnimationLayerMixerPlayable m_ChildMixer;
 
         public PlayableGraph Graph { get { return m_Graph; } }
-        public AnimationMixerPlayable ChildMixer { get { return m_ChildMixer; } }
+        public AnimationLayerMixerPlayable ChildMixer { get { return m_ChildMixer; } }
+        internal float AnimatorWeight { get; set; }
 
         public override Runtime.SequenceContext CreateContext(IReadOnlyList<Blackboard> blackboards)
         {
             this.OnCreate(blackboards);
 
-            return new Runtime.PlayableSequenceContext(this, m_Tracks, blackboards);
+            var ctx = new Runtime.PlayableSequenceContext(this, m_Tracks, blackboards);
+
+            if (!Application.isPlaying)
+            {
+                if (m_Animator != null)
+                {
+                    m_Animator.SetAnimatorWeight(AnimatorWeight);
+                    m_Animator.SetSequenceWeight(1f);
+                }
+            }
+
+            return ctx;
         }
 
         public override void OnCreate(IReadOnlyList<Blackboard> blackboards)
@@ -35,18 +47,11 @@ namespace ActionEditor
                 return;
 
             var animator = m_BlendableAnimator.Value;
-            var initialized = animator.IsInitialized;
-            if (!initialized)
-                animator.Initialize();
+            animator.Initialize();
 
             m_Animator = animator;
             m_Graph = m_Animator.Graph;
             m_ChildMixer = m_Animator.SequenceMixer;
-
-            if (!initialized)
-            {
-                animator.SetSequenceWeight(1f);
-            }
         }
 
         public override void OnDispose()

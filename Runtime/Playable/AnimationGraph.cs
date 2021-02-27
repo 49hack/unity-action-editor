@@ -16,13 +16,14 @@ namespace ActionEditor
 
         public class Handler
         {
-            public delegate void OnWaitChange(Handler handler, float weight);
+            public delegate void OnChangeWeightEvent(float weight);
+            public delegate void OnRequestWeightChange(Handler handler, float weight);
             public delegate void OnDispose(Handler handler);
 
             public Type Type { get; private set; }
             public int InputIndex { get; private set; }
             public float Weight { get { return m_Weight; } set { ChangeWaight(value); } }
-            public AnimationMixerPlayable Mixer
+            public AnimationLayerMixerPlayable Mixer
             {
                 get
                 {
@@ -41,24 +42,26 @@ namespace ActionEditor
                 }
             }
 
+            public event OnChangeWeightEvent OnChangeWeight;
+
             float m_Weight;
-            OnWaitChange onWaitChange;
+            OnRequestWeightChange onRequestWeightChange;
             OnDispose onDispose;
-            AnimationMixerPlayable m_Mixer;
+            AnimationLayerMixerPlayable m_Mixer;
             AnimatorControllerPlayable m_AnimatorController;
 
-            public Handler(Type type, int inputIndex, float weight, OnWaitChange waitChange, OnDispose dispose)
+            public Handler(Type type, int inputIndex, float weight, OnRequestWeightChange waitChange, OnDispose dispose)
             {
                 m_Weight = weight;
                 Type = type;
                 InputIndex = inputIndex;
-                onWaitChange = waitChange;
+                onRequestWeightChange = waitChange;
                 onDispose = dispose;
             }
 
             void ChangeWaight(float value)
             {
-                onWaitChange?.Invoke(this, value);
+                onRequestWeightChange?.Invoke(this, value);
             }
             
             public void Dispose()
@@ -66,7 +69,7 @@ namespace ActionEditor
                 onDispose?.Invoke(this);
             }
 
-            internal void SetMixer(AnimationMixerPlayable mixer)
+            internal void SetMixer(AnimationLayerMixerPlayable mixer)
             {
                 m_Mixer = mixer;
             }
@@ -81,6 +84,7 @@ namespace ActionEditor
             internal void ChangeWeightInternal(float weight)
             {
                 m_Weight = weight;
+                OnChangeWeight?.Invoke(weight);
             }
         }
 
@@ -149,7 +153,7 @@ namespace ActionEditor
                 throw new System.InvalidOperationException(string.Format("More than the specified count of AnimationMixerPlayable have been added. (max: {0})", m_MaxMixingCount));
 
             var Weight = 0f;
-            var mixer = AnimationMixerPlayable.Create(m_Graph, inputCount, false);
+            var mixer = AnimationLayerMixerPlayable.Create(m_Graph, inputCount);
             m_SequenceMixer.ConnectInput(index, mixer, 0, Weight);
 
             var handler = new Handler(Type.Sequence, index, Weight, OnChangeWeight, OnRemove);
@@ -168,6 +172,12 @@ namespace ActionEditor
             var weight = Mathf.Clamp01(animatorWeight);
             m_RootMixer.SetInputWeight(0, weight);
             m_RootMixer.SetInputWeight(1, 1f - weight);
+        }
+
+        public void SetRootWeight(int index, float weight)
+        {
+            weight = Mathf.Clamp01(weight);
+            m_RootMixer.SetInputWeight(index, weight);
         }
 
         public float GetAnimatorWeight()
