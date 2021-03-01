@@ -10,8 +10,10 @@ namespace ActionEditor
     public class AnimationClipBehaviour : ClipBehaviour
     {
         public static string PropNameClip { get { return nameof(m_Clip); } }
+        public static string PropNameSpeed { get { return nameof(m_Speed); } }
 
         [SerializeField] SharedAnimationClipContext m_Clip;
+        [SerializeField] float m_Speed = 1f;
 
         PlayableGraph m_Graph;
         AnimationClipPlayable m_Playable;
@@ -42,7 +44,9 @@ namespace ActionEditor
         public override void OnSetTime(float time, float duration)
         {
             if (m_Playable.IsValid())
-                m_Playable.SetTime(time);
+            {
+                m_Playable.SetTime(time * m_Speed);
+            }
         }
 
 #if UNITY_EDITOR

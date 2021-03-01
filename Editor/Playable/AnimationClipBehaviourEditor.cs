@@ -12,9 +12,16 @@ namespace ActionEditor
         {
             base.DrawContents(rect, serializedObject);
 
-            var clipRect = new Rect(rect.x, rect.y + 5f, rect.width, EditorGUIUtility.singleLineHeight);
+            var clipRect = new Rect(rect.x, rect.y + 2f, rect.width, EditorGUIUtility.singleLineHeight);
             var clipProp = serializedObject.FindProperty(AnimationClipBehaviour.PropNameClip);
             DrawContext(clipRect, clipProp, GUIContent.none, typeof(UnityEngine.AnimationClip));
+
+            using (new Utility.LabelWidthScope(rect.width * 0.3f))
+            {
+                var speedRect = new Rect(rect.x, rect.y + clipRect.height + 4f, rect.width, EditorGUIUtility.singleLineHeight);
+                var speedProp = serializedObject.FindProperty(AnimationClipBehaviour.PropNameSpeed);
+                EditorGUI.PropertyField(speedRect, speedProp);
+            }
         }
 
         protected override void AddContextMenu(GenericMenu menu)
