@@ -105,7 +105,6 @@ namespace ActionEditor.Runtime
             var fromTime = m_CurrentTime;
             m_CurrentTime = time;
             m_Track.SetTime(time);
-            UpdateClip(time);
             m_Track.OnProgress(fromTime, time);
         }
 
