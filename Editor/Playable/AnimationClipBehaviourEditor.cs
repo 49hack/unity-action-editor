@@ -41,7 +41,11 @@ namespace ActionEditor
             if (animClip == null)
                 return;
 
-            var length = animClip.length;
+            var speedProp = SerializedObject.FindProperty(AnimationClipBehaviour.PropNameSpeed);
+            if (speedProp == null)
+                return;
+
+            var length = animClip.length * (1f / speedProp.floatValue);
             var totalFrame = length * FrameRate;
             EndFrame = BeginFrame + totalFrame;
 
