@@ -155,17 +155,18 @@ namespace ActionEditor.Runtime
             }
 
             var prevTime = Current;
-            Current += deltaTime;
+            var nextTime = Current + deltaTime;
 
-            m_Sequence.OnSetTime(Current);
-            m_Sequence.OnProgress(prevTime, Current);
+            m_Sequence.OnProgress(prevTime, nextTime);
 
             for (int i = 0; i < m_TrackContexts.Length; i++)
             {
-                m_TrackContexts[i].Progress(Current);
+                m_TrackContexts[i].Progress(nextTime);
             }
 
-            if(Current >= Length)
+            Current = nextTime;
+
+            if (Current >= Length)
             {
                 Stop();
             }
