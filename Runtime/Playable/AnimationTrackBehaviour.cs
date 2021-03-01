@@ -29,7 +29,7 @@ namespace ActionEditor
             playableSequence.AvatarMask = m_AvatarMask.Value;
         }
 
-        public override void OnChangeClip(ClipBehaviour fromClip, float fromWeight, ClipBehaviour toClip, float toWeight)
+        public override void OnChangeClip(float time, ClipBehaviour fromClip, float fromWeight, ClipBehaviour toClip, float toWeight)
         {
             if (!m_Mixer.IsValid())
                 return;
@@ -53,7 +53,7 @@ namespace ActionEditor
             m_Mixer.SetInputWeight(1, toWeight);
         }
 
-        public override void OnChangeWight(ClipBehaviour fromClip, float fromWeight, ClipBehaviour toClip, float toWeight)
+        public override void OnChangeWight(float time, ClipBehaviour fromClip, float fromWeight, ClipBehaviour toClip, float toWeight)
         {
             if (!m_Mixer.IsValid())
                 return;

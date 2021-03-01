@@ -115,7 +115,7 @@ namespace ActionEditor.Runtime
             if(!indeceis.IsValid())
             {
                 if (!m_LatestIndecies.Equals(indeceis))
-                    m_Track.OnChangeClip(null, 0f, null, 0f);
+                    m_Track.OnChangeClip(time, null, 0f, null, 0f);
 
                 m_LatestIndecies = indeceis;
                 return;
@@ -124,7 +124,7 @@ namespace ActionEditor.Runtime
             if (indeceis.First == indeceis.Last)
             {
                 if (!m_LatestIndecies.Equals(indeceis))
-                    m_Track.OnChangeClip(m_ClipContexts[indeceis.First].Clip, 1f, null, 0f);
+                    m_Track.OnChangeClip(time, m_ClipContexts[indeceis.First].Clip, 1f, null, 0f);
             }
             else
             {
@@ -133,11 +133,11 @@ namespace ActionEditor.Runtime
                 var weight = Mathf.Clamp01((time - min) / (max - min) + 0.000001f);
                 if (!m_LatestIndecies.Equals(indeceis))
                 {
-                    m_Track.OnChangeClip(m_ClipContexts[indeceis.First].Clip, 1f - weight, m_ClipContexts[indeceis.Last].Clip, weight);
+                    m_Track.OnChangeClip(time, m_ClipContexts[indeceis.First].Clip, 1f - weight, m_ClipContexts[indeceis.Last].Clip, weight);
                 }
                 else
                 {
-                    m_Track.OnChangeWight(m_ClipContexts[indeceis.First].Clip, 1f - weight, m_ClipContexts[indeceis.Last].Clip, weight);
+                    m_Track.OnChangeWight(time, m_ClipContexts[indeceis.First].Clip, 1f - weight, m_ClipContexts[indeceis.Last].Clip, weight);
                 }
             }
 

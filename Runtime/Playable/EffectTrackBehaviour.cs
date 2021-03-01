@@ -56,7 +56,7 @@ namespace ActionEditor
             }
         }
 
-        public override void OnChangeClip(ClipBehaviour fromClip, float fromWeight, ClipBehaviour toClip, float toWeight)
+        public override void OnChangeClip(float time, ClipBehaviour fromClip, float fromWeight, ClipBehaviour toClip, float toWeight)
         {
             if (m_IsInterrupted)
                 return;

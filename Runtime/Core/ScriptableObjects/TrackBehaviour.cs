@@ -26,8 +26,8 @@ namespace ActionEditor
         public virtual void OnPause() { }
         public virtual void OnResume() { }
         public virtual void OnProgress(float fromTime, float toTime) { }
-        public virtual void OnChangeClip(ClipBehaviour fromClip, float fromWeight, ClipBehaviour toClip, float toWeight) { }
-        public virtual void OnChangeWight(ClipBehaviour fromClip, float fromWeight, ClipBehaviour toClip, float toWeight) { }
+        public virtual void OnChangeClip(float time, ClipBehaviour fromClip, float fromWeight, ClipBehaviour toClip, float toWeight) { }
+        public virtual void OnChangeWight(float time, ClipBehaviour fromClip, float fromWeight, ClipBehaviour toClip, float toWeight) { }
         public virtual void OnDispose() { }
     }
 }
