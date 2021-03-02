@@ -20,7 +20,7 @@ namespace ActionEditor
                     labelWidth = labelRect.width;
                 }
 
-                const float SelectorWidth = 20f;
+                float SelectorWidth = Mathf.Min(20f, position.width * 0.1f);
 
                 var valueRect = new Rect(position.x + labelWidth, position.y, position.width - labelWidth - SelectorWidth, position.height);
 
