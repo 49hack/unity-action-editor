@@ -16,11 +16,15 @@ namespace ActionEditor
             var clipProp = serializedObject.FindProperty(AnimationClipBehaviour.PropNameClip);
             DrawContext(clipRect, clipProp, GUIContent.none, typeof(UnityEngine.AnimationClip));
 
-            using (new Utility.LabelWidthScope(rect.width * 0.3f))
+            using (new Utility.LabelWidthScope(Mathf.Min(rect.width * 0.3f, 50f)))
             {
-                var speedRect = new Rect(rect.x, rect.y + clipRect.height + 4f, rect.width, EditorGUIUtility.singleLineHeight);
+                var speedRect = new Rect(rect.x, rect.y + clipRect.height + 8f, rect.width * 0.5f - 2f, EditorGUIUtility.singleLineHeight);
                 var speedProp = serializedObject.FindProperty(AnimationClipBehaviour.PropNameSpeed);
                 EditorGUI.PropertyField(speedRect, speedProp);
+
+                var offsetRect = new Rect(rect.x + speedRect.width + 4f, rect.y + clipRect.height + 8f, rect.width * 0.5f - 2f, EditorGUIUtility.singleLineHeight);
+                var offsetProp = serializedObject.FindProperty(AnimationClipBehaviour.PropNameOffset);
+                EditorGUI.PropertyField(offsetRect, offsetProp);
             }
         }
 
@@ -45,7 +49,11 @@ namespace ActionEditor
             if (speedProp == null)
                 return;
 
-            var length = animClip.length * (1f / speedProp.floatValue);
+            var offsetProp = SerializedObject.FindProperty(AnimationClipBehaviour.PropNameOffset);
+            if (offsetProp == null)
+                return;
+
+            var length = (animClip.length * (1f / speedProp.floatValue)) - offsetProp.floatValue;
             var totalFrame = length * FrameRate;
             EndFrame = BeginFrame + totalFrame;
 

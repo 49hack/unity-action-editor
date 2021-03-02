@@ -11,9 +11,11 @@ namespace ActionEditor
     {
         public static string PropNameClip { get { return nameof(m_Clip); } }
         public static string PropNameSpeed { get { return nameof(m_Speed); } }
+        public static string PropNameOffset { get { return nameof(m_Offset); } }
 
         [SerializeField] SharedAnimationClipContext m_Clip;
         [SerializeField] float m_Speed = 1f;
+        [SerializeField] float m_Offset = 0f;
 
         PlayableGraph m_Graph;
         AnimationClipPlayable m_Playable;
@@ -32,7 +34,7 @@ namespace ActionEditor
                 return;
 
             m_Playable = AnimationClipPlayable.Create(m_Graph, m_Clip.Value);
-            m_Playable.SetTime(0f);
+            m_Playable.SetTime(m_Offset);
         }
 
         public override void OnEnd(float time, float absoluteTime, float duration)
@@ -45,7 +47,7 @@ namespace ActionEditor
         {
             if (m_Playable.IsValid())
             {
-                m_Playable.SetTime(time * m_Speed);
+                m_Playable.SetTime(m_Offset + time * m_Speed);
             }
         }
 
