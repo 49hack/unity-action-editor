@@ -7,6 +7,7 @@ namespace ActionEditor.Runtime
     public class SequenceContext
     {
         public delegate void ChangeStatus(SequenceStatus status);
+        public delegate void Update(SequenceContext ctx, float time);
 
         protected SequenceBehaviour m_Sequence;
         protected SequenceStatus m_State;
@@ -15,6 +16,7 @@ namespace ActionEditor.Runtime
         TrackContext[] m_TrackContexts;
 
         public event ChangeStatus OnChangeStatus;
+        public event Update OnUpdate;
 
         public SequenceStatus Status { get { return m_State; } }
         public float Current
@@ -58,7 +60,7 @@ namespace ActionEditor.Runtime
 
             m_Sequence = sequence;
             m_TrackContexts = new TrackContext[tracks.Length];
-            for(int i = 0; i < m_TrackContexts.Length; i++)
+            for (int i = 0; i < m_TrackContexts.Length; i++)
             {
                 m_TrackContexts[i] = tracks[i].CreateContext(sequence.FrameRate, sequence, blackboards);
             }
@@ -142,6 +144,8 @@ namespace ActionEditor.Runtime
             {
                 m_TrackContexts[i].SetTime(time);
             }
+
+            OnUpdate?.Invoke(this, time);
         }
 
         public void Tick(float deltaTime)
@@ -176,9 +180,9 @@ namespace ActionEditor.Runtime
         {
             m_Sequence?.OnInterrupt();
 
-            if(m_TrackContexts != null)
+            if (m_TrackContexts != null)
             {
-                for(int i = 0; i < m_TrackContexts.Length; i++)
+                for (int i = 0; i < m_TrackContexts.Length; i++)
                 {
                     m_TrackContexts[i].Interrupt();
                 }
