@@ -1,0 +1,17 @@
+{
+    "name": "Unity.Editor.action-editor",
+    "references": [
+        "GUID:e6a47ad1e6262c14699bb3e25ed75920"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

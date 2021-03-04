@@ -25,7 +25,7 @@ namespace ActionEditor.Runtime
             }
             set
             {
-                m_ElapsedTime = Mathf.Clamp(value, 0f, m_Sequence.TotalFrame / m_Sequence.FrameRate);
+                m_ElapsedTime = value;
                 SetTime(Current);
             }
         }

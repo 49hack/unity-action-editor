@@ -25,7 +25,7 @@ namespace ActionEditor
             m_PropertyName = propertyName;
         }
 
-        internal string PropertyName { get { return m_PropertyName; } }
+        public string PropertyName { get { return m_PropertyName; } }
         public abstract System.Type ValueType{ get; }
     }
 
