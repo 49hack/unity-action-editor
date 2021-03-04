@@ -253,6 +253,14 @@ namespace ActionEditor
 
         public Context PlaySequence(PlayableSequence sequence, float time = 0f, float fadeDuration = 0.5f)
         {
+            if (m_CurrentSequence != null)
+            {
+                m_CurrentSequence.SequenceContext.Interrupt();
+                m_CurrentSequence.Interupt();
+                m_CurrentSequence.Complete();
+                m_CurrentSequence = null;
+            }
+
             var ctx = (PlayableSequenceContext)m_Director.Prepare(sequence, TickMode.Auto);
             m_Director.Play(time);
 
@@ -302,7 +310,7 @@ namespace ActionEditor
                             SetAnimatorWeight(1f);
                             break;
                         }
-                        if (!m_CurrentSequence.IsEndFading)
+                        if (m_CurrentSequence != null && !m_CurrentSequence.IsEndFading)
                             m_CurrentSequence = null;
                     }
                     break;
