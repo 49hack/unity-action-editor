@@ -64,6 +64,15 @@ namespace ActionEditor
             var effectClip = fromClip as EffectClipBehaviour;
             if(effectClip != null)
             {
+                var locator = default(Transform);
+                if (m_LocatorArray.Value != null && m_LocatorArray.Value.Length > m_LocatorIndex)
+                {
+                    locator = m_LocatorArray.Value[m_LocatorIndex];
+                }
+                if (locator != null)
+                {
+                    locator.transform.localScale = effectClip.Scale;
+                }
                 effectClip.SetParticle(m_Particle);
             }
         }

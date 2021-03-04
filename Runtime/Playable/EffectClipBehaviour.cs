@@ -7,7 +7,13 @@ namespace ActionEditor
     [ParentTrack(typeof(EffectTrackBehaviour))]
     public class EffectClipBehaviour : ClipBehaviour
     {
+        public static string PropNameScale { get { return nameof(m_Scale); } }
+
+        [SerializeField] Vector3 m_Scale = Vector3.one;
+
         EffectTrackBehaviour.Particle m_Particle;
+
+        public Vector3 Scale { get { return m_Scale; } }
 
         public override void OnEnd(float time, float absoluteTime, float duration)
         {
