@@ -398,7 +398,7 @@ namespace ActionEditor
             internal void Complete()
             {
                 m_Ctx?.Dispose();
-                m_Inner.Complete();
+                m_Inner?.Complete();
 
                 if (m_IsCancled)
                     return;
