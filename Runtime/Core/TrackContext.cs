@@ -47,6 +47,7 @@ namespace ActionEditor.Runtime
         }
 
         TrackBehaviour m_Track;
+        ClipBehaviour[] m_ClipInstances;
         ClipContext[] m_ClipContexts;
         ClipIndices m_LatestIndecies = new ClipIndices(-1, -1);
         float m_CurrentTime;
@@ -58,9 +59,19 @@ namespace ActionEditor.Runtime
             m_Track.OnCreate(sequence, blackboards);
 
             m_ClipContexts = new ClipContext[clips.Length];
-            for(int i = 0; i < m_ClipContexts.Length; i++)
+            if (Application.isPlaying)
             {
-                m_ClipContexts[i] = clips[i].CreateContext(frameRate, sequence, blackboards);
+                m_ClipInstances = new ClipBehaviour[clips.Length];
+            }
+            for (int i = 0; i < m_ClipContexts.Length; i++)
+            {
+                var clip = clips[i];
+                if (Application.isPlaying)
+                {
+                    m_ClipInstances[i] = ScriptableObject.Instantiate(clip);
+                    clip = m_ClipInstances[i];
+                }
+                m_ClipContexts[i] = clip.CreateContext(frameRate, sequence, blackboards);
             }
         }
 
@@ -191,6 +202,15 @@ namespace ActionEditor.Runtime
             for(int i = 0; i < m_ClipContexts.Length; i++)
             {
                 m_ClipContexts[i].Dispose();
+            }
+
+            if (m_ClipInstances != null)
+            {
+                for (int i = 0; i < m_ClipInstances.Length; i++)
+                {
+                    GameObject.Destroy(m_ClipInstances[i]);
+                }
+                m_ClipInstances = null;
             }
         }
     }

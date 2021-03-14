@@ -13,6 +13,7 @@ namespace ActionEditor.Runtime
         protected SequenceStatus m_State;
         protected float m_ElapsedTime;
 
+        TrackBehaviour[] m_TrackInstances;
         TrackContext[] m_TrackContexts;
 
         public event ChangeStatus OnChangeStatus;
@@ -60,9 +61,18 @@ namespace ActionEditor.Runtime
 
             m_Sequence = sequence;
             m_TrackContexts = new TrackContext[tracks.Length];
+            if (Application.isPlaying)
+                m_TrackInstances = new TrackBehaviour[tracks.Length];
             for (int i = 0; i < m_TrackContexts.Length; i++)
             {
-                m_TrackContexts[i] = tracks[i].CreateContext(sequence.FrameRate, sequence, blackboards);
+                var track = tracks[i];
+                if (Application.isPlaying)
+                {
+                    m_TrackInstances[i] = ScriptableObject.Instantiate(track);
+                    track = m_TrackInstances[i];
+                }
+
+                m_TrackContexts[i] = track.CreateContext(sequence.FrameRate, sequence, blackboards);
             }
         }
 
@@ -201,6 +211,15 @@ namespace ActionEditor.Runtime
                 {
                     m_TrackContexts[i].Dispose();
                 }
+            }
+
+            if (m_TrackInstances != null)
+            {
+                for (int i = 0; i < m_TrackInstances.Length; i++)
+                {
+                    GameObject.Destroy(m_TrackInstances[i]);
+                }
+                m_TrackInstances = null;
             }
         }
     }

@@ -385,6 +385,7 @@ namespace ActionEditor
                 m_IsCancled = true;
                 m_Ctx?.Stop();
                 m_Inner?.Cancel();
+                Complete();
             }
 
             internal void Interupt()
@@ -396,10 +397,12 @@ namespace ActionEditor
 
             internal void Complete()
             {
+                m_Ctx?.Dispose();
+                m_Inner.Complete();
+
                 if (m_IsCancled)
                     return;
 
-                m_Ctx?.Dispose();
                 OnCompleted?.Invoke();
                 OnCompleted = null;
             }
